@@ -1,4 +1,4 @@
-package rozaryonov.shipping.service.Impl;
+package rozaryonov.shipping.service.impl;
 
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 	
 	@Override
 	public Invoice findById(Long id) {
-		return invoiceRepository.findById(id).orElseThrow(()-> new DaoException("No Person with id:" + id));
+		return invoiceRepository.findById(id).orElseThrow(()-> new DaoException("No Invoice with id:" + id));
 	}
 
 	@Override

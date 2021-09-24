@@ -1,4 +1,4 @@
-package rozaryonov.shipping.controller;
+package rozaryonov.shipping.controller.examples;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import rozaryonov.shipping.model.TestPerson;
+import rozaryonov.shipping.model.examples.TestPerson;
 
 @Controller
 public class JspExampleController {
@@ -17,7 +17,7 @@ public class JspExampleController {
 
     static {
         persons.add(new TestPerson("Bill", "Gates"));
-        persons.add(new TestPerson("Steve", "Jobs"));
+        persons.add(new TestPerson("Steve", "Jobs")); 
     }
 
     @RequestMapping(value = { "/", "/testIndex" }, method = RequestMethod.GET)

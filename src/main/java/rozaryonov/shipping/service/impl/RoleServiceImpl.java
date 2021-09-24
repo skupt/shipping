@@ -1,4 +1,4 @@
-package rozaryonov.shipping.service.Impl;
+package rozaryonov.shipping.service.impl;
 
 import org.springframework.stereotype.Service;
 

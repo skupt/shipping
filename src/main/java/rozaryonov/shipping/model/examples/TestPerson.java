@@ -1,4 +1,4 @@
-package rozaryonov.shipping.model;
+package rozaryonov.shipping.model.examples;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
