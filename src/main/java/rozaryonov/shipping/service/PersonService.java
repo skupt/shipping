@@ -4,5 +4,7 @@ import rozaryonov.shipping.model.Person;
 
 public interface PersonService {
 	Person findById(Long id);
-	Iterable<Person> findAll(); 
+	Iterable<Person> findAll();
+	void save (Person person);
+	Person findByLogin(String login);
 }
