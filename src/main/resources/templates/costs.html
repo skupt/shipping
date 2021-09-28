@@ -1,0 +1,59 @@
+<!-- Set actual locale -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<script src="js/bootstrap.min.js"></script>
+<title th:text="#{pageCosts.calculateCostTitle}"></title>
+</head>
+<body>
+	<div class="container">
+	<th:block th:include="_menu_guest"></th:block>
+
+<h1 th:text="#{pageCosts.calculateCostsHeader}"></h1>
+<form name="calcShippingCosts" method="get" action="/delivery_cost">
+<div id="route">
+	<div style="width:50%; float:left">	
+	<p th:text="#{pageCosts.chooseDepartureLocality}"></p>
+	<select name="departure" required>
+			<option th:each="elem : ${localities}" th:value="${elem.id}" th:utext="${elem.name}"></option> 
+	</select> 
+	</div>
+	<div style="width:50%; float:left">
+	<p th:text="#{pageCosts.chooseArrivalLocality}"></p>
+	<select name="arrival" required>
+			<option th:each="elem : ${localities}" th:value="${elem.id}" th:utext="${elem.name}"></option> 
+	</select> 
+	</div>
+</div>
+	<p th:text="#{pageCosts.dimensions}"></p>
+	<p>
+	<input name="length" type="range" min="20" max="120" step="5" value="5" oninput="this.nextElementSibling.value = this.value"/>
+	<output>20</output><span th:text="#{units.cm}"></span>
+	</p>
+	
+	<p>	
+	<input name="width" type="range" min="15" max="80" step="5" value="5" oninput="this.nextElementSibling.value = this.value"/>
+	<output>15</output><span th:text="#{units.cm}"></span>
+	</p>
+
+	<p>
+	<input name="height" type="range" min="5" max="160" step="5" value="5" oninput="this.nextElementSibling.value = this.value"/>
+	<output>5</output><span th:text="#{units.cm}"></span>
+	</p>
+	
+	<p>	
+	<input name="weight" type="range" min="1" max="800" step="0,5" value="1" oninput="this.nextElementSibling.value = this.value"/>
+	<output>1</output><span th:text="#{units.kg}"></span>
+
+	<p><button class="btn btn-primary btn-lg" type="submit" name="button" th:text="#{pageCosts.calcCosts}"></button></p>
+	<input type="hidden" name="cmd" value="DeliveryCost"/>
+
+</form>
+
+	<th:block th:include="@{/_footer_guest}">
+
+</div>
+</body>
+</html>

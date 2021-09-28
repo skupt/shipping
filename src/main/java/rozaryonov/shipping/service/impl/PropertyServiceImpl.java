@@ -12,16 +12,16 @@ import rozaryonov.shipping.service.PropertyService;
 @RequiredArgsConstructor
 public class PropertyServiceImpl implements PropertyService {
 
-	private final PropertyRepository roleRepository;
+	private final PropertyRepository propertyRepository;
 	
 	@Override
-	public Property findById(Long id) {
-		return roleRepository.findById(id).orElseThrow(()-> new DaoException("No Property with id:" + id));
+	public Property findById(String id) {
+		return propertyRepository.findById(id).orElseThrow(()-> new DaoException("No Property with id:" + id));
 	}
 
 	@Override
 	public Iterable<Property> findAll() {
-		return roleRepository.findAll();
+		return propertyRepository.findAll();
 	}
 
 }

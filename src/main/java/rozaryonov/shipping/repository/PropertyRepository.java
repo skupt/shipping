@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import rozaryonov.shipping.model.Property;
 
 @Repository
-public interface PropertyRepository extends CrudRepository<Property, Long>{
+public interface PropertyRepository extends CrudRepository<Property, String>{
 
 }

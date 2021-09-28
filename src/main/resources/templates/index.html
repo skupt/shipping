@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Set actual locale -->
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<script src="js/bootstrap.min.js"></script>
+
+<title th:text="#{index.title}"></title>
+</head>
+<body>
+	<div class="container">
+		<!-- Include _menu.html -->
+		<th:block th:include="/_menu_guest"></th:block>
+
+		<div class="jumbotron">
+			<h1 th:text="#{index.header}"></h1>
+			<p th:text="#{index.about1}"></p>
+			<p th:text="#{index.about2}"></p>
+			<p th:text="#{index.about3}"></p>
+			<p th:text="#{index.about4}"></p>
+			<p th:text="#{index.about5}"></p>
+			<p>
+				<a class="btn btn-primary btn-lg" th:href="@{/costs}" role="button"
+					th:text="#{index.makeOrder}"></a>
+			</p>
+		</div>
+		
+		<th:block th:include="@{_footer_guest}"></th:block>
+		
+	</div>
+</body>
+</html>

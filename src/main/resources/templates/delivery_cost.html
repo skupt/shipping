@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/css/bootstrap.min.css" />
+<script src="/js/bootstrap.min.js"></script>
+
+<title th:text="#{deliveryCosts.calculationCosts}"></title>
+</head>
+<body>
+	<div class="container">
+			<th:block th:include="/_menu_guest"></th:block>
+	
+<div class="panel panel-success">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+    <span th:text="#{deliveryCosts.totalMoney} + ' : '"></span>
+    <span th:text="${totalMoney}"></span>
+	<a class="btn btn-default btn-lg" role="button" th:href="@{/make_order}" th:text="#{deliveryCosts.makeOrder}"></a>
+	</h3>
+  </div>
+  <div class="panel-body">
+<p> <span th:text="#{deliveryCosts.paperwork}"></span>: <span th:text="${paperwork}"></span></p>
+<p> <span th:text="#{deliveryCosts.targetReceipt}"></span>: <span th:text="${targetReceipt}"></span></p>
+<p> <span th:text="#{deliveryCosts.interCityCost}"></span>: <span th:text="${interCityCost}"></span></p>
+<p> <span th:text="#{deliveryCosts.targetDelivery}"></span>: <span th:text="${targetDelivery}"></span></p>
+<p> <span th:text="#{deliveryCosts.insuranceCost}"></span>: <span th:text="${insuranceCost}"></span></p> 
+</div>
+</div>
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title" th:text="#{deliveryCosts.data}"></h3>
+  </div>
+  <div class="panel-body">
+<p><span th:text="#{deliveryCosts.route}"></span>: <span th:text="${route}"></span></p>
+<p><span th:text="#{deliveryCosts.distance}"></span>: <span th:text="${distanceD}"></span></p>
+<p><span th:text="#{deliveryCosts.expectedDuration}">: </span><span th:text="${duration}"></span></p>
+<p><span th:text="#{deliveryCosts.weight}"></span>: <span th:text="${weight}"></span></p>
+<p><span th:text="#{deliveryCosts.volumeWeight}">: </span><span th:text="${volumeWeight}"></span></p>
+<p><span th:text="#{deliveryCosts.usedWeight}">: </span><span th:text="${usedWeight}"></span></p>
+</div>
+</div>
+
+<!-- <div class="panel panel-default"> -->
+<!--   <div class="panel-heading"> -->
+<!--     <h3 class="panel-title"><fmt:message key="deliveryCosts.tariffDetails"/></h3> -->
+<!--   </div> -->
+<!--   <div class="panel-body"> -->
+<!-- <p><fmt:message key="deliveryCosts.shippingRate"/>: ${shippingRate}</p> -->
+<!-- <p><fmt:message key="deliveryCosts.targetReceiptDist"/>: ${targetReceiptDist}</p> -->
+<!-- <p><fmt:message key="deliveryCosts.targetDeliveryDist"/>: ${targetDeliveryDist}</p> -->
+<!-- <p><fmt:message key="deliveryCosts.insuranceWorth"/>: ${insuranceWorth}</p> -->
+<!-- <p><fmt:message key="deliveryCosts.insuranceRate"/>: ${insuranceRate}</p> -->
+<!-- </div> -->
+<!-- </div> -->
+
+<p><a class="btn btn-primary btn-lg" role="button" th:href="@{/costs}" th:text="#{deliveryCosts.oneMoreCalculation}"></a></p>
+
+<th:block th:include="@{/_footer_guest}">
+
+</div>
+</body>
+</html>

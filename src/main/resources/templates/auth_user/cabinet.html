@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+	<link rel="stylesheet" href="/css/bootstrap.min.css"/>         
+	<script src="/js/bootstrap.min.js"></script>       
+
+<title th:text="#{userCabinet.headerCabinet}"></title>
+</head>
+<body>
+<div class="container">
+		<!-- Language switcher begin -->
+		 <!-- end Language switcher -->
+
+		<th:block th:include="/auth_user/_menu_user"></th:block>
+
+<div class="jumbotron">
+  		<h1 th:text="#{userCabinet.headerCabinet}"></h1>
+		<p th:text="#{userCabinet.tapMenuItem}"><fmt:message key="" /></p>
+		<p th:text="#{userCabinet.bakcToCabinet}"><fmt:message key="" /></p>
+		<p><a th:href="@{/auth_user/cabinet}" class="btn btn-primary btn-lg" role="button" th:text="#{userCabinet.Back}"></a></p>
+</div>
+<div>
+<p th:text="${person.getName()}"></p>
+<p th:text="${person.login}"></p>
+<p th:text="#{common.balance}"></p>
+<p th:text="${balance}"></p>
+</div>
+
+		<th:block th:include="@{_footer_guest}"></th:block>
+
+</div>
+</body>
+</html>

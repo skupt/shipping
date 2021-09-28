@@ -9,8 +9,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import javax.sql.DataSource;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import rozaryonov.shipping.exception.DaoException;
@@ -31,7 +34,7 @@ public class PersonDao extends AbstractDao <Person, Long>{
 	private static final String REPLACE_BALANCE = "replace into user_details (person_id, balance) values (?,?)";
 	
 	private static Logger logger = LogManager.getLogger(PersonDao.class.getName());
-
+	
 	
 	public PersonDao(Connection connection) {
 		super(connection);

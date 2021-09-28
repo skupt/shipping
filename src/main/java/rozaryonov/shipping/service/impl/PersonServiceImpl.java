@@ -1,10 +1,13 @@
 package rozaryonov.shipping.service.impl;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -17,10 +20,11 @@ import rozaryonov.shipping.service.PersonService;
 @Service
 @RequiredArgsConstructor
 public class PersonServiceImpl implements PersonService {
+	
+	private static Logger logger = LogManager.getLogger(PersonServiceImpl.class.getName());
 
 	private final PersonRepository personRepository;
 	private final DataSource dataSource;
-	
 	
 	@Override
 	public Person findById(Long id) {
@@ -40,16 +44,24 @@ public class PersonServiceImpl implements PersonService {
 	
 	@Override
 	public Person findByLogin(String login) {
-		Connection connection = null;
+		PersonDao personDao = null;;
 		try {
-			connection = dataSource.getConnection();
+			personDao = new PersonDao(dataSource.getConnection());
 		} catch (SQLException e) {
-			//logger.
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
-		PersonDao personDao = new PersonDao(connection);
 		return personDao.findByLogin(login).orElse(null);
 	}
-
+	
+	@Override
+	public BigDecimal calcAndReplaceBalance(long personId) {
+		PersonDao personDao = null;;
+		try {
+			personDao = new PersonDao(dataSource.getConnection());
+		} catch (SQLException e) {
+			logger.error(e.getMessage());
+		}
+		return personDao.calcAndReplaceBalance(personId);
+	}
 
 }

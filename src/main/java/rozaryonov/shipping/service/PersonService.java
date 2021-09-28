@@ -1,5 +1,7 @@
 package rozaryonov.shipping.service;
 
+import java.math.BigDecimal;
+
 import rozaryonov.shipping.model.Person;
 
 public interface PersonService {
@@ -7,4 +9,5 @@ public interface PersonService {
 	Iterable<Person> findAll();
 	void save (Person person);
 	Person findByLogin(String login);
+	BigDecimal calcAndReplaceBalance(long personId);
 }

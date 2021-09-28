@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+	<link rel="stylesheet" href="../../css/bootstrap.min.css"/>         
+	<script src="../../js/bootstrap.min.js"></script>       
+
+<title th:text="#{managerCabinet.title}"></title>
+</head>
+<body>
+<div class="container">
+<!-- Language switcher begin -->
+<!-- end Language switcher -->
+
+<h1 th:text="#{managerCabinet.headerCabinet}"></h1>
+<form id="formMenu" action="Controller" method="post">
+</form>
+	<button type="submit" form="formMenu" formmethod="post" name="cmd" class="btn btn-default navbar-btn" value="CreateInvoicesEnter" th:text="#{managerCabinet.createInvoices}" ></button>
+	<button type="submit" form="formMenu" formmethod="post" name="cmd" class="btn btn-default navbar-btn" value="PaymentsEnter" th:text="#{managerCabinet.addPayments}"></button>
+	<button type="submit" form="formMenu" formmethod="post" name="cmd" class="btn btn-default navbar-btn" value="FinishShippingsEnter" th:text="#{managerCabinet.finishShipping}"></button>
+	<button type="submit" form="formMenu" formmethod="post" name="cmd" class="btn btn-default navbar-btn" value="ManagerReportDay" th:text="#{managerCabinet.showDayReport}"></button>
+	<button type="submit" form="formMenu" formmethod="post" name="cmd" class="btn btn-default navbar-btn" value="ManagerReportDirections" th:text="#{managerCabinet.showDirectionReport}"></button>
+</div>
+</body>
+</html>

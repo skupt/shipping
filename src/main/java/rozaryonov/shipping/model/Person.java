@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,7 +19,10 @@ public class Person {
 	@Id
 	@GeneratedValue
 	private long id;
+	@NotEmpty(message = "Login should not be empty")
+	@Size(min = 3, max = 20, message = "Login should be between 3 and 20 characters")
 	private String login;
+	@Size(min = 3, max = 20, message = "Password should be between 3 and 20 characters")
 	private String password;
 	private String email;
 	private String name;
