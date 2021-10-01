@@ -26,9 +26,17 @@
 					<ul class="nav navbar-nav navbar-right">
 					<li>
 						<button type="button" class="btn btn-default navbar-btn" >
-<!-- 						th:text="#{person.name} #{person.login} #{common.balance}) #{balance}"> -->
+						<span th:text="${session.person.getName() + ' (' + session.person.getLogin() + '), '  + session.balance}"></span>
 						</button>	
+						<!-- + #common.balance + ': ' -->
 					</li>
+					<li>
+							<a th:href="${#httpServletRequest.getRequestURI} + '?lang=en_US'"><span th:text="#{lang.eng}"></span></a>
+					</li>
+					<li>
+							<a th:href="${#httpServletRequest.getRequestURI  + '?lang=ru_RU'}"><span th:text="#{lang.ru}"></span></a>
+					</li>
+					
 				</ul>
 				</div>
 				<!-- /.navbar-collapse -->

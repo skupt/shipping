@@ -5,46 +5,39 @@
 <link rel="stylesheet" href="css/bootstrap.min.css" />
 <script src="js/bootstrap.min.js"></script>
 
-<title>Login</title>
+<title th:text="#{pageLogin.titleLogin}">Login</title>
 </head>
 <body>
 <div class="container">
 	<!-- Include _menu.html -->
 	<th:block th:include="/_menu_guest"></th:block>
 
-	<h1>Login</h1>
+<div id="login" style="position: absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%)">
+
+	<h1 th:text="#{pageLogin.titleLogin}">Login</h1>
 
 	<!-- /login?error=true -->
 	<div th:if="${#request.getParameter('error') == 'true'}"
 		style="color: red; margin: 10px 0px;">
-		Login Failed!!!<br /> Reason : <span
+		Login Failed!!!<br /> Reason : <span>
 			th:if="${#session!= null and #session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION') != null}"
 			th:utext="${#session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION').message}">
 			Static summary </span>
-
 	</div>
 
-<!-- 	<h3>Enter login and password:</h3> -->
-	<form name='f' th:action="@{/j_spring_security_check}" method='POST'>
-		<table>
-			<tr>
-				<td>User:</td>
-				<td><input type='text' name='username' value=''></td>
-			</tr>
-			<tr>
-				<td>Password:</td>
-				<td><input type='password' name='password' /></td>
-			</tr>
-			<tr>
-				<td>Remember Me?</td>
-				<td><input type="checkbox" name="remember-me" /></td>
-			</tr>
-			<tr>
-				<td><input name="submit" type="submit" value="submit" /></td>
-			</tr>
-		</table>
-	</form>
-	<th:block th:include="/_footer_guest"></th:block>
+<form name='f' th:action="@{/j_spring_security_check}" method='POST'>
+<label for="username" th:text="#{pageLogin.yourLogin}">Your login</label> 
+<input type='text' name='username' value='' class="form-control">
+<label for="password" th:text="#{pageLogin.yourPassword}">Your password</label>
+<input type='password' name='password' class="form-control"/>
+<label for="remember-me" th:text="#{pageLogin.rememberMe}">Remember Me?</label>
+<input type="checkbox" name="remember-me" />
+<br>
+<button class="btn btn-primary gtn-lg" name="submit" type="submit" value="submit" th:text="#{pageLogin.buttonSubmit}">Submit</button>
+</form>
+</div>
+
+<!-- <th:block th:include="/_footer_guest"></th:block> -->
 
 </div>
 </body>

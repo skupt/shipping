@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru_RU">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<script src="js/bootstrap.min.js"></script>
+<title th:text="#{pageTariffs.tariffsArchive}">title</title>
+</head>
+<body>
+<div class="container">
+<th:block th:include="_menu_guest"/>
+
+<h1 th:text="#{pageTariffs.tariffsArchive}"></h1>
+<form name="tariffsForm" id="tariffsForm" method="get" action="/tariffs">
+	<div>
+	<fieldset>
+		<label for="sorting"  th:text="#{pageTariffs.sortIncr}"></label>
+		<input type="radio" name="sorting" value="incr" checked required/>
+		<label for="sorting"  th:text="#{pageTariffs.sortDecr}"></label>
+		<input type="radio" name="sorting" value="decr" required/>
+	</fieldset>
+	<label for="logConf" th:text="#{pageTariffs.filtLogConf}"></label>
+	<input type="number" name="logConf" min="0" value="1" size="4" required/>
+	<button type="submit" name="cmd" value="TariffArchiveApply">
+		<span th:text="#{pageTariffs.someApplySortFilt}"></span>
+	</button>
+	</div>
+</form>
+<br>
+<div th:if="${session.tariffArchiveList != null}">
+<table class="table">
+<tr>
+<th th:text="#{pageTariffs.date}"></th>
+<th th:text="#{pageTariffs.LogConf}"></th>
+<th th:text="#{pageTariffs.TruckVel}"></th>
+<th th:text="#{pageTariffs.Density}"></th>
+<th th:text="#{pageTariffs.Paper}"></th>
+<th th:text="#{pageTariffs.TargRec}"></th>
+<th th:text="#{pageTariffs.TargDel}"></th>
+<th th:text="#{pageTariffs.ShRate}"></th>
+<th th:text="#{pageTariffs.InsW}"></th>
+<th th:text="#{pageTariffs.InsR}"></th>
+</tr>
+
+	<tr th:each="t: ${session.tariffArchiveList}" >
+		<td th:utext="${t.getCreationTimestamp()}"></td>
+		<td th:utext="${t.getLogisticConfig().getId()}"></td>
+		<td th:utext="${t.getTruckVelocity()}"></td>
+		<td th:utext="${t.getDensity()}"></td>
+		<td th:utext="${t.getPaperwork()}"></td>
+		<td th:utext="${t.getTargetedReceipt()}"></td>
+		<td th:utext="${t.getTargetedDelivery()}"></td>
+		<td th:utext="${t.getShippingRate()}"></td>
+		<td th:utext="${t.getInsuranceWorth()}"></td>
+		<td th:utext="${t.getInsuranceRate()}"></td>
+	</tr>
+</table>
+</div>
+<form name="nextPrev" id="nextPrev" action="/tariffs" method="get">
+	<button type="submit" name="cmd" value="TariffArchivePrev"><span th:text="#{root.prev}"/></span></button>
+	<span th:text="${session.pageNum}">page number</span>
+	<button type="submit" name="cmd" value="TariffArchiveNext"><span th:text="#{root.next}"></span></button>
+</form>
+
+<th:block th:include="_footer_guest"/>
+
+</div>
+</body>
+</html>

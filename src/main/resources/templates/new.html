@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<script src="js/bootstrap.min.js"></script>
+<script type="text/javascript">
+	function validateForm() {
+		var p = document.getElementById("password").value;
+		var r = document.getElementById("repeat").value;
+		if (p == r) {
+			return true;
+		}
+		alert("Please re-enter your password");
+		return false;
+	}
+</script>
+
+<title th:text="#{register.registerTitle}"></title>
+</head>
+<body>
+
+<div class="container">
+<th:block th:include="@{/_menu_guest}"/> 	
+
+  <h1 th:text="#{register.registerHead}"></h1>
+  
+	<form th:method="POST" th:action="@{/}" th:object="${personDto}" onsubmit="return validateForm()" >
+		<div>
+			<label for="name" th:text="#{register.name}"></label>
+			<p><input type="text" th:field="*{name}" id="name" ></p>
+			<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</p>
+		</div>
+		<div>
+			<label for="login" th:text="#{register.login}"></label>
+			<p><input type="text" th:field="*{login}" id="login" ></p>
+			<p th:if="${#fields.hasErrors('login')}" th:errors="*{login}">Login error</p>
+		</div>
+		<div>
+			<label th:text="#{register.password}"></label>
+			<p><input type="password" th:field="*{password}" id="password" /></p>
+			<p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</p>
+		</div>
+		<div>
+			<label th:text="#{register.repeatPass}"></label>
+			<p><input type="password" name="pass" id="repeat"/></p>
+		</div>
+
+			<button type="submit" class="btn btn-primary btn-lg" name="button" ><span th:text="#{register.register}"></span></button>
+	</form>
+<th:block th:include="@{/_footer_guest}"/> 	
+</div>
+</body>
+
+</html>

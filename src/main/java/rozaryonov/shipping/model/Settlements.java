@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
 import lombok.Data;
 
@@ -15,6 +17,7 @@ import lombok.Data;
 @Entity
 public class Settlements {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	private LocalDateTime creationDatetime;
 	@ManyToOne

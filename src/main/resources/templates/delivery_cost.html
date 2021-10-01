@@ -15,16 +15,16 @@
   <div class="panel-heading">
     <h3 class="panel-title">
     <span th:text="#{deliveryCosts.totalMoney} + ' : '"></span>
-    <span th:text="${totalMoney}"></span>
-	<a class="btn btn-default btn-lg" role="button" th:href="@{/make_order}" th:text="#{deliveryCosts.makeOrder}"></a>
+    <span th:text="${session.totalMoney}"></span>
+	<a class="btn btn-default btn-lg" role="button" th:href="@{/auth_user/shippings_new}" th:text="#{deliveryCosts.makeOrder}"></a>
 	</h3>
   </div>
   <div class="panel-body">
-<p> <span th:text="#{deliveryCosts.paperwork}"></span>: <span th:text="${paperwork}"></span></p>
-<p> <span th:text="#{deliveryCosts.targetReceipt}"></span>: <span th:text="${targetReceipt}"></span></p>
-<p> <span th:text="#{deliveryCosts.interCityCost}"></span>: <span th:text="${interCityCost}"></span></p>
-<p> <span th:text="#{deliveryCosts.targetDelivery}"></span>: <span th:text="${targetDelivery}"></span></p>
-<p> <span th:text="#{deliveryCosts.insuranceCost}"></span>: <span th:text="${insuranceCost}"></span></p> 
+<p> <span th:text="#{deliveryCosts.paperwork}"></span>: <span th:text="${session.paperwork}"></span></p>
+<p> <span th:text="#{deliveryCosts.targetReceipt}"></span>: <span th:text="${session.targetReceipt}"></span></p>
+<p> <span th:text="#{deliveryCosts.interCityCost}"></span>: <span th:text="${session.interCityCost}"></span></p>
+<p> <span th:text="#{deliveryCosts.targetDelivery}"></span>: <span th:text="${session.targetDelivery}"></span></p>
+<p> <span th:text="#{deliveryCosts.insuranceCost}"></span>: <span th:text="${session.insuranceCost}"></span></p> 
 </div>
 </div>
 
@@ -34,12 +34,12 @@
     <h3 class="panel-title" th:text="#{deliveryCosts.data}"></h3>
   </div>
   <div class="panel-body">
-<p><span th:text="#{deliveryCosts.route}"></span>: <span th:text="${route}"></span></p>
-<p><span th:text="#{deliveryCosts.distance}"></span>: <span th:text="${distanceD}"></span></p>
-<p><span th:text="#{deliveryCosts.expectedDuration}">: </span><span th:text="${duration}"></span></p>
-<p><span th:text="#{deliveryCosts.weight}"></span>: <span th:text="${weight}"></span></p>
-<p><span th:text="#{deliveryCosts.volumeWeight}">: </span><span th:text="${volumeWeight}"></span></p>
-<p><span th:text="#{deliveryCosts.usedWeight}">: </span><span th:text="${usedWeight}"></span></p>
+<p><span th:text="#{deliveryCosts.route}"></span>: <span th:text="${session.route}"></span></p>
+<p><span th:text="#{deliveryCosts.distance}"></span>: <span th:text="${session.distanceD}"></span></p>
+<p><span th:text="#{deliveryCosts.expectedDuration}">: </span><span th:text="${session.duration}"></span></p>
+<p><span th:text="#{deliveryCosts.weight}"></span>: <span th:text="${session.weight}"></span></p>
+<p><span th:text="#{deliveryCosts.volumeWeight}">: </span><span th:text="${session.volumeWeight}"></span></p>
+<p><span th:text="#{deliveryCosts.usedWeight}">: </span><span th:text="${session.usedWeight}"></span></p>
 </div>
 </div>
 

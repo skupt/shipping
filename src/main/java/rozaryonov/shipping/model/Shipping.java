@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +26,7 @@ import lombok.NoArgsConstructor;
 public class Shipping {
 	@EqualsAndHashCode.Include
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	private Timestamp creationTimestamp;
 	@ManyToOne

@@ -8,6 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
 import lombok.Data;
 
@@ -17,6 +19,7 @@ import lombok.Data;
 //@IdClass(LogisticNetPK.class)
 public class LogisticNetElement {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	@ManyToOne
 	@JoinColumn (name = "logistic_config_id", foreignKey = @ForeignKey (name = "fk_logistic_net_logistic_config1"))

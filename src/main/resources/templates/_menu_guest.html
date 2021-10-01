@@ -19,16 +19,17 @@
 					<ul class="nav navbar-nav">
 						<li><a th:href="@{/index}" th:text="#{index.title}"><span class="sr-only">(current)</span></a></li>
 						<li><a th:href="@{/costs}" th:text="#{index.linkCostCalc}"></span></a></li>
-						<li><a th:href="@{/tariff}" th:text="#{index.linkTariffs}"></a></li>
+						<li><a th:href="@{/tariffs}" th:text="#{index.linkTariffs}"></a></li>
 						<li><a th:href="@{/login}" th:text="#{index.linkLogin}"></a></li>
 						<li><a th:if="${#request.userPrincipal != null}" th:href="@{/logout}" th:text="#{index.linkLogout}"></a></li>
-						<li><a th:href="@{/register}" th:text="#{index.linkRegister}"></a></li>
+						<li><a th:href="@{/new}" th:text="#{index.linkRegister}"></a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<li>
-							<!-- Language switcher begin -->
-							<!-- end Language switcher -->
-
+							<a th:href="${#httpServletRequest.getRequestURI} + '?lang=en_US'"><span th:text="#{lang.eng}"></span></a>
+						</li>
+						<li>
+							<a th:href="${#httpServletRequest.getRequestURI  + '?lang=ru_RU'}"><span th:text="#{lang.ru}"></span></a>
 						</li>
 					</ul>
 				</div>
@@ -36,3 +37,4 @@
 			</div>
 			<!-- /.container-fluid -->
 		</nav>
+</div>

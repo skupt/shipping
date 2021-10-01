@@ -1,4 +1,4 @@
-package rozaryonov.shipping.config;
+package rozaryonov.shipping.security;
 
 import javax.sql.DataSource;
 
@@ -16,8 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
-
-import rozaryonov.shipping.service.impl.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -58,7 +56,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/login", 
 				"/logout",
 				"/personByName/vasya", 
-				"/persons" )
+				"/new",
+				"/tariffFFS")
 						.permitAll();
 
 		// /userInfo page requires login as ROLE_USER or ROLE_ADMIN.
@@ -87,7 +86,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.loginProcessingUrl("/j_spring_security_check") // Submit URL
 				.loginPage("/login")
 				//.defaultSuccessUrl("/userAccountInfo")//
-				.defaultSuccessUrl("/userRegInApp")
+				.defaultSuccessUrl("/cabinet")
 				.failureUrl("/login?error=true")//
 				.usernameParameter("username")//
 				.passwordParameter("password")

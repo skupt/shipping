@@ -15,6 +15,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
 import lombok.Data;
 
@@ -22,6 +24,7 @@ import lombok.Data;
 @Entity(name = "invoice")
 public class Invoice {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	@ManyToOne
 	@JoinColumn(name = "person_id", foreignKey = @ForeignKey (name = "fk_invoice_person1"))

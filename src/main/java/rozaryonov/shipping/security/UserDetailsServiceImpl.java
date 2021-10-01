@@ -1,4 +1,4 @@
-package rozaryonov.shipping.service.impl;
+package rozaryonov.shipping.security;
 
 import java.util.HashSet;
 import java.util.Set;
