@@ -23,6 +23,7 @@
 <div class="container">
 <th:block th:include="@{/_menu_guest}"/> 	
 
+<div id="login" class="jumbotron" >
   <h1 th:text="#{register.registerHead}"></h1>
   
 	<form th:method="POST" th:action="@{/}" th:object="${personDto}" onsubmit="return validateForm()" >
@@ -48,6 +49,7 @@
 
 			<button type="submit" class="btn btn-primary btn-lg" name="button" ><span th:text="#{register.register}"></span></button>
 	</form>
+</div>
 <th:block th:include="@{/_footer_guest}"/> 	
 </div>
 </body>

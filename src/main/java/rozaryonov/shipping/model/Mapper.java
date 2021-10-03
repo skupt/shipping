@@ -4,13 +4,14 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import rozaryonov.shipping.dto.PersonDto;
-import rozaryonov.shipping.service.RoleService;
+import rozaryonov.shipping.exception.DaoException;
+import rozaryonov.shipping.repository.RoleRepository;
 
 @Component
 @RequiredArgsConstructor
 public class Mapper {
 
-	private final RoleService roleService;
+	private final RoleRepository roleRepository;
 	
 	
 	public Person toPerson(PersonDto personDto) {
@@ -22,7 +23,7 @@ public class Mapper {
 		person.setPatronomic(personDto.getPatronomic());
 		person.setSurname(personDto.getSurname());
 		person.setTitle(personDto.getTitle());
-		person.setRole(roleService.findById(personDto.getRoleId()));
+		person.setRole(roleRepository.findById(personDto.getRoleId()).orElseThrow(()-> new DaoException("No Role with id:"+ personDto.getRoleId())));
 		
 		return person;
 	}

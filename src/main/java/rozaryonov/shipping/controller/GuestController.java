@@ -28,7 +28,6 @@ import lombok.RequiredArgsConstructor;
 import rozaryonov.shipping.dto.PersonDto;
 import rozaryonov.shipping.model.Mapper;
 import rozaryonov.shipping.model.Person;
-import rozaryonov.shipping.model.Role;
 import rozaryonov.shipping.model.Tariff;
 import rozaryonov.shipping.repository.PersonRepository;
 import rozaryonov.shipping.repository.page.Page;
@@ -36,7 +35,6 @@ import rozaryonov.shipping.repository.page.PageableFactory;
 import rozaryonov.shipping.service.GuestService;
 import rozaryonov.shipping.service.LocalityService;
 import rozaryonov.shipping.service.PersonService;
-import rozaryonov.shipping.service.RoleService;
 import rozaryonov.shipping.service.TariffService;
 import rozaryonov.shipping.utils.WebUtils;
 
@@ -49,7 +47,6 @@ public class GuestController {
 	private final LocalityService localityService;
 	private final GuestService guestService;
 	private final PageableFactory pageableFactory;
-	private final RoleService roleService;
 	private final Mapper mapper;
 	private final PersonRepository personRepository;
 	private final BCryptPasswordEncoder passwordEncoder;
@@ -113,8 +110,6 @@ public class GuestController {
 	
 	@GetMapping("/new")
 	public String newUser (@ModelAttribute("personDto") PersonDto personDto) {
-//		person = new PersonDto();
-//		model.addAttribute("person", person);
 		return "/new";
 	}
 	
@@ -131,7 +126,7 @@ public class GuestController {
 			String passEncoded = passwordEncoder.encode(personDto.getPassword());
 			personDto.setPassword(passEncoded);
 			Person person = mapper.toPerson(personDto);
-			personService.save(person);
+			personRepository.save(person);
 		return "redirect:/";
 	}
 	
@@ -160,12 +155,12 @@ public class GuestController {
 					model.addAttribute("balance", personService.calcAndReplaceBalance(person.getId()));
 					model.addAttribute("person", person);
 					session.setAttribute("person", person);
-					page = "/auth_user/cabinet";
+					page = "redirect:/auth_user/cabinet";
 					break;
 				case "manager" : 
 					model.addAttribute("person", person);
 					session.setAttribute("person", person);
-					page = "/manager/cabinet";
+					page = "redirect:/manager/cabinet";
 					break;
 				default: 
 					page = "/index";
@@ -188,7 +183,12 @@ public class GuestController {
 	public String costResult (HttpServletRequest request, Model model, HttpSession session) {
 		return guestService.costResult(request, model, session);
 	}
-	
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		System.out.println("*inside logoutPre");
+		return "redirect:/";
+	}
 	
 	@RequestMapping(value = { "/welcome" }, method = RequestMethod.GET)
 	public String welcomePage(Model model) {

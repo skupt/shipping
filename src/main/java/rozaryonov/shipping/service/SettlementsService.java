@@ -1,8 +1,8 @@
 package rozaryonov.shipping.service;
 
 import rozaryonov.shipping.model.Settlements;
+import rozaryonov.shipping.repository.page.Pageable;
 
-public interface SettlementsService {
-	Settlements findById(Long id);
-	Iterable<Settlements> findAll(); 
+public interface SettlementsService extends Pageable<Settlements> {
+	
 }

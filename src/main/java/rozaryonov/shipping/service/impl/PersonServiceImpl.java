@@ -23,23 +23,10 @@ public class PersonServiceImpl implements PersonService {
 	
 	private static Logger logger = LogManager.getLogger(PersonServiceImpl.class.getName());
 
-	private final PersonRepository personRepository;
 	private final DataSource dataSource;
 	
-	@Override
-	public Person findById(Long id) {
-		return personRepository.findById(id).orElseThrow(()-> new DaoException("No Person with id:" + id));
-	}
 
-	@Override
-	public Iterable<Person> findAll() {
-		return personRepository.findAll();
-	}
 
-	@Override
-	public Person save(Person person) {
-		return personRepository.save(person);
-	}
 	
 	@Override
 	public Person findByLogin(String login) {
@@ -60,7 +47,10 @@ public class PersonServiceImpl implements PersonService {
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
-		return personDao.calcAndReplaceBalance(personId);
+		
+		System.out.println("PersonServiceImpl.calcAndReplaceBalance, personDao: " + personDao);
+		BigDecimal balance = personDao.calcAndReplaceBalance(personId);
+		return balance;
 	}
 
 }

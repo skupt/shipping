@@ -3,46 +3,52 @@
 <head>
 <meta charset="UTF-8">
 	<link rel="stylesheet" href="../css/bootstrap.min.css"/>         
-	<script src="../js/bootstrap.min.js"></script>       
+	<script src="../js/bootstrap.min.js"></script>
+	       
 <title th:text="#{userCabinetResOrder.title}"/></title>
 </head>
 <body>
 <div class="container">
 		<th:block th:include="/auth_user/_menu_user"></th:block>
-
+<div id="login" class="jumbotron" >
 <h1 th:text="#{userCabinetResOrder.headerResumeOrder}"/></h1>
 <p th:if="${session.loadLocality == null}" th:text="#{userCabinetResOrder.msgNoUnfinishedOrders}"></p>
 <div th:if="${session.loadLocality != null}">
 <p th:if="${session.errorDescription != null}" th:text="${errorDescription}"></p>
 
-<form th:name="resumeOrder" th:method="POST" action="/auth_user/shippings">
+<form th:name="resumeOrder" th:method="POST" th:object="${orderDataDto}" action="/auth_user/shippings" onsubmit="return validateForm()">
 <h2 th:text="#{userCabinetResOrder.enterData}"></h2>
 	<p th:text="#{userCabinetResOrder.loadLocality}"></p><p><input type="text" name="load" disabled th:value="${session.loadLocality.name}"/></p>
 	<div class="panel panel-primary">
+
 		<p th:text="#{userCabinetResOrder.shipper}"></p>
-		<p><input type="text" class="form-control" name="shipper" pattern="^.{1,45}$" required /></p>
+		<p><input type="text" class="form-control" th:field="*{shipper}" name="shipper" pattern="^.{5,45}$" required /></p>
+		<p th:if="${#fields.hasErrors('shipper')}" th:errors="*{shipper}">Shipper error</p>
+		
 		<p th:text="#{userCabinetResOrder.downloadAddress}"></p>
-		<p><input type="text" class="form-control" name="downloadAddress" pattern="^.{1,45}$" required /></p>
+		<p><input type="text" class="form-control" th:field="*{downloadAddress}" name="downloadAddress" pattern="^.{5,45}$" required /></p>
+		<p th:if="${#fields.hasErrors('downloadAddress')}" th:errors="*{downloadAddress}">Address error</p>
 	</div>
-	<p th:text="#{userCabinetResOrder.downloadDateTime}"></p>
-		<p th:text="#{userCabinetResOrder.date}">
-			<input type="date" name="dDate" th:value="${#dates.format(#dates.createToday(), 'yyyy-MMM-dd HH:mm')}">
-			<input type="number" name="year" min="2021" max="2100" required th:value="${session.date.getYear() }"/>
-			- <input type="number" name="month" min="1" max="12" required  th:value="${session.date.getMonthValue()}"/>
-			- <input type="number" name="day" min="1" max="31" required  th:value="${datesession.getDayOfMonth() }"/>
-		</p>
-		<p th:text="#{userCabinetResOrder.time}">
- 			<input type="number" name="hour" min="0" max="24" required  value="${session.date.getHour() }"/>
-			: <input type="number" name="minute" min="0" max="59" required  value="${session.date.getMinute() }"/>
-		</p>
-		<p th:text="#{userCabinetResOrder.unloadLocality}"></p>
-			<p><input type="text" name="unload" disabled th:value="${session.unloadLocality.name}"/></p>
+
+
+<!-- 		<p th:text="#{userCabinetResOrder.downloadDateTime}"></p> -->
+		<p th:text="#{userCabinetResOrder.date}"></p>
+<!-- Fields -->
+		<p><input type="date" name="downloadDatetime" th:value="${#dates.createToday()}" required ></p>
+		<p th:if="${#fields.hasErrors('downloadDatetime')}" th:errors="*{downloadDatetime}">Date error</p>
+<!-- Fields -->
+
+	<p th:text="#{userCabinetResOrder.unloadLocality}"></p>
+		<p><input type="text" name="unload" disabled th:value="${session.unloadLocality.name}"/></p>
 	<div class="panel panel-primary">
 		<p th:text="#{userCabinetResOrder.consignee}"></p>
-		<p><input type="text" class="form-control" name="consignee" pattern="^.{1,45}$" required ></p>
+		<p><input type="text" class="form-control" th:field="*{consignee}" name="consignee" pattern="^.{5,45}$" required ></p>
+		<p th:if="${#fields.hasErrors('consignee')}" th:errors="*{consignee}">Consignee error</p>
 		<p th:text="#{userCabinetResOrder.unloadAddress}"></p>
-		<p><input type="text" class="form-control" name="unloadAddress" pattern="^.{1,45}$" required ></p>
+		<p><input type="text" class="form-control" th:field="*{unloadAddress}" name="unloadAddress" pattern="^.{5,45}$" required ></p>
+		<p th:if="${#fields.hasErrors('unloadAddress')}" th:errors="*{unloadAddress}">Address error</p>
 	</div>
+
 	<p th:text="#{userCabinetResOrder.distance}"></p>
 	<p><input type="text" name="distanceD" disabled th:value="${session.distanceD}"/></p>
 	<p th:text="#{userCabinetResOrder.weight}"></p>
@@ -51,12 +57,12 @@
 	<p><input type="text" name="volume" disabled th:value="${session.volume}"/></p>
 	<p th:text="#{userCabinetResOrder.fare}"></p>
 	<p><input type="text" name="fare" disabled th:value="${session.totalMoney}"/></p>
-<!-- 	<p><input type="hidden" name="cmd" value="ResumeOrder"/></p> -->
-<!-- 	<p><input type="hidden" name="goTo" value="auth_user/cabinet.jsp"></p> -->
+
 	<p><button type="submit" ><span th:text="#{userCabinetResOrder.sendOrder}"></span></button></p> 
 </form>
 </div>
 </div>
-
+<th:block th:include="@{/_footer_guest}">
+</div>
 </body>
 </html>

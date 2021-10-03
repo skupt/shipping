@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+	<link rel="stylesheet" href="/css/bootstrap.min.css"/>         
+	<script src="/js/bootstrap.min.js"></script>       
+
+<title th:text="#{invoicesUser.title}"/></title>
+</head>
+<body>
+<div class="container">
+
+<th:block th:include="/auth_user/_menu_user"/>
+
+<h1 th:text="#{invoicesUser.header}"/></h1>
+
+<div th:if="${session.invoices == null}" th:with="invoices=${session.pageInvoiceToPay.nextPage()}">
+</div>	
+<form name="invoicesUserForm" action="/auth_user/invoices_of_user" th:method="POST">
+<table class="table">
+<thead>
+<tr>
+<th th:text="#{invoicesUser.date}"/></th>
+<th th:text="#{invoicesUser.person}"/></th>
+<th th:text="#{invoicesUser.type}"/></th>
+<th th:text="#{invoicesUser.sum}"/></th>
+<th th:text="#{invoicesUser.mark}"/></th>
+</tr>
+</thead>
+
+	<tr th:if="${session.invoices.size() > 0}" th:each="inv : ${session.invoices}">
+		<td th:text="${inv.getCreationDateTime()}"></td>
+		<td th:text="${inv.getPerson().getSurname() + ' ' + inv.getPerson().getName()}"></td>
+		<td th:text="${inv.getInvoiceStatus().getName()}"></td>
+		<td th:text="${inv.getSum()}"></td>
+		<td><input type="radio" name="invoiceId" th:value="${inv.getId()}" required /></td>
+	</tr>
+</table>
+<p th:if="${session.invoices.size() == 0}" th:text="#{invoicesUser.noInvoices}"></p>
+<p>
+<button type="submit" name="cmd" value="InvoiceUserPay" th:text="#{invoicesUser.Pay}"/></button>
+</p>
+<a href="/auth_user/invoices_of_user?cmd=prevPage" th:text="#{common.prevPage}"/></a>
+<span th:text="${session.pageNum}">page number</span>
+<a href="/auth_user/invoices_of_user?cmd=nextPage" th:text="#{common.nextPage}"/></a>
+</form>
+</div>
+</body>
+</html>

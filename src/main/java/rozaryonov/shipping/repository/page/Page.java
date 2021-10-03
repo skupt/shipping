@@ -41,6 +41,7 @@ public class Page <T, R extends Pageable<T>>{
 	private int curPageNum = 0;
 	private List<T> daoList = null;
 	private int totalRows = 1;
+	private int totalPages = 0;
 	
 	@SuppressWarnings("unused")
 	private Page() {}
@@ -64,8 +65,13 @@ public class Page <T, R extends Pageable<T>>{
 	public void init() {
 		daoList = repo.findFilterSort(after, before, predicat, comparator);
 		totalRows = daoList.size();
-		
+		if ((totalRows % rowsOnPage) != 0) {
+			totalPages = totalRows / rowsOnPage + 1;
+		} else {
+			totalPages = totalRows / rowsOnPage;
+		}
 	}
+
 	public List<T> nextPage() {
 		if (daoList==null) return new ArrayList<T>();
 		if (daoList.size()==0) return daoList;
@@ -137,5 +143,14 @@ public class Page <T, R extends Pageable<T>>{
 	public int getCurPageNum() {
 		return curPageNum;
 	}
+
+	public int getTotalRows() {
+		return totalRows;
+	}
+
+	public int getTotalPages() {
+		return totalPages;
+	}
+	
 
 }

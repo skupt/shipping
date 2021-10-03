@@ -20,12 +20,6 @@
 		<p th:text="#{userCabinet.bakcToCabinet}"><fmt:message key="" /></p>
 		<p><a th:href="@{/auth_user/cabinet}" class="btn btn-primary btn-lg" role="button" th:text="#{userCabinet.Back}"></a></p>
 </div>
-<div>
-<p th:text="${person.getName()}"></p>
-<p th:text="${person.login}"></p>
-<p th:text="#{common.balance}"></p>
-<p th:text="${balance}"></p>
-</div>
 
 		<th:block th:include="@{_footer_guest}"></th:block>
 

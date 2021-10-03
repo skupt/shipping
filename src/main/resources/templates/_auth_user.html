@@ -1,0 +1,7 @@
+<a th:href="@{/}" th:if="${session.person != null}">
+<span th:text="#{common.balance}"></span>
+(
+<span th:text="${session.person.login}"></span>
+): 
+<span th:text="${session.balance}"></span>
+</a>

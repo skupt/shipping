@@ -1,5 +1,3 @@
-<div xmlns:th="http://www.thymeleaf.org">
-
 		<nav class="navbar navbar-default">
 			<div class="container-fluid">
 				<!-- Brand and toggle get grouped for better mobile display -->
@@ -10,35 +8,31 @@
 							class="icon-bar"></span> <span class="icon-bar"></span> <span
 							class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="/index">MDS</a>
+					<a class="navbar-brand" th:href="@{/index}">MDS</a>
 				</div>
 
 				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="collapse navbar-collapse"
 					id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
-						<li><a th:href="@{/index}" th:text="#{index.title}"><span class="sr-only">(current)</span></a></li>
-						<li><a th:href="@{/costs}" th:text="#{index.linkCostCalc}"></span></a></li>
-						<li><a th:href="@{/tariffs}" th:text="#{index.linkTariffs}"></a></li>
-						<li><a th:href="@{/login}" th:text="#{index.linkLogin}"></a></li>
-						<li><a th:if="${#request.userPrincipal != null}" th:href="@{/logout}" th:text="#{index.linkLogout}"></a></li>
-						<li><a th:href="@{/new}" th:text="#{index.linkRegister}"></a></li>
+						<li><a th:href="@{/manager/create_invoices}" th:text="#{managerCabinet.createInvoices}"></a></li>
+						<li><a th:href="@{/manager/payments}" th:text="#{managerCabinet.addPayments}"></a></li>
+						<li><a th:href="@{/manager/finish_shippings}" th:text="#{managerCabinet.finishShipping}"></a></li>
+						<li><a th:href="@{/manager/report_day}" th:text="#{managerCabinet.showDayReport}"></a></li>
+						<li><a th:href="@{/manager/report_direction}" th:text="#{managerCabinet.showDirectionReport}"></a></li>
+						<li><a th:href="@{/logout}" th:text="#{index.linkLogout}"></a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
-						<li>
-							<th:block th:include="/_auth_user"></th:block>
-							
-						</li>
-						<li>
+					<li>
 							<a th:href="${#httpServletRequest.getRequestURI} + '?lang=en_US'"><span th:text="#{lang.eng}"></span></a>
-						</li>
-						<li>
+					</li>
+					<li>
 							<a th:href="${#httpServletRequest.getRequestURI  + '?lang=ru_RU'}"><span th:text="#{lang.ru}"></span></a>
-						</li>
-					</ul>
+					</li>
+					
+				</ul>
 				</div>
 				<!-- /.navbar-collapse -->
 			</div>
 			<!-- /.container-fluid -->
 		</nav>
-</div>

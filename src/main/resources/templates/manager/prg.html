@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/css/bootstrap.min.css"/>         
+<script src="/js/bootstrap.min.js"></script>       
+
+<title>Message</title>
+</head>
+<body>
+<div class="container">
+	<div class="jumbotron">
+		<h1 th:text="#{prg.inf}"></h1>
+		<div class="alert alert-info" role="alert">
+			<p  th:text="#{${session.message}}"></p>
+			<a class="btn btn-primary btn-lg" th:href="${session.goTo}" th:text="#{prg.goBack}"></a>
+		</div>
+	</div>
+</div>
+</body>
+</html>

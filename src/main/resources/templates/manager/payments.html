@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+	<link rel="stylesheet" href="../css/bootstrap.min.css"/>         
+	<script src="../js/bootstrap.min.js"></script>       
+
+<!-- DateTimePicker -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker-standalone.css" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker-standalone.min.css" />
+    <script data-require="jquery@3.1.1" data-semver="3.1.1" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script data-require="MomentJS@2.10.0" data-semver="2.10.0" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript">
+ 		$(function() {
+			$('#datetimepicker1').datetimepicker();
+		});
+ 	</script>
+<!-- DateTimePicker -->
+
+<title th:text="#{payments.title}"></title>
+</head>
+
+<body>
+<div class="container">
+<th:block th:include="@{/manager/_menu_manager_inner}"></th:block>
+<nav>
+	<a class="btn btn-default navbar-btn" href="/manager/cabinet" th:text="#{common.goCabinet}"></a>
+	<a class="btn btn-default navbar-btn" th:href="@{/logout}" th:text="#{index.linkLogout}"></a>
+</nav>
+
+
+<h1 th:text="#{payments.header}"></h1>
+
+<form name="shippingForm" action="/manager/payments" method="post" th:object="${settlements}">
+<table class="table">
+<tr>
+<th scope="col" th:text="#{payments.date}"></th>
+<th scope="col" th:text="#{payments.person}"></th>
+<th scope="col" th:text="#{payments.type}"></th>
+<th scope="col" th:text="#{payments.amount}"></th>
+<th scope="col" th:text="#{payments.mark}"></th>
+</tr>
+<!-- Data rows -->
+	<tr th:if="${session.settlementsList != null}" th:each="st : ${session.settlementsList}">
+		<td th:utext="${st.getCreationDatetime()}"></td>
+		<td th:utext="${st.getPerson().getSurname() + ' ' + st.getPerson().getName()}"></td>
+		<td th:utext="${st.getSettlementType().getName()}"></td>
+		<td th:utext="${st.getAmount()}"></td>
+		<td><input type="checkbox" name="settlementId" th:value="${st.getId()}"></td>
+	</tr>
+
+<!-- Input raw -->
+	<tr>
+		<td>
+<!-- DateTimePicker -->
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="form-group">
+          <div class="input-group date" id="datetimepicker1">
+            <input type="text" name="creationDatetime" th:field="*{creationDatetime}" required class="form-control" />
+            <span th:if="${#fields.hasErrors('creationDatetime')}" th:errors="*{creationDatetime}"></span>
+            
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+		</td>
+		<td>
+			<select name="person" >
+					<option th:each="person : ${session.persons}" th:value="${person.getId()}" th:text="${person.getSurname() + ' ' + person.getName()}"></option>
+			</select>
+			<span th:if="${#fields.hasErrors('personId')}" th:errors="*{personId}"></span>
+			
+		</td>
+		<td th:text="#{payments.payment}"></td>
+		<td><input type="number" name="amount" th:field="*{amount}">
+			<span th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></span>
+		</td>
+		
+		<td><button type="submit" name="cmd" value="PaymentsInsert" th:text="#{payments.insertNew}"/></button></td>
+	</tr>
+</table>
+</form>
+<p>
+	<a href="/manager/payments?cmd=prevPage" th:text="#{payments.prevPage}"></a>
+	<span th:text="${session.pageNum + ' of ' + session.pageTotal}"></span>
+	<a href="/manager/payments?cmd=nextPage" th:text="#{payments.nextPage}"></a>
+</p>
+</div>
+</body>
+</html>

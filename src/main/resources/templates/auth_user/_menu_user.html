@@ -17,18 +17,16 @@
 				<div class="collapse navbar-collapse"
 					id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
-						<li><button type="submit" form="formMenu" formmethod="post" name="cmd" class="btn btn-default navbar-btn" value="InvoiceUserEnter" th:text="#{userCabinet.invoicesUserLink}"></li>
-						<li><button type="submit" form="formMenu" formmethod="post" name="cmd" class="btn btn-default navbar-btn" value="OrderUserResumeEnter" th:text="#{userCabinet.resumeOrderLink}"></li>
-						<li><button type="submit" form="formMenu" formmethod="get" formaction="/delivery/costs.jsp" class="btn btn-default navbar-btn" th:text="#{userCabinet.costCalculation}"></li>
-						<li><a  th:href="@{/Controller?cmd=Logout}" th:text="userCabinet.linkLogout"></a></li>
+						<li><a th:href="@{invoices_of_user}" th:text="#{userCabinet.invoicesUserLink}"></a></li>
+						<li><a th:href="@{shippings_new}" th:text="#{userCabinet.resumeOrderLink}"></a></li>
+						<li><a th:href="@{/costs}" th:text="#{userCabinet.costCalculation}"></a></li>
+						<li><a th:href="@{/logout}" th:text="#{userCabinet.linkLogout}"></a></li>
 						<li></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 					<li>
-						<button type="button" class="btn btn-default navbar-btn" >
-						<span th:text="${session.person.getName() + ' (' + session.person.getLogin() + '), '  + session.balance}"></span>
-						</button>	
-						<!-- + #common.balance + ': ' -->
+						<th:block th:include="/_auth_user"></th:block>
+						
 					</li>
 					<li>
 							<a th:href="${#httpServletRequest.getRequestURI} + '?lang=en_US'"><span th:text="#{lang.eng}"></span></a>

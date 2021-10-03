@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.Positive;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,6 +27,7 @@ public class Settlements {
 	@ManyToOne
 	@JoinColumn(name = "settlment_type_id",  foreignKey = @ForeignKey(name = "fk_settlements_settlment_type1"))
 	private SettlementType settlementType;
+	@Positive
 	private BigDecimal amount;
 	
 }

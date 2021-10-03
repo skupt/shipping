@@ -6,17 +6,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import rozaryonov.shipping.model.Person;
+import rozaryonov.shipping.repository.PersonRepository;
 import rozaryonov.shipping.service.PersonService;
 
 @RestController
 @RequiredArgsConstructor
 public class PersonRestController {
-	
+	private final PersonRepository personRepository;
 	private final PersonService personService;
 	
 	@GetMapping ("/personJsonList")
 	public Iterable<Person> transferPersonList () {
-		return personService.findAll();
+		return personRepository.findAll();
 	}
 	
 	@GetMapping ("/personByName/{name}")

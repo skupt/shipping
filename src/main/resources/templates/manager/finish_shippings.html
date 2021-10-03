@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+	<link rel="stylesheet" href="../css/bootstrap.min.css"/>         
+	<script src="../js/bootstrap.min.js"></script>       
+
+<title th:text="#{finishShippings.title}"></title>
+</head>
+<body>
+<div class="container">
+<th:block th:include="@{/manager/_menu_manager_inner}"></th:block>
+
+<h1 th:text="#{finishShippings.header}"/></h1>
+<form name="shippingForm2" action="/manager/finish_shippings" method="post" th:object="${shippingDto}" th:if="${(session.shippingListFinish != null)}">
+<table class="table">
+<thead>
+<tr>
+<th scope="col" th:text="#{finishShippings.Date}"></th>
+<th scope="col" th:text="#{finishShippings.Person}"></th>
+<th scope="col" th:text="#{finishShippings.Load}"></th>
+<th scope="col" th:text="#{finishShippings.Unload}"></th>
+<th scope="col" th:text="#{finishShippings.Fare}"></th>
+<th scope="col" th:text="#{finishShippings.Status}"></th>
+<th scope="col" th:text="#{finishShippings.Mark}">
+</th>
+</tr>
+</thead>	
+	<tr th:each="s : ${session.shippingListFinish}">
+		<td th:text="${s.getCreationTimestamp()}"></td>
+		<td th:text="${s.getPerson().getName()}"></td>
+		<td th:text="${s.getLoadLocality().getName()}"></td>
+		<td th:text="${s.getUnloadLocality().getName()}"></td>
+		<td th:text="${s.getFare()}"></td>
+		<td th:text="${s.getShippingStatus().getName()}"></td>
+		<td>
+			<input type="checkbox" name="shippingId" th:value="${s.getId()}"  th:field="*{shippingId}"/>
+			<span th:if="${#fields.hasErrors('shippingId')}" th:errors="*{shippingId}"></span>
+			
+		</td>
+	</tr>
+<tr th:if="${session.shippingListFinish.size() == 0}" th:text="#{finishShippings.noNewShippings}"></tr>
+</table>
+<div>
+	<input th:type="date" name="unloadDate" required  th:field="*{unloadDate}" th:id="unloadDate"/>
+    <span th:if="${#fields.hasErrors('unloadDate')}" th:errors="*{unloadDate}"></span>
+	<button type="submit" class="btn btn-primary btn-lg" name="cmd" value="FinishShippings" th:text="#{finishShippings.finishShippings}"></button>
+</div>
+</form>
+<a href="/manager/finish_shippings?cmd=prevPage" th:text="#{finishShippings.prevPage}"></a>
+	<span th:text="${(session.pageShippingFinish.getNumber()+1) + ' of ' + (session.pageShippingFinish.getTotalPages())}"></span>
+<a href="/manager/finish_shippings?cmd=nextPage" th:text="#{finishShippings.nextPage}"/></a>
+
+</div>
+</body>
+</html>
