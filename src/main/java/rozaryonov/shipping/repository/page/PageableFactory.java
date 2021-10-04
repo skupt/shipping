@@ -17,11 +17,11 @@ import rozaryonov.shipping.model.Shipping;
 import rozaryonov.shipping.model.Tariff;
 import rozaryonov.shipping.exception.DaoException;
 import rozaryonov.shipping.repository.ShippingRepository;
+import rozaryonov.shipping.repository.reportable.DayReport;
+import rozaryonov.shipping.repository.reportable.DirectionReport;
 import rozaryonov.shipping.service.InvoiceService;
 import rozaryonov.shipping.service.SettlementsService;
 import rozaryonov.shipping.service.TariffService;
-//import rozaryonov.shipping.repository.reportable.DayReport;
-//import rozaryonov.shipping.repository.reportable.DirectionReport;
 
 @Component
 @RequiredArgsConstructor
@@ -30,6 +30,9 @@ public class PageableFactory {
 	private final TariffService tariffService;
 	private final InvoiceService invoiceService;
 	private final SettlementsService settlementsService;
+	private final DayReportRepo dayReportRepo;
+	private final DirectionReportRepo directionReportRepo;
+	
 	
 	
 //	public Page<Shipping, ShippingRepository> getPageableForInvoiceCreationPage(int rowsOnPage) {
@@ -95,24 +98,22 @@ public class PageableFactory {
 		 return page;
 	}
 	
-//	public Page<DayReport, DayReportRepo> getPageableForManagerDayReport (int rowsOnPage) {
-//		 DayReportRepo repo = new DayReportRepo(connection);
-//		 Page<DayReport, DayReportRepo> page = new Page<>(repo, Comparator.comparing((DayReport r) -> r.getIndex()));
-//		 //page.setPredicat((Invoice e)-> (e.getInvoiceStatus().getId()==1)&&(e.getPerson().getId()==person.getId()));
-//		 page.init();
-//
-//		 return page;
-//	}
-//
-//	public Page<DirectionReport, DirectionReportRepo> getPageableForManagerDirectionReport (int rowsOnPage) {
-//		 DirectionReportRepo repo = new DirectionReportRepo(connection);
-//		 Page<DirectionReport, DirectionReportRepo> page = new Page<>(repo, Comparator.comparing((DirectionReport r) -> r.getIndex()));
-//		 //page.setPredicat((Invoice e)-> (e.getInvoiceStatus().getId()==1)&&(e.getPerson().getId()==person.getId()));
-//		 page.init();
-//
-//		 return page;
-//	}
-//
+	public Page<DayReport, DayReportRepo> getPageableForManagerDayReport (int rowsOnPage) {
+		 Page<DayReport, DayReportRepo> page = new Page<>(dayReportRepo, Comparator.comparing((DayReport r) -> r.getIndex()));
+		 page.setRowsOnPage(rowsOnPage);
+		 page.init();
+
+		 return page;
+	}
+
+	public Page<DirectionReport, DirectionReportRepo> getPageableForManagerDirectionReport (int rowsOnPage) {
+		 Page<DirectionReport, DirectionReportRepo> page = new Page<>(directionReportRepo, Comparator.comparing((DirectionReport r) -> r.getIndex()));
+		 page.setRowsOnPage(rowsOnPage);
+		 page.init();
+
+		 return page;
+	}
+
 //
 //	
 //	

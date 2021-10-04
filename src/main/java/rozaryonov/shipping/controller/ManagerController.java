@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.catalina.startup.ClassLoaderFactory.Repository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
@@ -42,6 +43,10 @@ import rozaryonov.shipping.repository.InvoiceRepository;
 import rozaryonov.shipping.repository.InvoiceStatusRepository;
 import rozaryonov.shipping.repository.ShippingRepository;
 import rozaryonov.shipping.repository.ShippingStatusRepository;
+import rozaryonov.shipping.repository.page.DayReportRepo;
+import rozaryonov.shipping.repository.page.DirectionReportRepo;
+import rozaryonov.shipping.repository.reportable.DayReport;
+import rozaryonov.shipping.repository.reportable.DirectionReport;
 import rozaryonov.shipping.service.ManagerService;
 import rozaryonov.shipping.service.SettlementsService;
 
@@ -56,6 +61,7 @@ public class ManagerController {
 	private final InvoiceStatusRepository invoiceStatusRepository;
 	private final InvoiceRepository invoiceRepository;
 	private final ShippingStatusRepository shippingStatusRepository;
+	private final rozaryonov.shipping.repository.page.PageableFactory pageableFactory;
 
 	@GetMapping("/cabinet")
 	public String cabinet() {
@@ -98,6 +104,66 @@ public class ManagerController {
 	@PostMapping("/finish_shippings")
 	public String finishShippings(@ModelAttribute("shippingDto") @Valid ShippingToFinishDto shippingDto, BindingResult bindingResult, HttpServletRequest request, HttpSession session) {
 		return managerService.finishShippings(shippingDto, bindingResult, request, session);
+	}
+	
+	@GetMapping("/report_day")
+	public String reportDay(HttpSession session, HttpServletRequest request) {
+		rozaryonov.shipping.repository.page.Page<DayReport, DayReportRepo> pageDayReport = null;
+		List<DayReport> reportDayList = null;
+		String cmd = request.getParameter("cmd");
+		if (cmd != null) {
+			switch (cmd) {
+			case "prevPage":
+				pageDayReport = (rozaryonov.shipping.repository.page.Page<DayReport, DayReportRepo>) session.getAttribute("pageDayReport");
+				reportDayList  = pageDayReport.prevPage();
+				session.setAttribute("pageDayReport", pageDayReport);
+				session.setAttribute("reportDayList", reportDayList);
+				break;
+			case "nextPage":
+				pageDayReport = (rozaryonov.shipping.repository.page.Page<DayReport, DayReportRepo>) session.getAttribute("pageDayReport");
+				reportDayList  = pageDayReport.nextPage();
+				session.setAttribute("pageDayReport", pageDayReport);
+				session.setAttribute("reportDayList", reportDayList);
+				break;
+			}
+		} else {
+			pageDayReport = pageableFactory.getPageableForManagerDayReport(3);
+			reportDayList = pageDayReport.nextPage();
+			session.setAttribute("pageDayReport", pageDayReport);
+			session.setAttribute("reportDayList", reportDayList);
+		}
+		
+		return "/manager/report_day";
+	}
+	
+	@GetMapping("/report_direction")
+	public String reportDirection(HttpSession session, HttpServletRequest request) {
+		rozaryonov.shipping.repository.page.Page<DirectionReport, DirectionReportRepo> pageDirectionReport = null;
+		List<DirectionReport> reportDirectionList = null;
+		String cmd = request.getParameter("cmd");
+		if (cmd != null) {
+			switch (cmd) {
+			case "prevPage":
+				pageDirectionReport = (rozaryonov.shipping.repository.page.Page<DirectionReport, DirectionReportRepo>) session.getAttribute("pageDirectionReport");
+				reportDirectionList  = pageDirectionReport.prevPage();
+				session.setAttribute("pageDirectionReport", pageDirectionReport);
+				session.setAttribute("reportDirectionList", reportDirectionList);
+				break;
+			case "nextPage":
+				pageDirectionReport = (rozaryonov.shipping.repository.page.Page<DirectionReport, DirectionReportRepo>) session.getAttribute("pageDirectionReport");
+				reportDirectionList  = pageDirectionReport.nextPage();
+				session.setAttribute("pageDirectionReport", pageDirectionReport);
+				session.setAttribute("reportDirectionList", reportDirectionList);
+				break;
+			}
+		} else {
+			pageDirectionReport = pageableFactory.getPageableForManagerDirectionReport(3);
+			reportDirectionList = pageDirectionReport.nextPage();
+			session.setAttribute("pageDirectionReport", pageDirectionReport);
+			session.setAttribute("reportDirectionList", reportDirectionList);
+		}
+		
+		return "/manager/report_direction";
 	}
 	
 	

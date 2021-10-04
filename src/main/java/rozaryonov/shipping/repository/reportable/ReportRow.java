@@ -1,4 +1,4 @@
-package rozaryonov.shipping.repository.page;
+package rozaryonov.shipping.repository.reportable;
 
 public abstract class ReportRow {
 	String index;
