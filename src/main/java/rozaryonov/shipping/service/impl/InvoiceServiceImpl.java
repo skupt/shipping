@@ -86,25 +86,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 		return invoiceList;
 	}
 
-	/*
-	private static final String ROW_AMOUNT = "select count(*) from invoice";
-	@Override
-	public long countRows() {
-		long res=0;
-		try (PreparedStatement ps = connection.prepareStatement(ROW_AMOUNT);) {
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
-				res = rs.getLong(1);
-			}
-		} catch (SQLException e) {
-			logger.error("SQLException while Invoice countRow(). ", e.getMessage());
-			throw new DaoException("SQLException while Invoice countRow().", e);
-		}
-		
-		return res;
-	}
-	*/
-	
+
 
 	
 }

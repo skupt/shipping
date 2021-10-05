@@ -10,12 +10,6 @@ public class EncrytedPasswordUtils {
         return encoder.encode(password);
     }
 
-    // Encryte Password with PasswordEncoder
-    public static String encrytePassword2(String password) {
-        return PasswordEncoder.getHash(password);
-    }
-
-    
     
 
     public static void main(String[] args) {

@@ -30,7 +30,6 @@ public class LogisticNetElementDao {
 		try (PreparedStatement ps = connection.prepareStatement(FIND_ALL);) {
 			ps.setLong(1, netConfigId);
 			ResultSet rs = ps.executeQuery();
-			//LocalityDao locDao = new LocalityDao(connection);
 			while (rs.next()) {
 				LogisticNetElement netElement = new LogisticNetElement();
 				netElement.setCity(localityService.findById(rs.getLong(1)));
@@ -44,15 +43,4 @@ public class LogisticNetElementDao {
 		}
 		return localities;
 	}
-	
-//	public void close() {
-//		if (connection !=null) {
-//			try {
-//				connection.close();
-//			} catch (SQLException e) {
-//				logger.warn(e.getMessage());
-//			}
-//			connection=null;
-//		}
-//	}
 }

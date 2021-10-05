@@ -1,5 +1,7 @@
 package rozaryonov.shipping.model;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
@@ -39,5 +41,6 @@ public class Person {
 	@JoinColumn(name = "role_id",
 			foreignKey = @ForeignKey(name = "fk_person_role1"))
 	private Role role;
+	private BigDecimal balance;
 	
 }

@@ -41,7 +41,7 @@
 <button type="submit" name="cmd" value="InvoiceUserPay" th:text="#{invoicesUser.Pay}"/></button>
 </p>
 <a href="/auth_user/invoices_of_user?cmd=prevPage" th:text="#{common.prevPage}"/></a>
-<span th:text="${session.pageNum}">page number</span>
+<span th:text="${session.pageNum + ' of ' + session.totalPages}">page number</span>
 <a href="/auth_user/invoices_of_user?cmd=nextPage" th:text="#{common.nextPage}"/></a>
 </form>
 </div>

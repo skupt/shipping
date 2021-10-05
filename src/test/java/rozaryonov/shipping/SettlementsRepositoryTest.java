@@ -2,6 +2,7 @@ package rozaryonov.shipping;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -36,8 +37,19 @@ class SettlementsRepositoryTest {
 		}
 		String expected = "1 vasya payment 20000.00\n" + 
 				"2 petya payment 20000.00\n";
-
+		
+		
 		assertEquals(expected, sb.toString());
 	}
 
+	@Test
+	void calcPersonBalanceTest() {
+		BigDecimal b1 = settlementRepository.calcPersonBalance(1L);
+		assertEquals("19500.00", b1.toString());
+
+		BigDecimal b2 = settlementRepository.calcPersonBalance(2L);
+		assertEquals("18500.00", b2.toString());
+
+		
+	}
 }

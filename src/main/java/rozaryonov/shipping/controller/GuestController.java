@@ -1,5 +1,6 @@
 package rozaryonov.shipping.controller;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.Comparator;
 import java.util.List;
@@ -126,6 +127,7 @@ public class GuestController {
 			String passEncoded = passwordEncoder.encode(personDto.getPassword());
 			personDto.setPassword(passEncoded);
 			Person person = mapper.toPerson(personDto);
+			person.setBalance(BigDecimal.ZERO);
 			personRepository.save(person);
 		return "redirect:/";
 	}
@@ -190,40 +192,6 @@ public class GuestController {
 		return "redirect:/";
 	}
 	
-	@RequestMapping(value = { "/welcome" }, method = RequestMethod.GET)
-	public String welcomePage(Model model) {
-		model.addAttribute("title", "Welcome");
-		model.addAttribute("message", "This is welcome page!");
-		return "welcomePage";
-	}
-
-	@RequestMapping(value = "/admin", method = RequestMethod.GET)
-	public String adminPage(Model model, Principal principal) {
-		User loginedUser = (User) ((Authentication) principal).getPrincipal();
-		String userInfo = WebUtils.toString(loginedUser);
-		model.addAttribute("userInfo", userInfo);
-
-		return "adminPage";
-	}
-
-	
-	@RequestMapping(value = "/logoutSuccessful", method = RequestMethod.GET)
-	public String logoutSuccessfulPage(Model model) {
-		model.addAttribute("title", "Logout");
-		return "logoutSuccessfulPage";
-	}
-
-	@RequestMapping(value = "/userInfo", method = RequestMethod.GET)
-	public String userInfo(Model model, Principal principal) {
-		// After user login successfully.
-		String userName = principal.getName();
-		System.out.println("User Name: " + userName);
-		User loginedUser = (User) ((Authentication) principal).getPrincipal();
-		String userInfo = WebUtils.toString(loginedUser);
-		model.addAttribute("userInfo", userInfo);
-
-		return "userInfoPage";
-	}
 
 	@RequestMapping(value = "/403", method = RequestMethod.GET)
 	public String accessDenied(Model model, Principal principal) {

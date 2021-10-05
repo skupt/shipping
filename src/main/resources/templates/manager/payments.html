@@ -44,7 +44,7 @@
 <!-- Data rows -->
 	<tr th:if="${session.settlementsList != null}" th:each="st : ${session.settlementsList}">
 		<td th:utext="${st.getCreationDatetime()}"></td>
-		<td th:utext="${st.getPerson().getSurname() + ' ' + st.getPerson().getName()}"></td>
+		<td th:utext="${st.getPerson().getName() + ' ' + st.getPerson().getLogin()}"></td>
 		<td th:utext="${st.getSettlementType().getName()}"></td>
 		<td th:utext="${st.getAmount()}"></td>
 		<td><input type="checkbox" name="settlementId" th:value="${st.getId()}"></td>

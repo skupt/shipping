@@ -145,6 +145,7 @@ public class AuthUserController {
 						.getAttribute("pageInvoiceToPay");
 				invoices = pageInvoiceToPay.prevPage();
 				session.setAttribute("pageNum", pageInvoiceToPay.getCurPageNum());
+				session.setAttribute("totalPages", pageInvoiceToPay.getTotalPages());
 				session.setAttribute("invoices", invoices);
 				break;
 			case "nextPage":
@@ -152,6 +153,7 @@ public class AuthUserController {
 				.getAttribute("pageInvoiceToPay");
 				invoices = pageInvoiceToPay.nextPage();
 				session.setAttribute("pageNum", pageInvoiceToPay.getCurPageNum());
+				session.setAttribute("totalPages", pageInvoiceToPay.getTotalPages());
 				session.setAttribute("invoices", invoices);
 				break;
 			}
@@ -162,8 +164,8 @@ public class AuthUserController {
 				System.out.println("pageInvoiceToPay " + pageInvoiceToPay);
 			invoices = pageInvoiceToPay.nextPage();
 			session.setAttribute("pageNum", pageInvoiceToPay.getCurPageNum());
+			session.setAttribute("totalPages", pageInvoiceToPay.getTotalPages());
 			session.setAttribute("invoices", invoices);
-			System.out.println("invoices " + invoices);
 
 		}
 
