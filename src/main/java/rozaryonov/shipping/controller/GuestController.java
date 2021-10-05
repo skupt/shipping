@@ -60,53 +60,7 @@ public class GuestController {
 	
 	@GetMapping("/tariffs")
 	public String tariffs(HttpServletRequest request, HttpSession session) {
-		Page<Tariff, TariffService> pageTariffArchive = null;
-		List<Tariff> tariffArchiveList = null;
-		String cmd = request.getParameter("cmd");
-		if (cmd != null) {
-			switch (cmd) {
-			case "TariffArchivePrev":
-				pageTariffArchive = (Page<Tariff, TariffService>) session
-						.getAttribute("pageTariffArchive");
-				tariffArchiveList = pageTariffArchive.prevPage();
-				session.setAttribute("pageNum", pageTariffArchive.getCurPageNum());
-				session.setAttribute("tariffArchiveList", tariffArchiveList);
-				break;
-			case "TariffArchiveNext":
-				pageTariffArchive = (Page<Tariff, TariffService>) session
-						.getAttribute("pageTariffArchive");
-				tariffArchiveList = pageTariffArchive.nextPage();
-				session.setAttribute("pageNum", pageTariffArchive.getCurPageNum());
-				session.setAttribute("tariffArchiveList", tariffArchiveList);
-				break;
-			case "TariffArchiveApply":
-				String sort = request.getParameter("sorting");
-				int filter = Integer.parseInt(request.getParameter("logConf"));
-				// comparator creation
-				Comparator<Tariff> c = null;
-				switch (sort) {
-				case "incr" : c = Comparator.comparing((Tariff t) -> t.getCreationTimestamp()); break;
-				case "decr" : c = Comparator.comparing((Tariff t) -> t.getCreationTimestamp()).reversed(); break;
-				default : c = Comparator.comparing((Tariff t) -> t.getCreationTimestamp()); break;
-				}
-				//Predicetecreation
-				Predicate<Tariff> p = (Tariff t)-> t.getLogisticConfig().getId()==filter;
-				pageTariffArchive = pageableFactory.getPageableForTariffArchive(6, c, p);
-				session.setAttribute("pageTariffArchive", pageTariffArchive);
-				tariffArchiveList = pageTariffArchive.nextPage(); 
-				session.setAttribute("pageNum", pageTariffArchive.getCurPageNum());
-				session.setAttribute("tariffArchiveList", tariffArchiveList);
-				break;
-			}
-		} else {
-			pageTariffArchive = pageableFactory.getPageableForTariffArchive(6, null, null);
-			session.setAttribute("pageTariffArchive", pageTariffArchive);
-			tariffArchiveList = pageTariffArchive.nextPage();
-			session.setAttribute("pageNum", pageTariffArchive.getCurPageNum());
-			session.setAttribute("tariffArchiveList", tariffArchiveList);
-		}
-
-		return "/tariffs";
+		return guestService.tariffs(request, session);
 	}
 	
 	@GetMapping("/new")
@@ -116,30 +70,17 @@ public class GuestController {
 	
 	@PostMapping({"/"})
 	public String createUser(@ModelAttribute ("personDto") @Valid PersonDto personDto, BindingResult bindingResult) {
-			if (bindingResult.hasErrors()) return "/new";
-			FieldError fe = new FieldError("personDto", "login", "Please, choose other login.");
-			if (personService.findByLogin(personDto.getLogin()) != null) {
-				bindingResult.addError(new FieldError("personDto", "login", "Please, choose other login."));
-				return "/new";
-			}
-			// Everything is Ok with user, save him
-			personDto.setRoleId(2l);
-			String passEncoded = passwordEncoder.encode(personDto.getPassword());
-			personDto.setPassword(passEncoded);
-			Person person = mapper.toPerson(personDto);
-			person.setBalance(BigDecimal.ZERO);
-			personRepository.save(person);
-		return "redirect:/";
+		return guestService.createUser(personDto, bindingResult);
 	}
 	
-	@GetMapping("/tariffs?cmd=TariffArchiveNext")
-	public String tariffsNextPage(HttpSession session) {
-		Page<Tariff, TariffService> pageTariffArchive  = (Page<Tariff, TariffService>) session.getAttribute("pageTariffArchive");
-		List<Tariff> tariffArchiveList = pageTariffArchive.nextPage();
-		session.setAttribute("tariffArchiveList", tariffArchiveList);
-
-		return "/tariffs";
-	}
+//	@GetMapping("/tariffs?cmd=TariffArchiveNext")
+//	public String tariffsNextPage(HttpSession session) {
+//		Page<Tariff, TariffService> pageTariffArchive  = (Page<Tariff, TariffService>) session.getAttribute("pageTariffArchive");
+//		List<Tariff> tariffArchiveList = pageTariffArchive.nextPage();
+//		session.setAttribute("tariffArchiveList", tariffArchiveList);
+//
+//		return "/tariffs";
+//	}
 	
 	
 	@GetMapping("/login")
@@ -147,7 +88,7 @@ public class GuestController {
 		return "loginPage";
 	}
 
-	@GetMapping("/cabinet")
+	@GetMapping("/dispatch")
 	public String enterCabinet(Model model, Principal principal, HttpSession session) {
 			Person person = personService.findByLogin((principal.getName()));
 			String page = null;
@@ -205,7 +146,7 @@ public class GuestController {
 			model.addAttribute("message", message);
 		}
 
-		return "403Page";
+		return "/error/403";
 	}
 
 }

@@ -25,4 +25,5 @@ public interface ManagerService {
 	String showFinishShippingsForm (ShippingToFinishDto shippingDto, HttpSession session, HttpServletRequest request);
 	String finishShippings(ShippingToFinishDto shippingDto, BindingResult bindingResult, HttpServletRequest request, HttpSession session);
 	
+	boolean isManager(HttpSession session); 
 }

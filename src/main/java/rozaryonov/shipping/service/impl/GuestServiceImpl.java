@@ -1,24 +1,42 @@
 package rozaryonov.shipping.service.impl;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
+import java.util.function.Predicate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import lombok.RequiredArgsConstructor;
+import rozaryonov.shipping.dto.PersonDto;
 import rozaryonov.shipping.model.Locality;
+import rozaryonov.shipping.model.Mapper;
+import rozaryonov.shipping.model.Person;
+import rozaryonov.shipping.model.Tariff;
+import rozaryonov.shipping.repository.PersonRepository;
+import rozaryonov.shipping.repository.page.Page;
+import rozaryonov.shipping.repository.page.PageableFactory;
 import rozaryonov.shipping.service.GuestService;
 import rozaryonov.shipping.service.LocalityService;
 import rozaryonov.shipping.service.LogisticNetElementService;
+import rozaryonov.shipping.service.PersonService;
 import rozaryonov.shipping.service.PropertyService;
 import rozaryonov.shipping.service.TariffService;
 
@@ -31,6 +49,11 @@ public class GuestServiceImpl implements GuestService {
 	private final LogisticNetElementService logisticNetElementService;
 	private final TariffService tariffService;
 	private final LocalityService localityService;
+	private final PageableFactory pageableFactory;
+	private final PersonService personService;
+	private final BCryptPasswordEncoder passwordEncoder;
+	private final Mapper mapper;
+	private final PersonRepository personRepository;
 	
 	
 	@Override
@@ -116,5 +139,74 @@ public class GuestServiceImpl implements GuestService {
 		}
 		return "/delivery_cost";
 	}
+	
+	@Override
+	public String tariffs(HttpServletRequest request, HttpSession session) {
+		Page<Tariff, TariffService> pageTariffArchive = null;
+		List<Tariff> tariffArchiveList = null;
+		String cmd = request.getParameter("cmd");
+		if (cmd != null) {
+			switch (cmd) {
+			case "TariffArchivePrev":
+				pageTariffArchive = (Page<Tariff, TariffService>) session
+						.getAttribute("pageTariffArchive");
+				tariffArchiveList = pageTariffArchive.prevPage();
+				session.setAttribute("pageNum", pageTariffArchive.getCurPageNum());
+				session.setAttribute("tariffArchiveList", tariffArchiveList);
+				break;
+			case "TariffArchiveNext":
+				pageTariffArchive = (Page<Tariff, TariffService>) session
+						.getAttribute("pageTariffArchive");
+				tariffArchiveList = pageTariffArchive.nextPage();
+				session.setAttribute("pageNum", pageTariffArchive.getCurPageNum());
+				session.setAttribute("tariffArchiveList", tariffArchiveList);
+				break;
+			case "TariffArchiveApply":
+				String sort = request.getParameter("sorting");
+				int filter = Integer.parseInt(request.getParameter("logConf"));
+				// comparator creation
+				Comparator<Tariff> c = null;
+				switch (sort) {
+				case "incr" : c = Comparator.comparing((Tariff t) -> t.getCreationTimestamp()); break;
+				case "decr" : c = Comparator.comparing((Tariff t) -> t.getCreationTimestamp()).reversed(); break;
+				default : c = Comparator.comparing((Tariff t) -> t.getCreationTimestamp()); break;
+				}
+				//Predicetecreation
+				Predicate<Tariff> p = (Tariff t)-> t.getLogisticConfig().getId()==filter;
+				pageTariffArchive = pageableFactory.getPageableForTariffArchive(6, c, p);
+				session.setAttribute("pageTariffArchive", pageTariffArchive);
+				tariffArchiveList = pageTariffArchive.nextPage(); 
+				session.setAttribute("pageNum", pageTariffArchive.getCurPageNum());
+				session.setAttribute("tariffArchiveList", tariffArchiveList);
+				break;
+			}
+		} else {
+			pageTariffArchive = pageableFactory.getPageableForTariffArchive(6, null, null);
+			session.setAttribute("pageTariffArchive", pageTariffArchive);
+			tariffArchiveList = pageTariffArchive.nextPage();
+			session.setAttribute("pageNum", pageTariffArchive.getCurPageNum());
+			session.setAttribute("tariffArchiveList", tariffArchiveList);
+		}
 
+		return "/tariffs";
+	}
+
+	@Override
+	@Transactional
+	public String createUser(@ModelAttribute ("personDto") @Valid PersonDto personDto, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) return "/new";
+		FieldError fe = new FieldError("personDto", "login", "Please, choose other login.");
+		if (personService.findByLogin(personDto.getLogin()) != null) {
+			bindingResult.addError(new FieldError("personDto", "login", "Please, choose other login."));
+			return "/new";
+		}
+		// Everything is Ok with user, save him
+		personDto.setRoleId(2l);
+		String passEncoded = passwordEncoder.encode(personDto.getPassword());
+		personDto.setPassword(passEncoded);
+		Person person = mapper.toPerson(personDto);
+		person.setBalance(BigDecimal.ZERO);
+		personRepository.save(person);
+		return "redirect:/";
+	}
 }

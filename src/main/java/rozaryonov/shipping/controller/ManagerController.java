@@ -64,7 +64,8 @@ public class ManagerController {
 	private final rozaryonov.shipping.repository.page.PageableFactory pageableFactory;
 
 	@GetMapping("/cabinet")
-	public String cabinet() {
+	public String cabinet (HttpSession session) {
+		if (!managerService.isManager(session)) return "redirect:/";
 		return "/manager/cabinet"; 
 	}
 	
@@ -76,18 +77,21 @@ public class ManagerController {
 	
 	@GetMapping("/payments")
 	public String paymentsShow (@ModelAttribute("settlements") SettlementsDto settlements, HttpSession session, HttpServletRequest request) {
+		if (!managerService.isManager(session)) return "redirect:/";
 		return managerService.paymentsShow(settlements, session, request);
 	}
 	
 	@PostMapping("/payments")
 	public String paymentsCreate (@ModelAttribute ("settlements") @Valid SettlementsDto settlements, 
 			BindingResult bindingResult, HttpServletRequest request, HttpSession session) {
+		if (!managerService.isManager(session)) return "redirect:/";
 		return managerService.paymentsCreate(settlements, bindingResult, request, session);
 	}
 
 	@SuppressWarnings("unchecked")
 	@GetMapping("/create_invoices")
 	public String showCreateInvoicesForm (HttpSession session, HttpServletRequest request) {
+		if (!managerService.isManager(session)) return "redirect:/";
 		return managerService.showCreateInvoicesForm (session, request);
 	}
 	
@@ -98,16 +102,19 @@ public class ManagerController {
 	
 	@GetMapping("/finish_shippings")
 	public String showFinishShippingsForm (@ModelAttribute("shippingDto") ShippingToFinishDto shippingDto, HttpSession session, HttpServletRequest request) {
+		if (!managerService.isManager(session)) return "redirect:/";
 		return managerService.showFinishShippingsForm (shippingDto, session, request);
 	}
 	
 	@PostMapping("/finish_shippings")
 	public String finishShippings(@ModelAttribute("shippingDto") @Valid ShippingToFinishDto shippingDto, BindingResult bindingResult, HttpServletRequest request, HttpSession session) {
+		if (!managerService.isManager(session)) return "redirect:/";
 		return managerService.finishShippings(shippingDto, bindingResult, request, session);
 	}
 	
 	@GetMapping("/report_day")
 	public String reportDay(HttpSession session, HttpServletRequest request) {
+		if (!managerService.isManager(session)) return "redirect:/";
 		rozaryonov.shipping.repository.page.Page<DayReport, DayReportRepo> pageDayReport = null;
 		List<DayReport> reportDayList = null;
 		String cmd = request.getParameter("cmd");
@@ -138,6 +145,7 @@ public class ManagerController {
 	
 	@GetMapping("/report_direction")
 	public String reportDirection(HttpSession session, HttpServletRequest request) {
+		if (!managerService.isManager(session)) return "redirect:/";
 		rozaryonov.shipping.repository.page.Page<DirectionReport, DirectionReportRepo> pageDirectionReport = null;
 		List<DirectionReport> reportDirectionList = null;
 		String cmd = request.getParameter("cmd");

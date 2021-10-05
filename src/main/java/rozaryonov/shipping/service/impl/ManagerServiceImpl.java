@@ -342,5 +342,11 @@ public class ManagerServiceImpl implements ManagerService {
 		return "redirect:/manager/prg";
 	}
 	
+	public boolean isManager(HttpSession session) {
+		Person person = (Person) session.getAttribute("person");
+		if (person!=null && person.getRole().getName().equals("manager")) return true;
+		return false;
+	}
+	
 	
 }

@@ -45,10 +45,10 @@ class SettlementsRepositoryTest {
 	@Test
 	void calcPersonBalanceTest() {
 		BigDecimal b1 = settlementRepository.calcPersonBalance(1L);
-		assertEquals("19500.00", b1.toString());
+		assertEquals("20000.00", b1.toString());
 
 		BigDecimal b2 = settlementRepository.calcPersonBalance(2L);
-		assertEquals("18500.00", b2.toString());
+		assertEquals("20000.00", b2.toString());
 
 		
 	}

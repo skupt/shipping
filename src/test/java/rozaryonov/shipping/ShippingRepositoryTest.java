@@ -41,13 +41,13 @@ class ShippingRepositoryTest {
 			sb.append(s.getId()).append("; ").append(s.getFare()).append(s.getShippingStatus().getId()).append("\n");
 		}
 		
-		String exp1 = 	"8; 1200.961\n" + 
-						"1; 1345.961\n";
+		String exp1 = 	"1; 1345.961\n" + 
+				"3; 150.201\n";
 		assertEquals(exp1, sb.toString());
 		
-		assertEquals("2", "" + pageTotal);
+		assertEquals("1", "" + pageTotal);
 		
-		assertTrue(hasNext);
+		assertFalse(hasNext);
 		
 	}
 
@@ -77,11 +77,11 @@ class ShippingRepositoryTest {
 		curNumber = ps.getNumber();
 		hasNext = ps.hasNext();
 		
-		String exp1 = 	"3; 150.201\n" + 
-						"7; 1100.961\n";
+		String exp1 = 	"1; 1345.961\n" + 
+				"3; 150.201\n";
 		assertEquals(exp1, sb.toString());
 		
-		assertEquals("1", "" + curNumber);
+		assertEquals("0", "" + curNumber);
 		
 		assertFalse(hasNext);
 		

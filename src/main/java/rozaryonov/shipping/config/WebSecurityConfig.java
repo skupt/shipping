@@ -1,4 +1,4 @@
-package rozaryonov.shipping.security;
+package rozaryonov.shipping.config;
 
 import javax.sql.DataSource;
 
@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import rozaryonov.shipping.service.impl.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -58,12 +60,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/new")
 						.permitAll();
 
-		// /userInfo page requires login as ROLE_USER or ROLE_ADMIN.
-		// If no login, it will redirect to /login page.
-//		http.authorizeRequests().antMatchers(
-//				"/userInfo")
-//						.access("hasAnyRole('user', 'manager')");
-
 		// For MANAGERS only.
 		http.authorizeRequests().antMatchers("/manager*")
 						.access("hasRole('manager')");
@@ -85,7 +81,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.loginPage("/login")
 				
 				//.defaultSuccessUrl("/userAccountInfo")//
-				.defaultSuccessUrl("/cabinet")
+				.defaultSuccessUrl("/dispatch")
 				.failureUrl("/login?error=true")//
 				.usernameParameter("username")//
 				.passwordParameter("password")
@@ -99,6 +95,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().and() //
 				.rememberMe().tokenRepository(this.persistentTokenRepository()) //
 				.tokenValiditySeconds(1 * 24 * 60 * 60); // 24h
+
 
 	}
 

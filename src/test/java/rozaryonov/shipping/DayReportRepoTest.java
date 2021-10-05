@@ -29,7 +29,7 @@ class DayReportRepoTest {
 			sb.append(r.toString()).append("\n");
 		}
 		
-		String expected = "2021-08-23	3647.88\n" + 
+		String expected = "2021-08-23	1345.96\n" + 
 				"2021-09-11	378.0\n";
 		
 		assertEquals(expected, sb.toString());
@@ -66,7 +66,7 @@ class DayReportRepoTest {
 			sb.append(r.toString()).append("\n");
 		}
 		
-		String expected = "2021-08-23	3647.88\n" + 
+		String expected = "2021-08-23	1345.96\n" + 
 				"2021-09-11	378.0\n";
 		
 		assertEquals(expected, sb.toString());
