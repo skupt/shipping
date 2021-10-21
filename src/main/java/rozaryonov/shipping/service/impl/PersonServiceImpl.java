@@ -24,7 +24,7 @@ public class PersonServiceImpl implements PersonService {
 
 	@Override
 	public Person findByLogin(String login) {
-		return personRepository.findByLogin(login).orElse(null);
+		return personRepository.findByLogin(login).orElse(null); //todo here we get Optional
 	}
 
 	

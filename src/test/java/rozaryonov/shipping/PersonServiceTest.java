@@ -36,7 +36,7 @@ class PersonServiceTest {
 
 		personService.calcAndReplaceBalance(1L);
 		//after above balance of user 1 should be 19500.00
-		assertEquals("19500.00", personRepository.findById(1L).orElse(null).getBalance().toString());
+		assertEquals("20000.00", personRepository.findById(1L).orElse(null).getBalance().toString());
 		
 	}
 

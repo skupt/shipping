@@ -22,13 +22,13 @@ import rozaryonov.shipping.service.impl.UserDetailsServiceImpl;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-	@Autowired
+	@Autowired//todo learn autowiring differences
 	private UserDetailsServiceImpl userDetailsService;
 	
 	@Autowired
 	private DataSource dataSource;
 	
-	@Bean
+	@Bean //todo learn bean scopes
 	public BCryptPasswordEncoder passwordEncoder() {
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		return bCryptPasswordEncoder;
@@ -61,8 +61,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						.permitAll();
 
 		// For MANAGERS only.
-		http.authorizeRequests().antMatchers("/manager*")
-						.access("hasRole('manager')");
+		http.authorizeRequests().antMatchers("/manager*").hasRole('ROLE_manager');
+//						.access("hasRole('manager')");
 
 		// For USERS only.
 		http.authorizeRequests().antMatchers(

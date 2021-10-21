@@ -9,7 +9,7 @@ import rozaryonov.shipping.repository.RoleRepository;
 
 @Component
 @RequiredArgsConstructor
-public class Mapper {
+public class Mapper {//todo why it is in a model package? what is 'Mapper'; name correctly
 
 	private final RoleRepository roleRepository;
 	
@@ -24,6 +24,7 @@ public class Mapper {
 		person.setSurname(personDto.getSurname());
 		person.setTitle(personDto.getTitle());
 		person.setRole(roleRepository.findById(personDto.getRoleId()).orElseThrow(()-> new DaoException("No Role with id:"+ personDto.getRoleId())));
+		//todo use Enum for ROLES!!!!!!!! (this can fix your problem with security)
 		
 		return person;
 	}

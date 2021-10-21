@@ -28,7 +28,7 @@ public class TariffServiceImpl implements TariffService {
 	private static Logger logger = LogManager.getLogger();
 
 	private final TariffRepository tariffRepository;
-	private final DataSource dataSource;
+	private final DataSource dataSource;//todo
 	private final LogisticConfigRepository logisticConfigRepository;
 
 	private Connection connection;
@@ -61,7 +61,7 @@ public class TariffServiceImpl implements TariffService {
 		return tariffs.stream().filter(p).sorted(c).collect(Collectors.toList());
 	}
 	
-	private List<Tariff> findAllInPeriod(Timestamp after, Timestamp before) {
+	private List<Tariff> findAllInPeriod(Timestamp after, Timestamp before) {//todo refactor and use repository
 		ArrayList<Tariff> tariffs = new ArrayList<>();
 		try (PreparedStatement ps = connection.prepareStatement(FITER_BY_PERIOD);) {
 			ps.setTimestamp(1, after);

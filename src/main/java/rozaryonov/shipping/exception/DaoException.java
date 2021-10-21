@@ -19,7 +19,7 @@ public class DaoException extends RuntimeException {
 		super(message, cause);
 	}
 
-	public DaoException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+	public DaoException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {//todo don't write extra code
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 

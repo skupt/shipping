@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.PageRequest;
@@ -50,14 +51,20 @@ import rozaryonov.shipping.repository.SettlementsRepository;
 import rozaryonov.shipping.repository.SettlementsTypeRepository;
 import rozaryonov.shipping.repository.ShippingRepository;
 import rozaryonov.shipping.repository.ShippingStatusRepository;
+import rozaryonov.shipping.repository.page.Page;
 import rozaryonov.shipping.repository.page.PageableFactory;
 import rozaryonov.shipping.service.ManagerService;
 import rozaryonov.shipping.service.SettlementsService;
 
 @Service
 @RequiredArgsConstructor
+//todo @Slf4j
+//todo refactor all calsses to clean code (url naming< var naming, method naming, code readibility)
+//todo refactor all calsses to Solid (essentially Single responsibility)
+//todo use ultimate idea and learn its hotkeys (do not use eclipse!)
+
 public class ManagerServiceImpl implements ManagerService {
-	private static Logger logger = LogManager.getLogger();
+	private static Logger logger = LogManager.getLogger();//todo use lombok
 	
 	private final RoleRepository roleRepository;
 	private final PersonRepository personRepository;
@@ -75,11 +82,11 @@ public class ManagerServiceImpl implements ManagerService {
 		rozaryonov.shipping.repository.page.Page<Settlements, SettlementsService> pageSettlementsAddPayment = null;
 		List<Settlements> settlementsList = null;
 		String cmd = request.getParameter("cmd");
-		if (cmd != null) {
-			switch (cmd) {
+		if (cmd != null) {//todo use more gracious way like Optional;
+			switch (cmd) {//todo make code readibility; extrac to small methods
 			case "prevPage":
-				pageSettlementsAddPayment = (rozaryonov.shipping.repository.page.Page<Settlements, SettlementsService>) session
-						.getAttribute("pageSettlementsAddPayment");
+				pageSettlementsAddPayment = (Page<Settlements, SettlementsService>) session//todo
+						.getAttribute("pageSettlementsAddPayment");//todo correct all yellow Idea's code
 				settlementsList = pageSettlementsAddPayment.prevPage();
 				session.setAttribute("pageNum", pageSettlementsAddPayment.getCurPageNum());
 				session.setAttribute("pageTotal", pageSettlementsAddPayment.getTotalPages());
@@ -110,7 +117,7 @@ public class ManagerServiceImpl implements ManagerService {
 		return "/manager/payments";
 	}
 
-	@Transactional
+	@Transactional//todo learn how it works (learn about inside Proxy)
 	@Override
 	public String paymentsCreate (@ModelAttribute ("settlements") SettlementsDto settlements, 
 			BindingResult bindingResult, 
@@ -168,7 +175,7 @@ public class ManagerServiceImpl implements ManagerService {
 
 		org.springframework.data.domain.Page<Shipping> pageShipping = null;
 
-		String cmd = request.getParameter("cmd");
+		String cmd = request.getParameter("cmd");//todo reanme
 		if (cmd != null) {
 			switch (cmd) {
 			case "prevPage":
@@ -197,26 +204,26 @@ public class ManagerServiceImpl implements ManagerService {
 		
 		return "/manager/create_invoices";
 	}
-	
+
 	@Transactional
 	@Override
 	public String createInvoices(HttpServletRequest request) {
 		
 		String[] shippingIds = request.getParameterValues("shippingId");
 		Set<Shipping> setShippings = new HashSet<>();
-		for (String str : shippingIds) {
-			Shipping s = null;
+		for (String shippingId : shippingIds) {//todo naming; learn diff of for loop and foreach; LEARN EMERGENT!!!!!!!!!! //todo renaming hotkey shift+f6
+			Shipping s = null;//todo naming
 			try {
-				s = shippingRepository.findById(Long.parseLong(str))
+				s = shippingRepository.findById(Long.parseLong(shippingId))//todo hotkeyuy ctrl+q for see method info
 						.orElseThrow(() -> new DaoException("No Shipping while CreateInvoices cmd."));
 			} catch (DaoException e) {
-				logger.warn(e.getMessage());
+				logger.warn(e.getMessage());//todo create
 			}
 			setShippings.add(s);
 		}
 		// group shippings by Persons
 		Map<Person, List<Shipping>> personIdShippingsMap = setShippings.stream()
-				.collect(Collectors.groupingBy((Shipping se) -> se.getPerson()));
+				.collect(Collectors.groupingBy((se) -> se.getPerson()));//todo learn how write simplified lamdas
 		// create invoices
 		for (Map.Entry<Person, List<Shipping>> me : personIdShippingsMap.entrySet()) {
 			Invoice inv = new Invoice();
@@ -234,22 +241,22 @@ public class ManagerServiceImpl implements ManagerService {
 			inv.setShippings(shippingSet);
 			// TRANSACTION save each invoice
 			try {
-				// update statuses of shippings
-				for (Shipping shp : shippingSet) {
+				// update statuses of shippings//todo we don't need extra comments; code should be understandable without it; better write docs if it needed;
+				for (Shipping shp : shippingSet) {//todo learn diff of @Transactional and .commit() and . rollback()
 					shippingRepository.save(shp);
 				}
 				// save invoice and it's shippings 
 				invoiceRepository.save(inv);
 				
-			} catch (Exception e) {
-				logger.error(e.getMessage());
+			} catch (Exception e) {//todo is it right way to handle exception????
+				logger.error(e.getMessage());//todo create custom Exceptions; see Spring @ControllerAdvice and use it here. IMPORTANT!
 			}
 		}
 		HttpSession session = request.getSession(true);
 		session.setAttribute("goTo", "/manager/create_invoices");
 		session.setAttribute("message", "prg.invoiceOk");
 
-		return "redirect:/manager/prg";
+		return "redirect:/manager/prg";//todo extract preffix and suffix in app.properties
 	}
 
 
@@ -257,7 +264,7 @@ public class ManagerServiceImpl implements ManagerService {
 	public String showFinishShippingsForm(@ModelAttribute("shippingDto") ShippingToFinishDto shippingDto, HttpSession session, HttpServletRequest request) {
 		
 		ShippingStatus deliveringStatus = new ShippingStatus();
-		deliveringStatus.setId(4L);
+		deliveringStatus.setId(4L);//todo don't use unanderstandable variabels; make constansp; hotkey ctrl+alt+C
 
 		org.springframework.data.domain.Page<Shipping> pageShippingFinish = null;
 
@@ -265,7 +272,7 @@ public class ManagerServiceImpl implements ManagerService {
 		if (cmd != null) {
 			switch (cmd) {
 			case "prevPage":
-				pageShippingFinish = (org.springframework.data.domain.Page<Shipping>) session.getAttribute("pageShippingFinish");
+				pageShippingFinish = (org.springframework.data.domain.Page<Shipping>) session.getAttribute("pageShippingFinish");//todo import
 				if (pageShippingFinish.hasPrevious()) {
 					Pageable pageable = pageShippingFinish.previousPageable();
 					pageShippingFinish = shippingRepository.findAllByShippingStatusOrderByCreationTimestamp(deliveringStatus, pageable);

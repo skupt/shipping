@@ -53,6 +53,8 @@ import rozaryonov.shipping.service.SettlementsService;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/manager/")
+
+//todo in parallel learn Spring and its basics
 public class ManagerController {
 	private static Logger logger = LogManager.getLogger();
 	

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
-public class TestPerson {
+public class TestPerson {//todo remove 'exampels' classes
     private final String firstName;
     private final String lastName;
 }

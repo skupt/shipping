@@ -3,7 +3,7 @@ package rozaryonov.shipping.controller;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.Comparator;
-import java.util.List;
+import java.util.List;   //todo extra imports... use ctrl+alt+O
 import java.util.function.Predicate;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,41 +39,41 @@ import rozaryonov.shipping.service.PersonService;
 import rozaryonov.shipping.service.TariffService;
 import rozaryonov.shipping.utils.WebUtils;
 
-@Controller
-@RequiredArgsConstructor
+@Controller //todo diff with @RestController
+@RequiredArgsConstructor //todo base endpoint name like '.../shipping...'
 public class GuestController {
-	private static Logger logger = LogManager.getLogger();
+	private static Logger logger = LogManager.getLogger();//todo @slf4j
 	
 	private final PersonService personService;
 	private final LocalityService localityService;
 	private final GuestService guestService;
-	private final PageableFactory pageableFactory;
+	private final PageableFactory pageableFactory;//todo clean code! remove extra fields //use spring here
 	private final Mapper mapper;
 	private final PersonRepository personRepository;
 	private final BCryptPasswordEncoder passwordEncoder;
 	
 	
-	@GetMapping({"/", "/index", "/users"})
+	@GetMapping({"/", "/index", "/users"})//todo extract to config
 	public String indexPage () {
 		return "index";
 	}
 	
-	@GetMapping("/tariffs")
+	@GetMapping("/tariffs")//todo correct naming
 	public String tariffs(HttpServletRequest request, HttpSession session) {
 		return guestService.tariffs(request, session);
 	}
 	
-	@GetMapping("/new")
+	@GetMapping("/new")//todo correct naming; READ REST best practices and Richardson Maturity Model! Cannot be 'new' for GetMapping;
 	public String newUser (@ModelAttribute("personDto") PersonDto personDto) {
 		return "/new";
-	}
+	}//todo why we need parameter? what?????
 	
 	@PostMapping({"/"})
 	public String createUser(@ModelAttribute ("personDto") @Valid PersonDto personDto, BindingResult bindingResult) {
 		return guestService.createUser(personDto, bindingResult);
 	}
 	
-//	@GetMapping("/tariffs?cmd=TariffArchiveNext")
+//	@GetMapping("/tariffs?cmd=TariffArchiveNext")//todo remove
 //	public String tariffsNextPage(HttpSession session) {
 //		Page<Tariff, TariffService> pageTariffArchive  = (Page<Tariff, TariffService>) session.getAttribute("pageTariffArchive");
 //		List<Tariff> tariffArchiveList = pageTariffArchive.nextPage();
@@ -88,11 +88,11 @@ public class GuestController {
 		return "loginPage";
 	}
 
-	@GetMapping("/dispatch")
+	@GetMapping("/dispatch")//todo what meaning of it??? rename
 	public String enterCabinet(Model model, Principal principal, HttpSession session) {
-			Person person = personService.findByLogin((principal.getName()));
-			String page = null;
-			if (person != null) {
+			Person person = personService.findByLogin((principal.getName()));//todo here we get Optional
+			String page = null;//todo don't left gray code
+			if (person != null) {//todo use Optional
 				switch (person.getRole().getName()) {
 				case "user" : 
 					model.addAttribute("balance", personService.calcAndReplaceBalance(person.getId()));

@@ -40,7 +40,7 @@ public class Person {
 	@ManyToOne
 	@JoinColumn(name = "role_id",
 			foreignKey = @ForeignKey(name = "fk_person_role1"))
-	private Role role;
+	private Role role;//todo use EnumRole
 	private BigDecimal balance;
 	
 }

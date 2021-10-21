@@ -16,12 +16,12 @@ public class ShippingServiceImpl implements ShippingService {
 	
 	@Override
 	public Shipping findById(Long id) {
-		return shippingRepository.findById(id).orElseThrow(()-> new DaoException("No Shipping with id:" + id));
+		return shippingRepository.findById(id).orElseThrow(()-> new DaoException("No Shipping with id:" + id));//todo use custom exceptions here
 	}
 
 	@Override
 	public Iterable<Shipping> findAll() {
 		return shippingRepository.findAll();
-	}
+	}//todo is it okay return Iterable???
 
 }

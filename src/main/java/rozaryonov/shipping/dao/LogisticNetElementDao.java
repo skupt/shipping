@@ -13,7 +13,7 @@ import rozaryonov.shipping.model.LogisticNetElement;
 import rozaryonov.shipping.service.LocalityService;
 import rozaryonov.shipping.exception.DaoException;
 
-public class LogisticNetElementDao {
+public class LogisticNetElementDao {//todo why not extand AbstractDao
 	private static final String FIND_ALL = "select city_id, neighbor_id, distance, logistic_config_id from logistic_net where logistic_config_id=? order by city_id, neighbor_id;";
 	private static Logger logger = LogManager.getLogger(LogisticNetElementDao.class.getName());
 	private Connection connection;

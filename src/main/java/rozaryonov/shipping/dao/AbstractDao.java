@@ -8,7 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-public abstract class AbstractDao <T, ID> {
+public abstract class AbstractDao <T, ID> {//todo why we do not use it
 	protected Connection connection;
 	protected Logger logger = LogManager.getLogger();
 	
