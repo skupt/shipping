@@ -1,20 +1,14 @@
 package rozaryonov.shipping.config;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import rozaryonov.shipping.service.impl.UserDetailsServiceImpl;
@@ -25,9 +19,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired//todo learn autowiring differences
 	private UserDetailsServiceImpl userDetailsService;
 	
-	@Autowired
-	private DataSource dataSource;
-	
 	@Bean //todo learn bean scopes
 	public BCryptPasswordEncoder passwordEncoder() {
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -36,20 +27,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-
-		// Setting Service to find User in the database.
-		// And Setting PassswordEncoder
 		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
 	}
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		//http.csrf().disable().authorizeRequests().anyRequest().permitAll();
 		
 		http.csrf().disable();
 
-		// The pages does not require login
-		http.authorizeRequests().antMatchers(
+		http
+			.authorizeRequests()
+			.antMatchers(
 				"/", 
 				"/index", 
 				"/cabinet", 
@@ -57,44 +45,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/delivery_cost", 
 				"/login", 
 				"/logout", 
-				"/new")
-						.permitAll();
-
-		// For MANAGERS only.
-		http.authorizeRequests().antMatchers("/manager*").hasRole('ROLE_manager');
-//						.access("hasRole('manager')");
-
-		// For USERS only.
-		http.authorizeRequests().antMatchers(
-				"/auth_user*")
-						.access("hasRole('user')");
-		
-		// When the user has logged in as XX.
-		// But access a page that requires role YY,
-		// AccessDeniedException will be thrown.
-		http.authorizeRequests().and().exceptionHandling().accessDeniedPage("/403");
-
-		// Config for Login Form
-		http.authorizeRequests().and().formLogin()//
-				// Submit URL of login page.
-				.loginProcessingUrl("/j_spring_security_check") // Submit URL
-				.loginPage("/login")
-				
-				//.defaultSuccessUrl("/userAccountInfo")//
-				.defaultSuccessUrl("/dispatch")
-				.failureUrl("/login?error=true")//
-				.usernameParameter("username")//
-				.passwordParameter("password")
-				
-				// Config for Logout Page
-				.and().logout().
-				logoutUrl("/logout").
-				logoutSuccessUrl("/");
-
-		// Config Remember Me.
-		http.authorizeRequests().and() //
-				.rememberMe().tokenRepository(this.persistentTokenRepository()) //
-				.tokenValiditySeconds(1 * 24 * 60 * 60); // 24h
+				"/new",
+				"/error/*").permitAll()
+			.antMatchers("/manager/*").hasRole("MANAGER")
+			.antMatchers("/auth_user/*").hasRole("USER")
+			.and()
+		.exceptionHandling()
+			.accessDeniedPage("/error/403")
+			.and()
+		.formLogin()
+			.loginPage("/login")
+			.loginProcessingUrl("/j_spring_security_check")
+			.defaultSuccessUrl("/dispatch")
+			.failureUrl("/login?error=true")
+			.usernameParameter("username")
+			.passwordParameter("password")
+			.and()
+		.logout()
+			.logoutUrl("/logout")
+			.clearAuthentication(true)
+			.logoutSuccessUrl("/")
+			.and()
+		.rememberMe()
+			.tokenRepository(this.persistentTokenRepository())
+			.tokenValiditySeconds(1 * 24 * 60 * 60);
 
 
 	}

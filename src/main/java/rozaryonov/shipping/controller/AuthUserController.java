@@ -24,13 +24,13 @@ public class AuthUserController {
 	
 	@GetMapping("/cabinet")
 	public String cabinet(HttpSession session) {
-		if (!authUserService.isAuthUser(session)) return "redirect:/";
+		//if (!authUserService.isAuthUser(session)) return "redirect:/";
 		return "/auth_user/cabinet"; 
 	}
 	
 	@GetMapping("/shippings_new")
 	public String newShipping(HttpSession session, @ModelAttribute("orderDataDto") OrderDataDto orderDataDto) {
-		if (!authUserService.isAuthUser(session)) return "redirect:/";
+		//if (!authUserService.isAuthUser(session)) return "redirect:/";
 		Person person = (Person) session.getAttribute("person");
 		if (person == null) return "redirect:/new";
 		return "/auth_user/shippings_new";
@@ -39,19 +39,19 @@ public class AuthUserController {
 	@PostMapping("/shippings")
 	public String createShipping(@ModelAttribute("orderDataDto") @Valid OrderDataDto orderDataDto, 
 			BindingResult bindingResult, HttpSession session) {
-		if (!authUserService.isAuthUser(session)) return "redirect:/";
+		//if (!authUserService.isAuthUser(session)) return "redirect:/";
 		return authUserService.createShipping(orderDataDto, bindingResult, session);
 	}
 	
 	@GetMapping("/invoices_of_user")
 	public String showInvoices(HttpSession session, HttpServletRequest request) {
-		if (!authUserService.isAuthUser(session)) return "redirect:/";
+		//if (!authUserService.isAuthUser(session)) return "redirect:/";
 		return authUserService.showInvoices(session, request);
 	}
 	
 	@PostMapping("/invoices_of_user")
 	public String payInvoice(HttpServletRequest request, HttpSession session) {
-		if (!authUserService.isAuthUser(session)) return "redirect:/";
+		//if (!authUserService.isAuthUser(session)) return "redirect:/";
 		return authUserService.payInvoice(request, session);
 	}
 }
