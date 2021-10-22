@@ -1,8 +1,6 @@
 package rozaryonov.shipping.service.impl;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,19 +16,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import lombok.RequiredArgsConstructor;
 import rozaryonov.shipping.dto.SettlementsDto;
@@ -46,7 +40,6 @@ import rozaryonov.shipping.model.ShippingStatus;
 import rozaryonov.shipping.repository.InvoiceRepository;
 import rozaryonov.shipping.repository.InvoiceStatusRepository;
 import rozaryonov.shipping.repository.PersonRepository;
-import rozaryonov.shipping.repository.RoleRepository;
 import rozaryonov.shipping.repository.SettlementsRepository;
 import rozaryonov.shipping.repository.SettlementsTypeRepository;
 import rozaryonov.shipping.repository.ShippingRepository;
@@ -66,7 +59,6 @@ import rozaryonov.shipping.service.SettlementsService;
 public class ManagerServiceImpl implements ManagerService {
 	private static Logger logger = LogManager.getLogger();//todo use lombok
 	
-	private final RoleRepository roleRepository;
 	private final PersonRepository personRepository;
 	private final SettlementsTypeRepository settlementsTypeRepository;
 	private final PageableFactory pageableFactory;
@@ -109,7 +101,7 @@ public class ManagerServiceImpl implements ManagerService {
 				session.setAttribute("pageNum", pageSettlementsAddPayment.getCurPageNum());
 				session.setAttribute("pageTotal", pageSettlementsAddPayment.getTotalPages());
 				session.setAttribute("settlementsList", settlementsList);
-				Role user = roleRepository.findById(2L).orElse(null);
+				Role user = Role.findById(2L);
 				session.setAttribute("persons", personRepository.findByRole(user)); 
 
 		}

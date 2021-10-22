@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-	<link rel="stylesheet" href="/css/bootstrap.min.css"/>         
-	<script src="/js/bootstrap.min.js"></script>       
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>         
+	<script th:src="@{/js/bootstrap.min.js}"></script>       
 
 <title th:text="#{createInvoices.title}"/></title>
 </head>
 <body>
 <div class="container">
-<th:block th:include="@{/manager/_menu_manager_inner}"></th:block>
+<th:block th:include="@{manager/_menu_manager_inner}"></th:block>
 
 <h1 th:text="#{createInvoices.header}"></h1>
 <form name="shippingForm" action="/manager/create_invoices" method="post" th:if="${(session.shippingList != null)}">

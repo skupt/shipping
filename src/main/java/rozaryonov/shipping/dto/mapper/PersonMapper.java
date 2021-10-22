@@ -1,18 +1,15 @@
-package rozaryonov.shipping.model;
+package rozaryonov.shipping.dto.mapper;
 
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import rozaryonov.shipping.dto.PersonDto;
-import rozaryonov.shipping.exception.DaoException;
-import rozaryonov.shipping.repository.RoleRepository;
+import rozaryonov.shipping.model.Person;
+import rozaryonov.shipping.model.Role;
 
 @Component
 @RequiredArgsConstructor
-public class Mapper {//todo why it is in a model package? what is 'Mapper'; name correctly
-
-	private final RoleRepository roleRepository;
-	
+public class PersonMapper {
 	
 	public Person toPerson(PersonDto personDto) {
 		Person person = new Person();
@@ -23,8 +20,7 @@ public class Mapper {//todo why it is in a model package? what is 'Mapper'; name
 		person.setPatronomic(personDto.getPatronomic());
 		person.setSurname(personDto.getSurname());
 		person.setTitle(personDto.getTitle());
-		person.setRole(roleRepository.findById(personDto.getRoleId()).orElseThrow(()-> new DaoException("No Role with id:"+ personDto.getRoleId())));
-		//todo use Enum for ROLES!!!!!!!! (this can fix your problem with security)
+		person.setRole(Role.findById(personDto.getRoleId()));
 		
 		return person;
 	}

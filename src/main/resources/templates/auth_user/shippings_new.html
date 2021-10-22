@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ru_RU">
 <head>
 <meta charset="UTF-8">
-	<link rel="stylesheet" href="../css/bootstrap.min.css"/>         
-	<script src="../js/bootstrap.min.js"></script>
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>         
+	<script th:src="@{/js/bootstrap.min.js}"></script>       
 	       
 <title th:text="#{userCabinetResOrder.title}"/></title>
 </head>
@@ -62,7 +62,7 @@
 </form>
 </div>
 </div>
-<th:block th:include="@{/_footer_guest}">
+<th:block th:include="@{_footer_guest}">
 </div>
 </body>
 </html>

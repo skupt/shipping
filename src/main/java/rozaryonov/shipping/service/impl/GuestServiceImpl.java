@@ -26,8 +26,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import lombok.RequiredArgsConstructor;
 import rozaryonov.shipping.dto.PersonDto;
+import rozaryonov.shipping.dto.mapper.PersonMapper;
 import rozaryonov.shipping.model.Locality;
-import rozaryonov.shipping.model.Mapper;
 import rozaryonov.shipping.model.Person;
 import rozaryonov.shipping.model.Tariff;
 import rozaryonov.shipping.repository.PersonRepository;
@@ -52,7 +52,7 @@ public class GuestServiceImpl implements GuestService {
 	private final PageableFactory pageableFactory;
 	private final PersonService personService;
 	private final BCryptPasswordEncoder passwordEncoder;
-	private final Mapper mapper;
+	private final PersonMapper mapper;
 	private final PersonRepository personRepository;
 	
 	

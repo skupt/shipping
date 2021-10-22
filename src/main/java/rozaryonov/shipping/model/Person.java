@@ -37,10 +37,7 @@ public class Person {
 	private String surname;
 	private String patronomic;
 	private String title;
-	@ManyToOne
-	@JoinColumn(name = "role_id",
-			foreignKey = @ForeignKey(name = "fk_person_role1"))
-	private Role role;//todo use EnumRole
+	private Role role;
 	private BigDecimal balance;
 	
 }

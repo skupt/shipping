@@ -2,15 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-	<link rel="stylesheet" href="/css/bootstrap.min.css"/>         
-	<script src="/js/bootstrap.min.js"></script>       
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>         
+	<script th:src="@{/js/bootstrap.min.js}"></script>       
 
 <title th:text="#{managerCabinet.title}"></title>
 </head>
 <body>
 <div class="container">
 
-	<th:block th:include="@{/manager/_menu_manager}"></th:block>
+	<th:block th:include="@{manager/_menu_manager}"></th:block>
 	<div class="jumbotron">
 		<h1 th:text="#{managerCabinet.headerCabinet}"></h1>
 		<p></p>
