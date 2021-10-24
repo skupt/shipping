@@ -2,16 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ru_RU">
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="../css/bootstrap.min.css" />
-<script src="../js/bootstrap.min.js"></script>
+<link rel="stylesheet" th:href="@{../css/bootstrap.min.css}" />
+<script th:src="@{../js/bootstrap.min.js}"></script>
 <title th:text="#{five.title}"></title>
 </head>
 <body>
 	<div class="container">
 		<div class = "jumbotron">
 			<h1 th:text="#{five.head}"></h1>
-			<p><a href="/login" th:text="#{four.login}"></a></p>
-			<p><a href="/" th:text="#{four.index}"></a></p>
+			<h2 th:text="${erororDescription}"></h2>
+			<p><a th:href="@{/login}" th:text="#{four.login}"></a></p>
+			<p><a th:href="@{/}" th:text="#{four.index}"></a></p>
 		</div>
 	</div>
 </body>

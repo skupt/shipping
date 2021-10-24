@@ -52,7 +52,7 @@ public class Page <T, R extends Pageable<T>>{
 	}
 	
 	
-	public Page(Pageable<T> repo, LocalDateTime after, LocalDateTime before, int rowsOnPage, Predicate p, Comparator c) {
+	public Page(Pageable<T> repo, LocalDateTime after, LocalDateTime before, int rowsOnPage, Predicate<T> p, Comparator<T> c) {
 		this.repo=repo;
 		this.after = Timestamp.valueOf(after);
 		this.before = Timestamp.valueOf(before);

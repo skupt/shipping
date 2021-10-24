@@ -10,15 +10,14 @@
 							class="icon-bar"></span> <span class="icon-bar"></span> <span
 							class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="/index">MDS</a>
+					<a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}">MDS</a>
 				</div>
 
 				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="collapse navbar-collapse"
 					id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
-						<li><a th:href="@{/index}" th:text="#{index.title}"><span class="sr-only">(current)</span></a></li>
-						<li><a th:href="@{/costs}" th:text="#{index.linkCostCalc}"></span></a></li>
+						<li><a th:href="@{/costs}" th:text="#{index.linkCostCalc}"></a></li>
 						<li><a th:href="@{/tariffs}" th:text="#{index.linkTariffs}"></a></li>
 						<li><a th:href="@{/login}" th:text="#{index.linkLogin}"></a></li>
 						<li><a th:if="${#request.userPrincipal != null}" th:href="@{/logout}" th:text="#{index.linkLogout}"></a></li>

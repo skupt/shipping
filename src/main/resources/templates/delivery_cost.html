@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="/css/bootstrap.min.css" />
-<script src="/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>         
+	<script th:src="@{/js/bootstrap.min.js}"></script>       
 
 <title th:text="#{deliveryCosts.calculationCosts}"></title>
 </head>
@@ -43,22 +43,9 @@
 </div>
 </div>
 
-<!-- <div class="panel panel-default"> -->
-<!--   <div class="panel-heading"> -->
-<!--     <h3 class="panel-title"><fmt:message key="deliveryCosts.tariffDetails"/></h3> -->
-<!--   </div> -->
-<!--   <div class="panel-body"> -->
-<!-- <p><fmt:message key="deliveryCosts.shippingRate"/>: ${shippingRate}</p> -->
-<!-- <p><fmt:message key="deliveryCosts.targetReceiptDist"/>: ${targetReceiptDist}</p> -->
-<!-- <p><fmt:message key="deliveryCosts.targetDeliveryDist"/>: ${targetDeliveryDist}</p> -->
-<!-- <p><fmt:message key="deliveryCosts.insuranceWorth"/>: ${insuranceWorth}</p> -->
-<!-- <p><fmt:message key="deliveryCosts.insuranceRate"/>: ${insuranceRate}</p> -->
-<!-- </div> -->
-<!-- </div> -->
-
 <p><a class="btn btn-primary btn-lg" role="button" th:href="@{/costs}" th:text="#{deliveryCosts.oneMoreCalculation}"></a></p>
 
-<th:block th:include="@{/_footer_guest}">
+<th:block th:include="@{_footer_guest}">
 
 </div>
 </body>

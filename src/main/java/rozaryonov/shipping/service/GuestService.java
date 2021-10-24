@@ -1,5 +1,7 @@
 package rozaryonov.shipping.service;
 
+import java.security.Principal;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -14,4 +16,8 @@ public interface GuestService {
 	String costResult (HttpServletRequest request, Model model, HttpSession session);
 	String tariffs(HttpServletRequest request, HttpSession session);
 	String createUser(@ModelAttribute ("personDto") @Valid PersonDto personDto, BindingResult bindingResult);
+	String enterCabinet(Model model, Principal principal, HttpSession session);
+	String accessDenied(Model model, Principal principal);
+	String logout(HttpSession session);
+	String costForm (Model model);	
 }

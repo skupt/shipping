@@ -12,7 +12,7 @@
 <th:block th:include="@{manager/_menu_manager_inner}"></th:block>
 
 <h1 th:text="#{createInvoices.header}"></h1>
-<form name="shippingForm" action="/manager/create_invoices" method="post" th:if="${(session.shippingList != null)}">
+<form name="shippingForm" th:action="@{/manager/create_invoices}" method="post" th:if="${(session.shippingList != null)}">
 <table class="table" >
 <tr>
 <th scope="col" th:text="#{pageCrInv.Date}"/></th>

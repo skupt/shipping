@@ -17,7 +17,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-import rozaryonov.shipping.exception.DaoException;
+import rozaryonov.shipping.exception.ConnectionGettingException;
+import rozaryonov.shipping.exception.PageableListFindingException;
 import rozaryonov.shipping.repository.reportable.DirectionReport;
 
 @Component
@@ -33,15 +34,14 @@ public class DirectionReportRepo implements Pageable<DirectionReport> {
 			"group by Direction;";
 
 
-	private final DataSource dataSource;
 	private Connection connection;
 	
 	public DirectionReportRepo(DataSource dataSource) {
-		this.dataSource = dataSource;
 		try {
 			this.connection = dataSource.getConnection();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
+			throw new ConnectionGettingException(e.getMessage());
 		}
 	}
 
@@ -67,7 +67,7 @@ public class DirectionReportRepo implements Pageable<DirectionReport> {
 			}
 		} catch (SQLException e) {
 			logger.error("SQLException while Shipping findAllInPeriod. ", e.getMessage());
-			throw new DaoException("SQLException while findAllInPeriod deleteById.", e);
+			throw new PageableListFindingException(e.getMessage());
 		}
 		return reportRows;
 	}

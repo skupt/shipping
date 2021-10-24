@@ -2,32 +2,35 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>         
-	<script th:src="@{/js/bootstrap.min.js}"></script>       
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<script th:src="@{/js/bootstrap.min.js}"></script>
 
-<title th:text="#{reportDirection.title}"/></title>
+<title th:text="#{reportDirection.title}" /></title>
 </head>
 <body>
-<div class="container">
-<th:block th:include="@{manager/_menu_manager_inner}"></th:block>
+	<div class="container">
+		<th:block th:include="@{manager/_menu_manager_inner}"></th:block>
 
-<h1 th:text="#{reportDirection.header}"/></h1>
-<table class="table">
-<thead>
-<tr>
-<th th:text="#{reportDirection.Direction}"/></th>
-<th th:text="#{reportDirection.Turnover}"/></th>
-</tr>
-</thead>	
-	<tr th:if="${session.reportDirectionList != null}" th:each="s : ${session.reportDirectionList}">
-		<td th:text="${s.getIndex()}"></td>
-		<td th:text="${s.getValue()}"></td>
-	</tr>
-</table>
-<a href="/manager/report_direction?cmd=prevPage" th:text="#{finishShippings.prevPage}"></a>
-	<span th:text="${(session.pageDirectionReport.getCurPageNum()) + ' of ' + (session.pageDirectionReport.getTotalPages())}"></span>
-<a href="/manager/report_direction?cmd=nextPage" th:text="#{finishShippings.nextPage}"/></a>
+		<h1 th:text="#{reportDirection.header}" /></h1>
+		<table class="table">
+			<thead>
+				<tr>
+					<th th:text="#{reportDirection.Direction}" /></th>
+					<th th:text="#{reportDirection.Turnover}" /></th>
+				</tr>
+			</thead>
+			<tr th:if="${session.reportDirectionList != null}"
+				th:each="s : ${session.reportDirectionList}">
+				<td th:text="${s.getIndex()}"></td>
+				<td th:text="${s.getValue()}"></td>
+			</tr>
+		</table>
+		<a th:href="@{/manager/report_direction?cmd=prevPage}"
+			th:text="#{finishShippings.prevPage}"></a> <span
+			th:text="${(session.pageDirectionReport.getCurPageNum()) + ' of ' + (session.pageDirectionReport.getTotalPages())}"></span>
+		<a th:href="@{/manager/report_direction?cmd=nextPage}"
+			th:text="#{finishShippings.nextPage}" /></a>
 
-</div>
+	</div>
 </body>
 </html>

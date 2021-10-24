@@ -9,24 +9,24 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import rozaryonov.shipping.exception.LogisticNetNotFoundException;
 import rozaryonov.shipping.model.LogisticNetElement;
 import rozaryonov.shipping.service.LocalityService;
-import rozaryonov.shipping.exception.DaoException;
 
-public class LogisticNetElementDao {//todo why not extand AbstractDao
+public class LogisticNetElementDao {// todo why not extand AbstractDao
 	private static final String FIND_ALL = "select city_id, neighbor_id, distance, logistic_config_id from logistic_net where logistic_config_id=? order by city_id, neighbor_id;";
 	private static Logger logger = LogManager.getLogger(LogisticNetElementDao.class.getName());
 	private Connection connection;
 	private LocalityService localityService;
-	
-	public LogisticNetElementDao (Connection connection, LocalityService localityService) {
+
+	public LogisticNetElementDao(Connection connection, LocalityService localityService) {
 		this.connection = connection;
 		this.localityService = localityService;
 	}
-	
 
 	public Iterable<LogisticNetElement> findByNetConfig(long netConfigId) {
-		ArrayList<LogisticNetElement> localities = new ArrayList<>();;
+		ArrayList<LogisticNetElement> localities = new ArrayList<>();
+		;
 		try (PreparedStatement ps = connection.prepareStatement(FIND_ALL);) {
 			ps.setLong(1, netConfigId);
 			ResultSet rs = ps.executeQuery();
@@ -39,7 +39,8 @@ public class LogisticNetElementDao {//todo why not extand AbstractDao
 			}
 		} catch (SQLException e) {
 			logger.error("SQLException while LogisticNetElement findAll. ", e.getMessage());
-			throw new DaoException("SQLException while LogisticNetElement deleteById.", e);
+			throw new LogisticNetNotFoundException(
+					"No Iterable<LogisticNetElement> found in LogisticNetElementDao.findByNetConfig.");
 		}
 		return localities;
 	}

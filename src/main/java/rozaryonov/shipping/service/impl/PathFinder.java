@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +16,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import rozaryonov.shipping.dao.LogisticNetElementDao;
 import rozaryonov.shipping.model.LogisticNetElement;
 import rozaryonov.shipping.service.LogisticNetElementService;
 

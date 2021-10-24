@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
+import rozaryonov.shipping.exception.PersonBalanceCalculationException;
 import rozaryonov.shipping.repository.CustomSettlementsRepository;
 
 public class CustomSettlementsRepositoryImpl implements CustomSettlementsRepository {
@@ -21,15 +22,14 @@ public class CustomSettlementsRepositoryImpl implements CustomSettlementsReposit
 			"where settlment_type_id = settlement_type.id " + 
 			"and person_id = ?; ";
 	
-	private final DataSource dataSource;
 	private Connection connection;
 	
 	CustomSettlementsRepositoryImpl(DataSource dataSource) {
-		this.dataSource = dataSource;
 		try {
 			connection = dataSource.getConnection();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
+			throw new PersonBalanceCalculationException(e.getMessage());
 		}
 	}
 	
@@ -45,6 +45,7 @@ public class CustomSettlementsRepositoryImpl implements CustomSettlementsReposit
 				}
 			} catch (SQLException e) {
 				logger.error("SQLException while PersonDAo.calcAndSetBalane(Person_id)" + e.getMessage());
+				throw new PersonBalanceCalculationException(e.getMessage());
 			}
 			if (b==null) b=BigDecimal.ZERO;
 			return b;

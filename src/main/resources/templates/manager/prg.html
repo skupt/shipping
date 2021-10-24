@@ -13,7 +13,7 @@
 		<h1 th:text="#{prg.inf}"></h1>
 		<div class="alert alert-info" role="alert">
 			<p  th:text="#{${session.message}}"></p>
-			<a class="btn btn-primary btn-lg" th:href="${session.goTo}" th:text="#{prg.goBack}"></a>
+			<a class="btn btn-primary btn-lg" th:href="@{${session.goTo}}" th:text="#{prg.goBack}"></a>
 		</div>
 	</div>
 </div>

@@ -11,7 +11,7 @@
 <th:block th:include="_menu_guest"/>
 
 <h1 th:text="#{pageTariffs.tariffsArchive}"></h1>
-<form name="tariffsForm" id="tariffsForm" method="get" action="/tariffs">
+<form name="tariffsForm" id="tariffsForm" method="get" th:action="@{/tariffs}">
 	<div>
 	<fieldset>
 		<label for="sorting"  th:text="#{pageTariffs.sortIncr}"></label>
@@ -56,7 +56,7 @@
 	</tr>
 </table>
 </div>
-<form name="nextPrev" id="nextPrev" action="/tariffs" method="get">
+<form name="nextPrev" id="nextPrev" th:action="@{/tariffs}" method="get">
 	<button type="submit" name="cmd" value="TariffArchivePrev"><span th:text="#{root.prev}"/></span></button>
 	<span th:text="${session.pageNum}">page number</span>
 	<button type="submit" name="cmd" value="TariffArchiveNext"><span th:text="#{root.next}"></span></button>

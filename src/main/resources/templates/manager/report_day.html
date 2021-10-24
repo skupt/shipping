@@ -24,9 +24,9 @@
 		<td th:text="${s.getValue()}"></td>
 	</tr>
 </table>
-<a href="/manager/report_day?cmd=prevPage" th:text="#{finishShippings.prevPage}"></a>
+<a th:href="@{/manager/report_day?cmd=prevPage}" th:text="#{finishShippings.prevPage}"></a>
 	<span th:text="${(session.pageDayReport.getCurPageNum()) + ' of ' + (session.pageDayReport.getTotalPages())}"></span>
-<a href="/manager/report_day?cmd=nextPage" th:text="#{finishShippings.nextPage}"/></a>
+<a th:href="@{/manager/report_day?cmd=nextPage}" th:text="#{finishShippings.nextPage}"/></a>
 
 </div>
 </body>

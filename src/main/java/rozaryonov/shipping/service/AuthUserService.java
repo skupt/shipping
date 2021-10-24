@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import rozaryonov.shipping.dto.OrderDataDto;
 
 public interface AuthUserService {//todo learn why we need implement service from interface
-	/* TODO remove isAuthUser after SpringSecuriry works */ 
-	boolean isAuthUser(HttpSession session); 
 	String createShipping(@ModelAttribute("orderDataDto") @Valid OrderDataDto orderDataDto, //todo is it okay use annotations here?
 			BindingResult bindingResult, HttpSession session);
 	String showInvoices(HttpSession session, HttpServletRequest request);
 	String payInvoice(HttpServletRequest request, HttpSession session);
+	String newShipping(HttpSession session, @ModelAttribute("orderDataDto") OrderDataDto orderDataDto);
 }

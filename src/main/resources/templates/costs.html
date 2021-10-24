@@ -12,7 +12,7 @@
 	<th:block th:include="_menu_guest"></th:block>
 
 <h1 th:text="#{pageCosts.calculateCostsHeader}"></h1>
-<form name="calcShippingCosts" method="get" action="/delivery_cost">
+<form name="calcShippingCosts" method="get" th:action="@{/delivery_cost}">
 <div id="route">
 	<div style="width:50%; float:left">	
 	<p th:text="#{pageCosts.chooseDepartureLocality}"></p>

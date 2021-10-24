@@ -10,5 +10,4 @@ import rozaryonov.shipping.repository.page.Pageable;
 
 public interface InvoiceService extends Pageable<Invoice>{
 	List<Invoice> findFilterSort(Timestamp after, Timestamp before, Predicate<Invoice> p, Comparator<Invoice> c);
-	//long countRows();
 }

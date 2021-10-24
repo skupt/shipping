@@ -15,23 +15,22 @@ import javax.sql.DataSource;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import rozaryonov.shipping.exception.DaoException;
+import rozaryonov.shipping.exception.ConnectionGettingException;
+import rozaryonov.shipping.exception.PageableListFindingException;
 import rozaryonov.shipping.repository.reportable.DayReport;
 
 @Component
 public class DayReportRepo implements Pageable<DayReport> {
-	private final DataSource dataSource;
 	private Connection connection;
 	
 	public DayReportRepo(DataSource dataSource) {
-		this.dataSource = dataSource;
 		try {
 			this.connection = dataSource.getConnection();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
+			throw new ConnectionGettingException(e.getMessage());
 		}
 
 	}
@@ -56,9 +55,6 @@ public class DayReportRepo implements Pageable<DayReport> {
 	private List<DayReport> findAllInPeriod(Timestamp after, Timestamp before) {
 		ArrayList<DayReport> reportRows = new ArrayList<>();
 		try (PreparedStatement ps = connection.prepareStatement(FITER_BY_PERIOD);) {
-			//ps.setTimestamp(1, after);
-			//ps.setTimestamp(2, before);
-			
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				DayReport r = new DayReport();
@@ -68,7 +64,7 @@ public class DayReportRepo implements Pageable<DayReport> {
 			}
 		} catch (SQLException e) {
 			logger.error("SQLException while Shipping findAllInPeriod. ", e.getMessage());
-			throw new DaoException("SQLException while findAllInPeriod deleteById.", e);
+			throw new PageableListFindingException(e.getMessage());
 		}
 		return reportRows;
 	}
