@@ -13,3 +13,24 @@ RepositoryException (которое extends RuntimeException); ServiceException 
 
 Что скажешь?
    
+
+
+Дима привет!
+Почитал о Richardson Maturity Model
+В моем приложении связке с CRUD планирую переименовать uri потакому приципу.
+И, соответственно, изменить и добавять контроллеры, которые будут обрабатывать
+запросы по ним:
+
+CRUD	Description	HTTP	URL
+-----------------------------------------
+READ	Get all		GET		/units
+READ	Get one		GET		/units/id
+-		Get form 	GET		/units/form*	// only sends form for filing fields
+CREATE	Create unit	POST	/units
+-		Get form	GET		/units/id/form	// only form for update
+UPDATE	Upd unit	PATCH	/units/id		// POST will be actually in app.
+DELETE	Del unit	DELETE	/units/id
+------------------------------------------
+* Alishev named it as /units/new*
+
+https://youtu.be/D58pIymCew4?list=PLAma_mKffTOR5o0WNHnY0mTjKxnCgSXrZ&t=551

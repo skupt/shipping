@@ -32,12 +32,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		
-		http.csrf().disable();
+		// todo disclose what will happen when anable csrf 
+		http.csrf().disable(); 
 
 		http
 			.authorizeRequests()
-			.antMatchers(
+			.antMatchers( //todo extract
 				"/", 
 				"/index", 
 				"/cabinet", 

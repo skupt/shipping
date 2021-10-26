@@ -24,6 +24,7 @@ public class AuthUserController {
 	
 	@GetMapping("/cabinet")
 	public String cabinet() {
+		
 		return "/auth_user/cabinet"; 
 	}
 	
