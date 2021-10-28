@@ -11,7 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
-import rozaryonov.shipping.service.impl.UserDetailsServiceImpl;
+import rozaryonov.shipping.service.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity

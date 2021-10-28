@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import rozaryonov.shipping.model.Tariff;
 
-public interface TariffRepository extends CrudRepository<Tariff, Long> {
+public interface TariffRepository extends CrudRepository<Tariff, Long>, CustomTariffRepository {
 
 }

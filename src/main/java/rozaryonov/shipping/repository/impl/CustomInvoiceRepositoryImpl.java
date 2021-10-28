@@ -1,48 +1,37 @@
-package rozaryonov.shipping.service.impl;
+package rozaryonov.shipping.repository.impl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import lombok.extern.slf4j.Slf4j;
+import rozaryonov.shipping.exception.ConnectionGettingException;
+import rozaryonov.shipping.exception.InvoiceStatusNotFound;
+import rozaryonov.shipping.exception.PersonNotFoundException;
+import rozaryonov.shipping.model.Invoice;
+import rozaryonov.shipping.repository.CustomInvoiceRepository;
+import rozaryonov.shipping.repository.InvoiceStatusRepository;
+import rozaryonov.shipping.repository.PersonRepository;
+
+import javax.sql.DataSource;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import javax.sql.DataSource;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.stereotype.Service;
-
-import rozaryonov.shipping.exception.ConnectionGettingException;
-import rozaryonov.shipping.exception.InvoiceStatusNotFound;
-import rozaryonov.shipping.exception.PersonNotFoundException;
-import rozaryonov.shipping.model.Invoice;
-import rozaryonov.shipping.repository.InvoiceStatusRepository;
-import rozaryonov.shipping.repository.PersonRepository;
-import rozaryonov.shipping.service.InvoiceService;
-
-/* TODO Refactor it as a part of composite Invoice repository */
-@Service
-public class InvoiceServiceImpl implements InvoiceService {
-	private static Logger logger = LogManager.getLogger();
-
+@Slf4j
+public class CustomInvoiceRepositoryImpl implements CustomInvoiceRepository {
 	private final PersonRepository personRepository;
 	private final InvoiceStatusRepository invoiceStatusRepository;
 
 	private Connection connection;
 
-	public InvoiceServiceImpl(DataSource dataSource, PersonRepository personRepository,
-			InvoiceStatusRepository invoiceStatusRepository) {
+	public CustomInvoiceRepositoryImpl(DataSource dataSource, PersonRepository personRepository,
+                                       InvoiceStatusRepository invoiceStatusRepository) {
 		this.personRepository = personRepository;
 		this.invoiceStatusRepository = invoiceStatusRepository;
 		try {
 			this.connection = dataSource.getConnection();
 		} catch (SQLException e) {
-			logger.error(e.getMessage());
+			log.error(e.getMessage());
 			throw new ConnectionGettingException(e.getMessage());
 		}
 	}
@@ -78,7 +67,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 				invoiceList.add(i);
 			}
 		} catch (SQLException e) {
-			logger.error("SQLException while Invoice findAllInPeriod. ", e.getMessage());
+			log.error("SQLException while Invoice findAllInPeriod. ", e.getMessage());
 			throw new ConnectionGettingException(e.getMessage());
 		}
 

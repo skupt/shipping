@@ -1,4 +1,4 @@
-package rozaryonov.shipping.service.impl;
+package rozaryonov.shipping.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,6 @@ import rozaryonov.shipping.repository.page.Page;
 import rozaryonov.shipping.repository.page.PageableFactory;
 import rozaryonov.shipping.repository.reportable.DayReport;
 import rozaryonov.shipping.repository.reportable.DirectionReport;
-import rozaryonov.shipping.service.SettlementsService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -61,13 +60,13 @@ public class ManagerServiceImpl {
 	@SuppressWarnings("unchecked")
 	public String paymentsShow(@ModelAttribute("settlements") @Valid SettlementsDto settlements, HttpSession session,
 			HttpServletRequest request) {
-		rozaryonov.shipping.repository.page.Page<Settlements, SettlementsService> pageSettlementsAddPayment = null;
-		List<Settlements> settlementsList = null;
+		rozaryonov.shipping.repository.page.Page<Settlements, SettlementsRepository> pageSettlementsAddPayment = null;
+		List<Settlements> settlementsList;
 		String cmd = request.getParameter("cmd");
 		if (cmd != null) {// todo use more gracious way like Optional;
 			switch (cmd) {// todo make code readibility; extrac to small methods
 			case "prevPage":
-				pageSettlementsAddPayment = (Page<Settlements, SettlementsService>) session// todo
+				pageSettlementsAddPayment = (Page<Settlements, SettlementsRepository>) session// todo
 						.getAttribute("pageSettlementsAddPayment");// todo correct all yellow Idea's code
 				settlementsList = pageSettlementsAddPayment.prevPage();
 				session.setAttribute("pageNum", pageSettlementsAddPayment.getCurPageNum());
@@ -75,7 +74,7 @@ public class ManagerServiceImpl {
 				session.setAttribute("settlementsList", settlementsList);
 				break;
 			case "nextPage":
-				pageSettlementsAddPayment = (rozaryonov.shipping.repository.page.Page<Settlements, SettlementsService>) session
+				pageSettlementsAddPayment = (rozaryonov.shipping.repository.page.Page<Settlements, SettlementsRepository>) session
 						.getAttribute("pageSettlementsAddPayment");
 				settlementsList = pageSettlementsAddPayment.nextPage();
 				session.setAttribute("pageNum", pageSettlementsAddPayment.getCurPageNum());
@@ -84,7 +83,7 @@ public class ManagerServiceImpl {
 				break;
 			}
 		} else {
-			pageSettlementsAddPayment = pageableFactory.getPageableForManagerPaymentsPage(6);
+			pageSettlementsAddPayment = pageableFactory.getPageableForManagerPaymentsPage(3);
 			session.setAttribute("pageSettlementsAddPayment", pageSettlementsAddPayment);
 
 			settlementsList = pageSettlementsAddPayment.nextPage();
@@ -190,12 +189,12 @@ public class ManagerServiceImpl {
 	public String createInvoices(HttpServletRequest request) {
 
 		String[] shippingIds = request.getParameterValues("shippingId");
-		Set<Shipping> setShippings = new HashSet<>();
+		Set<Shipping> shippingSet = new HashSet<>();
 		for (String shippingId : shippingIds) {// todo naming; learn diff of for loop and foreach; LEARN
 												// EMERGENT!!!!!!!!!! //todo renaming hotkey shift+f6
-			Shipping shippig = null;
+			Shipping shipping;
 			try {
-				shippig = shippingRepository.findById(Long.parseLong(shippingId))// todo hotkeyuy ctrl+q for see method
+				shipping = shippingRepository.findById(Long.parseLong(shippingId))// todo hotkeyuy ctrl+q for see method
 																					// info
 						.orElseThrow(() -> new ShippingNotFoundException(
 								"No Shipping found in managerServiceImpl.createInvoices()."));
@@ -203,25 +202,25 @@ public class ManagerServiceImpl {
 				log.warn(e.getMessage());
 				throw e;
 			}
-			setShippings.add(shippig);
+			shippingSet.add(shipping);
 		}
-		Map<Person, List<Shipping>> personShippingsMap = setShippings.stream()
+		Map<Person, List<Shipping>> personShippingsMap = shippingSet.stream()
 				.collect(Collectors.groupingBy(se -> se.getPerson()));
 		for (Map.Entry<Person, List<Shipping>> shippingsOfPerson : personShippingsMap.entrySet()) {
 			Invoice inv = new Invoice();
 			inv.setPerson(shippingsOfPerson.getKey());
 			inv.setCreationDateTime(Timestamp.valueOf(LocalDateTime.now()));
-			List<Shipping> shippingSet = shippingsOfPerson.getValue().stream().collect(Collectors.toList());
-			BigDecimal sum = shippingSet.stream().map(x -> x.getFare()).reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
+			List<Shipping> shippingList = shippingsOfPerson.getValue().stream().collect(Collectors.toList());
+			BigDecimal sum = shippingList.stream().map(x -> x.getFare()).reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 			inv.setSum(sum);
 			inv.setInvoiceStatus(invoiceStatusRepository.findById(1L).orElseThrow(() -> new InvoiceStatusNotFound(
 					"No InvoiceStatus found while createInvoices cmd in ManagerService")));
-			for (Shipping sh : shippingSet) {
+			for (Shipping sh : shippingList) {
 				sh.setShippingStatus(shippingStatusRepository.findById(2L).orElseThrow(
 						() -> new ShippingStatusNotFoundException("No ShippingStatus while CreateInvoices cmd")));
 			}
-			inv.setShippings(shippingSet);
-			for (Shipping shp : shippingSet) {// todo learn diff of @Transactional and .commit() and . rollback()
+			inv.setShippings(shippingList);
+			for (Shipping shp : shippingList) {// todo learn diff of @Transactional and .commit() and . rollback()
 				shippingRepository.save(shp);
 			}
 			invoiceRepository.save(inv);

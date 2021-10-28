@@ -7,11 +7,11 @@ import rozaryonov.shipping.model.Invoice;
 import rozaryonov.shipping.model.Person;
 import rozaryonov.shipping.model.Settlements;
 import rozaryonov.shipping.model.Tariff;
+import rozaryonov.shipping.repository.InvoiceRepository;
+import rozaryonov.shipping.repository.SettlementsRepository;
+import rozaryonov.shipping.repository.TariffRepository;
 import rozaryonov.shipping.repository.reportable.DayReport;
 import rozaryonov.shipping.repository.reportable.DirectionReport;
-import rozaryonov.shipping.service.InvoiceService;
-import rozaryonov.shipping.service.SettlementsService;
-import rozaryonov.shipping.service.TariffService;
 
 import java.util.Comparator;
 import java.util.function.Predicate;
@@ -19,15 +19,15 @@ import java.util.function.Predicate;
 @Component
 @RequiredArgsConstructor
 public class PageableFactory {
-	private final TariffService tariffService;
-	private final InvoiceService invoiceService;
-	private final SettlementsService settlementsService;
+	private final TariffRepository tariffRepository;
+	private final InvoiceRepository invoiceRepository;
+	private final SettlementsRepository settlementsRepository;
 	private final DayReportRepo dayReportRepo;
 	private final DirectionReportRepo directionReportRepo;
 	
-	public Page<Settlements, SettlementsService> getPageableForManagerPaymentsPage (int rowsOnPage) {
-		 Page<Settlements, SettlementsService> page = new Page<>(
-				 settlementsService, 
+	public Page<Settlements, SettlementsRepository> getPageableForManagerPaymentsPage (int rowsOnPage) {
+		 Page<Settlements, SettlementsRepository> page = new Page<>(
+				 settlementsRepository, 
 				 Comparator.comparing((Settlements s) -> s.getCreationDatetime()));
 		 page.setPredicat(e->e.getSettlementType().getName().equals("payment"));
 		 page.setRowsOnPage(rowsOnPage);
@@ -36,9 +36,9 @@ public class PageableFactory {
 		 return page;
 	}
 
-	public Page<Invoice, InvoiceService> getPageableForUserSpendingPage (int rowsOnPage, Person person) {
-		 Page<Invoice, InvoiceService> page = new Page<>(
-				 invoiceService,
+	public Page<Invoice, InvoiceRepository> getPageableForUserSpendingPage (int rowsOnPage, Person person) {
+		 Page<Invoice, InvoiceRepository> page = new Page<>(
+				 invoiceRepository,
 				 Comparator.comparing((Invoice s) -> s.getCreationDateTime()).reversed());
 		 page.setPredicat((Invoice e)-> (e.getInvoiceStatus().getId()==1)&&(e.getPerson().getId()==person.getId()));
 		 page.setRowsOnPage(rowsOnPage);
@@ -53,12 +53,12 @@ public class PageableFactory {
 	 * @param p = Predicate for Tariff
 	 * @return Page <T, R extends Pageable<T>>
 	 */
-	public Page<Tariff, TariffService> getPageableForTariffArchive (int rowsOnPage, Comparator<Tariff> c, Predicate<Tariff> p) {
-		 Page<Tariff, TariffService> page = null;
+	public Page<Tariff, TariffRepository> getPageableForTariffArchive (int rowsOnPage, Comparator<Tariff> c, Predicate<Tariff> p) {
+		 Page<Tariff, TariffRepository> page = null;
 		 if (c == null) {
-			 page = new Page<>(tariffService, Comparator.comparing((Tariff s) -> s.getCreationTimestamp()));
+			 page = new Page<>(tariffRepository, Comparator.comparing((Tariff s) -> s.getCreationTimestamp()));
 		 } else {
-			 page = new Page<>(tariffService, c);
+			 page = new Page<>(tariffRepository, c);
 		 }
 		 if (p == null) {
 			 page.setPredicat((Tariff e)-> true);

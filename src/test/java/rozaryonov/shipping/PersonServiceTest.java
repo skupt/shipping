@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import rozaryonov.shipping.model.Person;
 import rozaryonov.shipping.repository.PersonRepository;
-import rozaryonov.shipping.service.impl.PersonServiceImpl;
+import rozaryonov.shipping.service.PersonServiceImpl;
 
 import java.math.BigDecimal;
 

@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import rozaryonov.shipping.dto.OrderDataDto;
-import rozaryonov.shipping.service.impl.LocalityServiceImpl;
-import rozaryonov.shipping.service.impl.ShippingServiceImpl;
+import rozaryonov.shipping.service.LocalityServiceImpl;
+import rozaryonov.shipping.service.ShippingServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

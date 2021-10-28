@@ -1,14 +1,9 @@
-package rozaryonov.shipping.service.impl;
+package rozaryonov.shipping.service;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import rozaryonov.shipping.dto.OrderDataDto;
 import rozaryonov.shipping.exception.InvoiceNotFoundException;
 import rozaryonov.shipping.exception.InvoiceStatusNotFound;
 import rozaryonov.shipping.exception.SettlementsTypeNotFoundException;
@@ -17,20 +12,17 @@ import rozaryonov.shipping.model.*;
 import rozaryonov.shipping.repository.*;
 import rozaryonov.shipping.repository.page.Page;
 import rozaryonov.shipping.repository.page.PageableFactory;
-import rozaryonov.shipping.service.InvoiceService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthUserServiceImpl {
-	private static Logger logger = LogManager.getLogger();
 
 	private final ShippingRepository shippingRepository;
 	private final ShippingStatusRepository shippingStatusRepository;
@@ -46,20 +38,20 @@ public class AuthUserServiceImpl {
 	public String getSpendingForm(HttpSession session, HttpServletRequest request) {
 		Person curPerson = (Person) session.getAttribute("person");
 		session.setAttribute("balance", personService.calcAndReplaceBalance(curPerson.getId()));
-		Page<Invoice, InvoiceService> pageInvoiceToPay = null;
+		Page<Invoice, InvoiceRepository> pageInvoiceToPay = null;
 		List<Invoice> invoices = null;
 		String cmd = request.getParameter("cmd");
 		if (cmd != null) {
 			switch (cmd) {
 			case "prevPage":
-				pageInvoiceToPay = (Page<Invoice, InvoiceService>) session.getAttribute("pageInvoiceToPay");
+				pageInvoiceToPay = (Page<Invoice, InvoiceRepository>) session.getAttribute("pageInvoiceToPay");
 				invoices = pageInvoiceToPay.prevPage();
 				session.setAttribute("pageNum", pageInvoiceToPay.getCurPageNum());
 				session.setAttribute("totalPages", pageInvoiceToPay.getTotalPages());
 				session.setAttribute("invoices", invoices);
 				break;
 			case "nextPage":
-				pageInvoiceToPay = (Page<Invoice, InvoiceService>) session.getAttribute("pageInvoiceToPay");
+				pageInvoiceToPay = (Page<Invoice, InvoiceRepository>) session.getAttribute("pageInvoiceToPay");
 				invoices = pageInvoiceToPay.nextPage();
 				session.setAttribute("pageNum", pageInvoiceToPay.getCurPageNum());
 				session.setAttribute("totalPages", pageInvoiceToPay.getTotalPages());
@@ -112,11 +104,11 @@ public class AuthUserServiceImpl {
 				session.setAttribute("balance", personService.calcAndReplaceBalance(curPerson.getId()));
 
 			} catch (IllegalArgumentException e) {
-				logger.warn(e.getMessage());
+				log.warn(e.getMessage());
 				throw e;
 			}
 
-			Page<Invoice, InvoiceService> pageInvoiceToPay = pageableFactory.getPageableForUserSpendingPage(3,
+			Page<Invoice, InvoiceRepository> pageInvoiceToPay = pageableFactory.getPageableForUserSpendingPage(3,
 					curPerson);
 			session.setAttribute("pageInvoiceToPay", pageInvoiceToPay);
 			List<Invoice> invoices = pageInvoiceToPay.nextPage();

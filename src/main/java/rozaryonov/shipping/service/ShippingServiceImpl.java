@@ -1,4 +1,4 @@
-package rozaryonov.shipping.service.impl;
+package rozaryonov.shipping.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +12,14 @@ import rozaryonov.shipping.dto.OrderDataDto;
 import rozaryonov.shipping.exception.GuestSerivceException;
 import rozaryonov.shipping.exception.ShippingNotFoundException;
 import rozaryonov.shipping.exception.ShippingStatusNotFoundException;
+import rozaryonov.shipping.exception.TariffNotFoundException;
 import rozaryonov.shipping.model.Locality;
 import rozaryonov.shipping.model.Person;
 import rozaryonov.shipping.model.Shipping;
+import rozaryonov.shipping.model.Tariff;
 import rozaryonov.shipping.repository.ShippingRepository;
 import rozaryonov.shipping.repository.ShippingStatusRepository;
+import rozaryonov.shipping.repository.TariffRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -39,7 +42,7 @@ public class ShippingServiceImpl{
 	@Autowired
 	private LogisticNetElementServiceImpl logisticNetElementService;
 	@Autowired
-	private TariffServiceImpl tariffService;
+	private TariffRepository tariffRepository;
 	@Autowired
 	private LocalityServiceImpl localityService;
 	@Autowired
@@ -91,14 +94,16 @@ public class ShippingServiceImpl{
 			throw new GuestSerivceException(e.getMessage());
 		}
 
-		double truckVelocity = tariffService.findById(tariffId).getTruckVelocity();
-		double dencity = tariffService.findById(tariffId).getDensity();
-		double paperwork = tariffService.findById(tariffId).getPaperwork();
-		double targetReceiptDist = tariffService.findById(tariffId).getTargetedReceipt();
-		double targetDeliveryDist = tariffService.findById(tariffId).getTargetedDelivery();
-		double shippingRate = tariffService.findById(tariffId).getShippingRate();
-		double insuranceWorth = tariffService.findById(tariffId).getInsuranceWorth();
-		double insuranceRate = tariffService.findById(tariffId).getInsuranceRate();
+		Tariff tariff = tariffRepository.findById(tariffId).orElseThrow(()->
+				new TariffNotFoundException("Tariff not found for id=" + tariffId));
+		double truckVelocity = tariff.getTruckVelocity();
+		double dencity = tariff.getDensity();
+		double paperwork = tariff.getPaperwork();
+		double targetReceiptDist = tariff.getTargetedReceipt();
+		double targetDeliveryDist = tariff.getTargetedDelivery();
+		double shippingRate = tariff.getShippingRate();
+		double insuranceWorth = tariff.getInsuranceWorth();
+		double insuranceRate = tariff.getInsuranceRate();
 
 		Duration duration = Duration.ofHours((long) (distance / truckVelocity + 48));
 		long dur = duration.toDays();

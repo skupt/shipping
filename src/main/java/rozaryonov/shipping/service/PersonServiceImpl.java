@@ -1,4 +1,4 @@
-package rozaryonov.shipping.service.impl;
+package rozaryonov.shipping.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

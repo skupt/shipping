@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import rozaryonov.shipping.dto.PersonDto;
-import rozaryonov.shipping.service.impl.PersonServiceImpl;
+import rozaryonov.shipping.service.PersonServiceImpl;
 
 import javax.validation.Valid;
 

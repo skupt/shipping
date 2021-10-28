@@ -1,4 +1,4 @@
-package rozaryonov.shipping.service.impl;
+package rozaryonov.shipping.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

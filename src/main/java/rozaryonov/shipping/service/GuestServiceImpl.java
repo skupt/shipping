@@ -1,30 +1,20 @@
-package rozaryonov.shipping.service.impl;
+package rozaryonov.shipping.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import rozaryonov.shipping.exception.GuestSerivceException;
-import rozaryonov.shipping.model.Locality;
 import rozaryonov.shipping.model.Person;
 import rozaryonov.shipping.model.Tariff;
+import rozaryonov.shipping.repository.TariffRepository;
 import rozaryonov.shipping.repository.page.Page;
 import rozaryonov.shipping.repository.page.PageableFactory;
-import rozaryonov.shipping.service.*;
-import rozaryonov.shipping.utils.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.security.Principal;
-import java.text.NumberFormat;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.function.Predicate;
 
 @Slf4j
@@ -37,19 +27,19 @@ public class GuestServiceImpl{
 
 	@SuppressWarnings("unchecked")
 	public String tariffs(HttpServletRequest request, HttpSession session) {
-		Page<Tariff, TariffService> pageTariffArchive;
+		Page<Tariff, TariffRepository> pageTariffArchive;
 		List<Tariff> tariffArchiveList;
 		String cmd = request.getParameter("cmd");
 		if (cmd != null) {
 			switch (cmd) {
 			case "TariffArchivePrev":
-				pageTariffArchive = (Page<Tariff, TariffService>) session.getAttribute("pageTariffArchive");
+				pageTariffArchive = (Page<Tariff, TariffRepository>) session.getAttribute("pageTariffArchive");
 				tariffArchiveList = pageTariffArchive.prevPage();
 				session.setAttribute("pageNum", pageTariffArchive.getCurPageNum());
 				session.setAttribute("tariffArchiveList", tariffArchiveList);
 				break;
 			case "TariffArchiveNext":
-				pageTariffArchive = (Page<Tariff, TariffService>) session.getAttribute("pageTariffArchive");
+				pageTariffArchive = (Page<Tariff, TariffRepository>) session.getAttribute("pageTariffArchive");
 				tariffArchiveList = pageTariffArchive.nextPage();
 				session.setAttribute("pageNum", pageTariffArchive.getCurPageNum());
 				session.setAttribute("tariffArchiveList", tariffArchiveList);

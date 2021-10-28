@@ -1,13 +1,11 @@
 package rozaryonov.shipping.repository.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import rozaryonov.shipping.exception.ConnectionGettingException;
 import rozaryonov.shipping.exception.LogisticNetNotFoundException;
 import rozaryonov.shipping.model.LogisticNetElement;
 import rozaryonov.shipping.repository.CustomLogisticNetElementRepository;
-import rozaryonov.shipping.service.impl.LocalityServiceImpl;
+import rozaryonov.shipping.service.LocalityServiceImpl;
 
 import javax.sql.DataSource;
 import java.sql.Connection;

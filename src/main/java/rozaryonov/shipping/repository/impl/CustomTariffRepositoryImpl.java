@@ -1,49 +1,33 @@
-package rozaryonov.shipping.service.impl;
+package rozaryonov.shipping.repository.impl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import lombok.extern.slf4j.Slf4j;
+import rozaryonov.shipping.exception.ConnectionGettingException;
+import rozaryonov.shipping.exception.LogisticConfigNotFoundException;
+import rozaryonov.shipping.exception.PageableListFindingException;
+import rozaryonov.shipping.model.Tariff;
+import rozaryonov.shipping.repository.CustomTariffRepository;
+import rozaryonov.shipping.repository.LogisticConfigRepository;
+
+import javax.sql.DataSource;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import javax.sql.DataSource;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.stereotype.Service;
-
-import rozaryonov.shipping.exception.ConnectionGettingException;
-import rozaryonov.shipping.exception.LogisticConfigNotFoundException;
-import rozaryonov.shipping.exception.PageableListFindingException;
-import rozaryonov.shipping.exception.TariffNotFoundException;
-import rozaryonov.shipping.model.Tariff;
-import rozaryonov.shipping.repository.LogisticConfigRepository;
-import rozaryonov.shipping.repository.TariffRepository;
-import rozaryonov.shipping.service.TariffService;
-
-//todo. Vitaly: here I dont use lomboc because I initialize field connection in my constructor 
-@Service
-public class TariffServiceImpl implements TariffService {
-	private static Logger logger = LogManager.getLogger();
-
-	private final TariffRepository tariffRepository;
+@Slf4j
+public class CustomTariffRepositoryImpl implements CustomTariffRepository {
 	private final LogisticConfigRepository logisticConfigRepository;
 
 	private Connection connection;
 
-	public TariffServiceImpl(TariffRepository tariffRepository, DataSource dataSource,
-			LogisticConfigRepository logisticConfigRepository) {
-		this.tariffRepository = tariffRepository;
+	public CustomTariffRepositoryImpl(DataSource dataSource, LogisticConfigRepository logisticConfigRepository) {
 		this.logisticConfigRepository = logisticConfigRepository;
 		try {
 			this.connection = dataSource.getConnection();
 		} catch (SQLException e) {
-			logger.error(e.getMessage());
+			log.error(e.getMessage());
 			throw new ConnectionGettingException(e.getMessage());
 		}
 	}
@@ -60,7 +44,7 @@ public class TariffServiceImpl implements TariffService {
 		return tariffs.stream().filter(p).sorted(c).collect(Collectors.toList());
 	}
 
-	private List<Tariff> findAllInPeriod(Timestamp after, Timestamp before) {// todo refactor and use repository
+	private List<Tariff> findAllInPeriod(Timestamp after, Timestamp before) {
 		ArrayList<Tariff> tariffs = new ArrayList<>();
 		try (PreparedStatement ps = connection.prepareStatement(FITER_BY_PERIOD);) {
 			ps.setTimestamp(1, after);
@@ -84,21 +68,10 @@ public class TariffServiceImpl implements TariffService {
 				tariffs.add(t);
 			}
 		} catch (SQLException e) {
-			logger.error("SQLException while Shipping findAllInPeriod. ", e.getMessage());
+			log.error("SQLException while Shipping findAllInPeriod. ", e.getMessage());
 			throw new PageableListFindingException(e.getMessage());
 		}
 		return tariffs;
-	}
-
-	@Override
-	public Tariff findById(Long id) {
-		return tariffRepository.findById(id)
-				.orElseThrow(() -> new TariffNotFoundException("No Tariff found in TariffService.findById()"));
-	}
-
-	@Override
-	public Iterable<Tariff> findAll() {
-		return tariffRepository.findAll();
 	}
 
 }

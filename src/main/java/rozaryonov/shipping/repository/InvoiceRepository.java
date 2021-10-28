@@ -8,6 +8,6 @@ import rozaryonov.shipping.model.Person;
 import rozaryonov.shipping.model.Role;
 
 @Repository
-public interface InvoiceRepository extends CrudRepository<Invoice, Long>{
+public interface InvoiceRepository extends CrudRepository<Invoice, Long>, CustomInvoiceRepository {
 
 }
