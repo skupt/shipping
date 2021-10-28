@@ -32,7 +32,7 @@
 
 <h1 th:text="#{payments.header}"></h1>
 
-<form name="shippingForm" th:action="@{/manager/payments}" method="post" th:object="${settlements}">
+<form name="shippingForm" th:action="@{/manager/settlements}" method="post" th:object="${settlements}">
 <table class="table">
 <tr>
 <th scope="col" th:text="#{payments.date}"></th>
@@ -87,9 +87,9 @@
 </table>
 </form>
 <p>
-	<a th:href="@{/manager/payments?cmd=prevPage}" th:text="#{payments.prevPage}"></a>
+	<a th:href="@{/manager/settlements/payment_form?cmd=prevPage}" th:text="#{payments.prevPage}"></a>
 	<span th:text="${session.pageNum + ' of ' + session.pageTotal}"></span>
-	<a th:href="@{/manager/payments?cmd=nextPage}" th:text="#{payments.nextPage}"></a>
+	<a th:href="@{/manager/settlements/payment_form?cmd=nextPage}" th:text="#{payments.nextPage}"></a>
 </p>
 </div>
 </body>

@@ -16,7 +16,7 @@
     <h3 class="panel-title">
     <span th:text="#{deliveryCosts.totalMoney} + ' : '"></span>
     <span th:text="${session.totalMoney}"></span>
-	<a class="btn btn-default btn-lg" role="button" th:href="@{/auth_user/shippings_new}" th:text="#{deliveryCosts.makeOrder}"></a>
+	<a class="btn btn-default btn-lg" role="button" th:href="@{/shippings/form}" th:text="#{deliveryCosts.makeOrder}"></a>
 	</h3>
   </div>
   <div class="panel-body">
@@ -43,7 +43,7 @@
 </div>
 </div>
 
-<p><a class="btn btn-primary btn-lg" role="button" th:href="@{/costs}" th:text="#{deliveryCosts.oneMoreCalculation}"></a></p>
+<p><a class="btn btn-primary btn-lg" role="button" th:href="@{/shippings/calculation_start_form}" th:text="#{deliveryCosts.oneMoreCalculation}"></a></p>
 
 <th:block th:include="@{_footer_guest}">
 

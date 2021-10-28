@@ -1,21 +1,20 @@
 package rozaryonov.shipping;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.math.BigDecimal;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import rozaryonov.shipping.model.Person;
 import rozaryonov.shipping.repository.PersonRepository;
-import rozaryonov.shipping.service.PersonService;
+import rozaryonov.shipping.service.impl.PersonServiceImpl;
+
+import java.math.BigDecimal;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class PersonServiceTest {
 	@Autowired
-	private PersonService personService;
+	private PersonServiceImpl personService;
 	@Autowired
 	private PersonRepository personRepository;
 	

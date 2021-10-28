@@ -12,7 +12,7 @@
 <th:block th:include="@{manager/_menu_manager_inner}"></th:block>
 
 <h1 th:text="#{finishShippings.header}"/></h1>
-<form name="shippingForm2" th:action="@{/manager/finish_shippings}" method="post" th:object="${shippingDto}" th:if="${(session.shippingListFinish != null)}">
+<form name="shippingForm2" th:action="@{/manager/shippings}" method="post" th:object="${shippingDto}" th:if="${(session.shippingListFinish != null)}">
 <table class="table">
 <thead>
 <tr>
@@ -47,9 +47,9 @@
 	<button type="submit" class="btn btn-primary btn-lg" name="cmd" value="FinishShippings" th:text="#{finishShippings.finishShippings}"></button>
 </div>
 </form>
-<a th:href="@{/manager/finish_shippings?cmd=prevPage}" th:text="#{finishShippings.prevPage}"></a>
+<a th:href="@{/manager/shippings/finish_form?cmd=prevPage}" th:text="#{finishShippings.prevPage}"></a>
 	<span th:text="${(session.pageShippingFinish.getNumber()+1) + ' of ' + (session.pageShippingFinish.getTotalPages())}"></span>
-<a th:href="@{/manager/finish_shippings?cmd=nextPage}" th:text="#{finishShippings.nextPage}"/></a>
+<a th:href="@{/manager/shippings/finish_form?cmd=nextPage}" th:text="#{finishShippings.nextPage}"/></a>
 
 </div>
 </body>

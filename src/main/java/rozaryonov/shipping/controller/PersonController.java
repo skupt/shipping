@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import rozaryonov.shipping.dto.PersonDto;
-import rozaryonov.shipping.service.PersonService;
+import rozaryonov.shipping.service.impl.PersonServiceImpl;
 
 import javax.validation.Valid;
 
@@ -18,7 +18,7 @@ import javax.validation.Valid;
 @Slf4j
 public class PersonController {
     @Autowired
-    private PersonService personService;
+    private PersonServiceImpl personService;
 
     @GetMapping("/form")
     public String getNewPersonForm(@ModelAttribute("personDto") PersonDto personDto) {
@@ -27,7 +27,13 @@ public class PersonController {
 
     @PostMapping("/")
     public String createPerson(@ModelAttribute ("personDto") @Valid PersonDto personDto, BindingResult bindingResult) {
-        personService.createUser(personDto, bindingResult);
-        return "redirect:/";
+        String page;
+        if (personService.checkUserCreationForm(personDto, bindingResult).hasErrors()) {
+            page = "/person/form";
+        } else {
+            personService.createUser(personDto);
+            page = "redirect:/";
+        }
+        return page;
     }
 }

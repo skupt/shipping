@@ -12,7 +12,7 @@
 <th:block th:include="@{manager/_menu_manager_inner}"></th:block>
 
 <h1 th:text="#{createInvoices.header}"></h1>
-<form name="shippingForm" th:action="@{/manager/create_invoices}" method="post" th:if="${(session.shippingList != null)}">
+<form name="shippingForm" th:action="@{/manager/invoices}" method="post" th:if="${(session.shippingList != null)}">
 <table class="table" >
 <tr>
 <th scope="col" th:text="#{pageCrInv.Date}"/></th>
@@ -35,9 +35,9 @@
 </table>
 <button type="submit" class="btn btn-primary btn-lg" name="cmd" value="CreateInvoices" th:text="#{pageCrInv.CreateInvoices}"></button>
 </form>
-<a th:href="@{/manager/create_invoices?cmd=prevPage}" th:text="#{pageCrInv.prevPage}"/></a>
+<a th:href="@{/manager/invoices/form?cmd=prevPage}" th:text="#{pageCrInv.prevPage}"/></a>
 	<span th:text="${(session.pageShipping.getNumber()+1) + ' of ' + (session.pageShipping.getTotalPages())}"></span>
-<a th:href="@{/manager/create_invoices?cmd=nextPage}" th:text="#{pageCrInv.nextPage}"/></a>
+<a th:href="@{/manager/invoices/form?cmd=nextPage}" th:text="#{pageCrInv.nextPage}"/></a>
 </div>
 </body>
 </html>

@@ -10,16 +10,16 @@
 							class="icon-bar"></span> <span class="icon-bar"></span> <span
 							class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" th:href="@{/index}">MDS</a>
+					<a class="navbar-brand" th:href="@{/}">MDS</a>
 				</div>
 
 				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="collapse navbar-collapse"
 					id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
-						<li><a th:href="@{invoices_of_user}" th:text="#{userCabinet.invoicesUserLink}"></a></li>
-						<li><a th:href="@{shippings_new}" th:text="#{userCabinet.resumeOrderLink}"></a></li>
-						<li><a th:href="@{/costs}" th:text="#{userCabinet.costCalculation}"></a></li>
+						<li><a th:href="@{/auth_user/settlements/spending_form}" th:text="#{userCabinet.invoicesUserLink}"></a></li>
+						<li><a th:href="@{/shippings/form}" th:text="#{userCabinet.resumeOrderLink}"></a></li>
+						<li><a th:href="@{/shippings/calculation_start_form}" th:text="#{userCabinet.costCalculation}"></a></li>
 						<li><a th:href="@{/logout}" th:text="#{userCabinet.linkLogout}"></a></li>
 						<li></li>
 					</ul>

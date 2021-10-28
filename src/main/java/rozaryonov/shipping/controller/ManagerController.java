@@ -33,41 +33,47 @@ public class ManagerController {
 		return "/manager/cabinet"; 
 	}
 	
-	@GetMapping("/prg")
-	public String getPrg() {
-		return "/manager/prg"; 
+	@GetMapping("/message")
+	public String getMessage() {
+		return "/manager/message";
 	}
 
 	
-	@GetMapping("/payments")
+	@GetMapping("/settlements/payment_form")
 	public String paymentsShow (@ModelAttribute("settlements") SettlementsDto settlements, HttpSession session, HttpServletRequest request) {
-		return managerService.paymentsShow(settlements, session, request);
+		managerService.paymentsShow(settlements, session, request);
+		return "/manager/settlements";
 	}
 	
-	@PostMapping("/payments")
+	@PostMapping("/settlements")
 	public String paymentsCreate (@ModelAttribute ("settlements") @Valid SettlementsDto settlements, 
 			BindingResult bindingResult, HttpServletRequest request, HttpSession session) {
-		return managerService.paymentsCreate(settlements, bindingResult, request, session);
+		managerService.paymentsCreate(settlements, bindingResult, request, session);
+		return "redirect:/manager/settlements/payment_form";
 	}
 
-	@GetMapping("/create_invoices")
+	@GetMapping("/invoices/form")
 	public String showCreateInvoicesForm (HttpSession session, HttpServletRequest request) {
-		return managerService.showCreateInvoicesForm (session, request);
+		managerService.showCreateInvoicesForm (session, request);
+		return "/manager/invoices/form";
 	}
 	
-	@PostMapping("/create_invoices")
+	@PostMapping("/invoices")
 	public String createInvoices(HttpServletRequest request) {
-		return managerService.createInvoices(request);
+		managerService.createInvoices(request);
+		return "redirect:/manager/invoices/form";
 	}
 	
-	@GetMapping("/finish_shippings")
+	@GetMapping("/shippings/finish_form")
 	public String showFinishShippingsForm (@ModelAttribute("shippingDto") ShippingToFinishDto shippingDto, HttpSession session, HttpServletRequest request) {
-		return managerService.showFinishShippingsForm (shippingDto, session, request);
+		managerService.showFinishShippingsForm (shippingDto, session, request);
+		return "/manager/shippings/finish_form";
 	}
 	
-	@PostMapping("/finish_shippings")
+	@PostMapping("/shippings")
 	public String finishShippings(@ModelAttribute("shippingDto") @Valid ShippingToFinishDto shippingDto, BindingResult bindingResult, HttpServletRequest request, HttpSession session) {
-		return managerService.finishShippings(shippingDto, bindingResult, request, session);
+		managerService.finishShippings(shippingDto, bindingResult, request, session);
+		return "redirect:/manager/shippings/finish_form";
 	}
 	
 	@GetMapping("/report_day")

@@ -16,7 +16,7 @@
 
 <div th:if="${session.invoices == null}" th:with="invoices=${session.pageInvoiceToPay.nextPage()}">
 </div>	
-<form name="invoicesUserForm" th:action="@{/auth_user/invoices_of_user}" th:method="POST">
+<form name="invoicesUserForm" th:action="@{/auth_user/settlements}" th:method="POST">
 <table class="table">
 <thead>
 <tr>
@@ -40,9 +40,9 @@
 <p>
 <button type="submit" name="cmd" value="InvoiceUserPay" th:text="#{invoicesUser.Pay}"/></button>
 </p>
-<a th:href="@{/auth_user/invoices_of_user?cmd=prevPage}" th:text="#{common.prevPage}"/></a>
+<a th:href="@{/auth_user/settlements/spending_form?cmd=prevPage}" th:text="#{common.prevPage}"/></a>
 <span th:text="${session.pageNum + ' of ' + session.totalPages}">page number</span>
-<a th:href="@{/auth_user/invoices_of_user?cmd=nextPage}" th:text="#{common.nextPage}"/></a>
+<a th:href="@{/auth_user/settlements/spending_form?cmd=nextPage}" th:text="#{common.nextPage}"/></a>
 </form>
 </div>
 </body>

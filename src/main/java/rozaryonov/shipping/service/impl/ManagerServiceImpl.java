@@ -119,7 +119,7 @@ public class ManagerServiceImpl implements ManagerService {
 
 		}
 
-		return "/manager/payments";
+		return "/manager/settlements";
 	}
 
 	@Transactional // todo learn how it works (learn about inside Proxy)
@@ -167,7 +167,7 @@ public class ManagerServiceImpl implements ManagerService {
 		session.setAttribute("goTo", "/manager/payments");
 		session.setAttribute("message", "prg.paymentOk");
 
-		return "redirect:/manager/payments";
+		return "redirect:/manager/settlements/payment_form";
 	}
 
 	@SuppressWarnings("unchecked")
@@ -208,7 +208,7 @@ public class ManagerServiceImpl implements ManagerService {
 			session.setAttribute("shippingList", pageShipping.getContent());
 		}
 
-		return "/manager/create_invoices";
+		return "/manager/invoices/form";
 	}
 
 	@Transactional

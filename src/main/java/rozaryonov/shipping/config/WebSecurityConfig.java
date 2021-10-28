@@ -46,9 +46,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/login", 
 				"/logout", 
 				"/new",
-				"/error/*").permitAll()
+				"/error/*",
+                "/shippings/*").permitAll()
 			.antMatchers("/manager/*").hasRole("MANAGER")
-			.antMatchers("/auth_user/*").hasRole("USER")
+			.antMatchers("/auth_user/*", "/shippings/form").hasRole("USER")
 			.and()
 		.exceptionHandling()
 			.accessDeniedPage("/error/403")

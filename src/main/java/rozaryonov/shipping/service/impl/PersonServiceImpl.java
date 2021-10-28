@@ -14,7 +14,6 @@ import rozaryonov.shipping.exception.PersonNotFoundException;
 import rozaryonov.shipping.model.Person;
 import rozaryonov.shipping.repository.PersonRepository;
 import rozaryonov.shipping.repository.SettlementsRepository;
-import rozaryonov.shipping.service.PersonService;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -24,21 +23,19 @@ import static rozaryonov.shipping.AppConst.ROLE_USER_ID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PersonServiceImpl implements PersonService {
+public class PersonServiceImpl {
 
     private final SettlementsRepository settlementsRepository;
     private final PersonRepository personRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final PersonMapper mapper;
 
-    @Override
     public Person findByLogin(String login) {
         return personRepository.findByLogin(login).orElseThrow(() ->
                 new PersonNotFoundException("Person not found for login=" + login)); //todo here we get Optional
     }
 
 
-    @Override
     @Transactional
     public BigDecimal calcAndReplaceBalance(long personId) {
         BigDecimal balance = settlementsRepository.calcPersonBalance(personId);
@@ -49,15 +46,8 @@ public class PersonServiceImpl implements PersonService {
         return balance;
     }
 
-    @Override
     @Transactional
-    public String createUser(@ModelAttribute("personDto") @Valid PersonDto personDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors())
-            return "/new";
-        if (findByLogin(personDto.getLogin()) != null) {
-            bindingResult.addError(new FieldError("personDto", "login", "Please, choose other login."));
-            return "/new";
-        }
+    public String createUser(@ModelAttribute("personDto") @Valid PersonDto personDto) {
         personDto.setRoleId(ROLE_USER_ID);
         String passEncoded = passwordEncoder.encode(personDto.getPassword());
         personDto.setPassword(passEncoded);
@@ -65,6 +55,17 @@ public class PersonServiceImpl implements PersonService {
         person.setBalance(BigDecimal.ZERO);
         personRepository.save(person);
         return "redirect:/";
+    }
+
+    public BindingResult checkUserCreationForm (@ModelAttribute("personDto") @Valid PersonDto personDto, BindingResult bindingResult) {
+        try {
+            if (findByLogin(personDto.getLogin()) != null) {
+                bindingResult.addError(new FieldError("personDto", "login", "Please, choose other login."));
+            }
+        } catch(PersonNotFoundException e) {
+            // do nothing, chosen login is free
+        }
+        return bindingResult;
     }
 
 
