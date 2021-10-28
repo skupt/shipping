@@ -55,6 +55,7 @@ public class ShippingAdviceController {
 	
 	@ExceptionHandler( Exception.class )
 	public String handleExceptions (Exception e, Model model, HttpServletResponse response) {
+		log.error(e.getMessage(), e); //+ stacktrace
 		model.addAttribute("erororDescription", e.getMessage());
 		response.setStatus(500);
 		return "/error/5xx";

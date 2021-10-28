@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,6 +31,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Locale;
 
+import static rozaryonov.shipping.AppConst.SHIPPING_STATUS_JUST_CREATED;
+
 @Slf4j
 @Service
 public class ShippingServiceImpl{
@@ -58,7 +59,7 @@ public class ShippingServiceImpl{
 		return shippingRepository.findAll();
 	}//todo is it okay return Iterable??? Vitaly: "Every lector on summer course said if you could use super type or interface you should have used it".
 
-	public String shippingCostCalculationResult(HttpServletRequest request, Model model, HttpSession session) {
+	public void shippingCostCalculationResult(HttpServletRequest request, HttpSession session) {
 		long departureId = Long.parseLong(request.getParameter("departure"));
 		long arrivalId = Long.parseLong(request.getParameter("arrival"));
 		int length = Integer.parseInt(request.getParameter("length"));
@@ -66,7 +67,6 @@ public class ShippingServiceImpl{
 		int height = Integer.parseInt(request.getParameter("height"));
 		double weight = Integer.parseInt(request.getParameter("weight"));
 		String locStrStr = request.getLocale().toString();
-		System.out.println(locStrStr);
 		String[] locPart = locStrStr.split("_");
 		Locale locale = new Locale(locPart[0], locPart[1]);
 		NumberFormat doubleFormat = NumberFormat.getInstance(locale);
@@ -76,19 +76,14 @@ public class ShippingServiceImpl{
 		NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("uk", "UA"));
 
 		long logisticConfigId = Long.parseLong(propertyService.findById("currentLogisticConfigId").getValue());
-		PathFinder pf = (PathFinder) session.getAttribute("pathfinder");
-		if (pf == null) {
-			session.removeAttribute("pathfinder");
-			pf = new PathFinder(logisticNetElementService, logisticConfigId);
-			session.setAttribute("pathfinder", pf);
-		}
+		PathFinder pathfinder = new PathFinder(logisticNetElementService, logisticConfigId);
 
 		String route;
 		double distance;
 		long tariffId = Long.parseLong(propertyService.findById("currentTariffId").getValue());
 		try {
-			route = pf.showShortestPath(departureId, arrivalId);
-			distance = pf.calcMinDistance(departureId, arrivalId);
+			route = pathfinder.showShortestPath(departureId, arrivalId);
+			distance = pathfinder.calcMinDistance(departureId, arrivalId);
 		} catch (ClassNotFoundException | IOException e) {
 			log.warn(e.getMessage());
 			throw new GuestSerivceException(e.getMessage());
@@ -118,7 +113,7 @@ public class ShippingServiceImpl{
 
 		Locality loadLocality = localityService.findById(departureId);
 		Locality unloadLocality = localityService.findById(arrivalId);
-
+		session.setAttribute("pathfinder", pathfinder);
 		session.setAttribute("loadLocality", loadLocality);
 		session.setAttribute("unloadLocality", unloadLocality);
 		session.setAttribute("route", route);
@@ -144,24 +139,17 @@ public class ShippingServiceImpl{
 		session.setAttribute("targetReceiptDist", doubleFormat.format(targetReceiptDist));
 		session.setAttribute("targetDeliveryDist", doubleFormat.format(targetDeliveryDist));
 		session.setAttribute("date", LocalDateTime.now().plusDays(dur));
-		return "/delivery_cost";
 	}
 
 	@Transactional
-	public String createShipping(@ModelAttribute("orderDataDto") @Valid OrderDataDto orderDataDto,
+	public void createShipping(@ModelAttribute("orderDataDto") @Valid OrderDataDto orderDataDto,
 								 BindingResult bindingResult, HttpSession session) {
-		if (bindingResult.hasErrors())
-			return "/auth_user/shippings_new";
-		Timestamp downloadTs0 = null;
+		Timestamp downloadTimestamp = null;
 		try {
-			String tsStr = orderDataDto.getDownloadDatetime() + " 00:00:00";
-			downloadTs0 = Timestamp.valueOf(tsStr);
+			String timestampsString = orderDataDto.getDownloadDatetime() + " 00:00:00";
+			downloadTimestamp = Timestamp.valueOf(timestampsString);
 		} catch (IllegalArgumentException e) {
-			// do nothing
-		}
-		if (downloadTs0 == null) {
-			bindingResult.addError(new FieldError("orderDataDto", "downloadDatetime", "Wrong date."));
-			return "/auth_user/shippings_new";
+			// do nothing we have checked it earlier in Controller
 		}
 
 		String shipper = orderDataDto.getShipper();
@@ -172,15 +160,8 @@ public class ShippingServiceImpl{
 		double weight = (Double) session.getAttribute("weightD");
 		double volume = (Double) session.getAttribute("volumeD");
 		BigDecimal fare = BigDecimal.valueOf((Double) session.getAttribute("totalD"));
-		Long shippingStatusId = 1L;
-
-		session.setAttribute("shipper", shipper);
-		session.setAttribute("downloadAddress", downloadAddress);
-		session.setAttribute("consignee", consignee);
-		session.setAttribute("unloadAddress", unloadAddress);
-
 		Timestamp creationTs = Timestamp.valueOf(LocalDateTime.now());
-		Timestamp downloadTs = downloadTs0;
+		Timestamp downloadTs = downloadTimestamp;
 
 		Shipping shipping = Shipping.builder().person((Person) session.getAttribute("person"))
 				.creationTimestamp(creationTs).loadLocality((Locality) session.getAttribute("loadLocality"))
@@ -189,15 +170,45 @@ public class ShippingServiceImpl{
 				.unloadAddress(unloadAddress).distance(distance).weight(weight).volume(
 						volume)
 				.fare(fare)
-				.shippingStatus(shippingStatusRepository.findById(shippingStatusId)
+				.shippingStatus(shippingStatusRepository.findById(SHIPPING_STATUS_JUST_CREATED)
 						.orElseThrow(() -> new ShippingStatusNotFoundException(
 								"No SippingStatus found in AuthUserService.createShipping()")))
 				.build();
 
 		shippingRepository.save(shipping);
-		return "redirect:/auth_user/cabinet";
+		setAttributes(session, shipper, downloadAddress, consignee, unloadAddress);
+	}
+
+	private void setAttributes(HttpSession session, String shipper, String downloadAddress, String consignee,
+							   String unloadAddress) {
+		session.setAttribute("shipper", shipper);
+		session.setAttribute("downloadAddress", downloadAddress);
+		session.setAttribute("consignee", consignee);
+		session.setAttribute("unloadAddress", unloadAddress);
 
 	}
+
+
+	public BindingResult checkShippingCreationForm (OrderDataDto orderDataDto, BindingResult bindingResult) {
+		Timestamp downloadTimestamp = null;
+		try {
+			String timestampsString = orderDataDto.getDownloadDatetime() + " 00:00:00";
+			downloadTimestamp = Timestamp.valueOf(timestampsString);
+		} catch (IllegalArgumentException e) {
+			// do nothing
+		}
+		if (downloadTimestamp == null) {
+			bindingResult.addError(new FieldError("orderDataDto", "downloadDatetime", "Wrong date."));
+
+		}
+		return bindingResult;
+	}
+
+
+
+
+
+
 
 	public String newShipping(HttpSession session, @ModelAttribute("orderDataDto") OrderDataDto orderDataDto) {
 		Person person = (Person) session.getAttribute("person");

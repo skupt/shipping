@@ -33,8 +33,8 @@ public class ShippingController {
     }
 
     @GetMapping("/calculation_result_form")
-    public String getShippingCalculationResultForm(HttpServletRequest request, Model model, HttpSession session) {
-        shippingService.shippingCostCalculationResult(request, model, session);
+    public String getShippingCalculationResultForm(HttpServletRequest request,  HttpSession session) {
+        shippingService.shippingCostCalculationResult(request, session);
         return "/shippings/calculation_result_form";
     }
 
@@ -47,7 +47,18 @@ public class ShippingController {
     @PostMapping("/")
     public String createShipping(@ModelAttribute("orderDataDto") @Valid OrderDataDto orderDataDto,
                                  BindingResult bindingResult, HttpSession session) {
-        return shippingService.createShipping(orderDataDto, bindingResult, session);
+        String page;
+        if (shippingService.checkShippingCreationForm(orderDataDto, bindingResult).hasErrors()) {
+            page = "/shippings/form_new";
+        } else {
+            if (session.getAttribute("person") != null) {
+                shippingService.createShipping(orderDataDto, bindingResult, session);
+                page = "redirect:/auth_user/cabinet";
+            } else {
+                page = "redirect:/login";
+            }
+        }
+        return page;
     }
 
 
