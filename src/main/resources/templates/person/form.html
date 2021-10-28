@@ -2,8 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="css/bootstrap.min.css" />
-<script src="js/bootstrap.min.js"></script>
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<script th:src="@{/js/bootstrap.min.js}"></script>
 <script type="text/javascript">
 	function validateForm() {
 		var p = document.getElementById("password").value;
@@ -23,10 +23,10 @@
 <div class="container">
 <th:block th:include="@{_menu_guest}"/> 	
 
-<div id="login" class="jumbotron" >
+<div id="loginDiv" class="jumbotron" >
   <h1 th:text="#{register.registerHead}"></h1>
   
-	<form th:method="POST" th:action="@{/}" th:object="${personDto}" onsubmit="return validateForm()" >
+	<form th:method="POST" th:action="@{/persons/}" th:object="${personDto}" onsubmit="return validateForm()" >
 		<div>
 			<label for="name" th:text="#{register.name}"></label>
 			<p><input type="text" th:field="*{name}" id="name" ></p>

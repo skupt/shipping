@@ -15,7 +15,7 @@ import rozaryonov.shipping.dto.PersonDto;
 public interface GuestService {
 	String costResult (HttpServletRequest request, Model model, HttpSession session);
 	String tariffs(HttpServletRequest request, HttpSession session);
-	String createUser(@ModelAttribute ("personDto") @Valid PersonDto personDto, BindingResult bindingResult);
+//	String createUser(@ModelAttribute ("personDto") @Valid PersonDto personDto, BindingResult bindingResult);
 	String enterCabinet(Model model, Principal principal, HttpSession session);
 	String accessDenied(Model model, Principal principal);
 	String logout(HttpSession session);

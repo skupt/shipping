@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 			.antMatchers( //todo extract
 				"/", 
-				"/index", 
+				"/persons/*",
 				"/cabinet", 
 				"/costs", 
 				"/delivery_cost", 
@@ -56,7 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.formLogin()
 			.loginPage("/login")
 			.loginProcessingUrl("/j_spring_security_check")
-			.defaultSuccessUrl("/dispatch")
+			.defaultSuccessUrl("/authorized_zone_redirection")
 			.failureUrl("/login?error=true")
 			.usernameParameter("username")
 			.passwordParameter("password")

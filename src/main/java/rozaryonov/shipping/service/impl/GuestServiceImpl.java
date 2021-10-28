@@ -1,7 +1,23 @@
 package rozaryonov.shipping.service.impl;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+import rozaryonov.shipping.exception.GuestSerivceException;
+import rozaryonov.shipping.model.Locality;
+import rozaryonov.shipping.model.Person;
+import rozaryonov.shipping.model.Tariff;
+import rozaryonov.shipping.repository.page.Page;
+import rozaryonov.shipping.repository.page.PageableFactory;
+import rozaryonov.shipping.service.*;
+import rozaryonov.shipping.utils.WebUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.security.Principal;
 import java.text.NumberFormat;
 import java.time.Duration;
@@ -11,44 +27,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Predicate;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-
-import lombok.RequiredArgsConstructor;
-import rozaryonov.shipping.dto.PersonDto;
-import rozaryonov.shipping.dto.mapper.PersonMapper;
-import rozaryonov.shipping.exception.GuestSerivceException;
-import rozaryonov.shipping.model.Locality;
-import rozaryonov.shipping.model.Person;
-import rozaryonov.shipping.model.Tariff;
-import rozaryonov.shipping.repository.PersonRepository;
-import rozaryonov.shipping.repository.page.Page;
-import rozaryonov.shipping.repository.page.PageableFactory;
-import rozaryonov.shipping.service.GuestService;
-import rozaryonov.shipping.service.LocalityService;
-import rozaryonov.shipping.service.LogisticNetElementService;
-import rozaryonov.shipping.service.PersonService;
-import rozaryonov.shipping.service.PropertyService;
-import rozaryonov.shipping.service.TariffService;
-import rozaryonov.shipping.utils.WebUtils;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GuestServiceImpl implements GuestService {
-	private static Logger logger = LogManager.getLogger();
 
 	private final PropertyService propertyService;
 	private final LogisticNetElementService logisticNetElementService;
@@ -56,9 +38,6 @@ public class GuestServiceImpl implements GuestService {
 	private final LocalityService localityService;
 	private final PageableFactory pageableFactory;
 	private final PersonService personService;
-	private final BCryptPasswordEncoder passwordEncoder;
-	private final PersonMapper mapper;
-	private final PersonRepository personRepository;
 
 	@Override
 	public String costResult(HttpServletRequest request, Model model, HttpSession session) {
@@ -93,7 +72,7 @@ public class GuestServiceImpl implements GuestService {
 			route = pf.showShortestPath(departureId, arrivalId);
 			distance = pf.calcMinDistance(departureId, arrivalId);
 		} catch (ClassNotFoundException | IOException e) {
-			logger.warn(e.getMessage());
+			log.warn(e.getMessage());
 			throw new GuestSerivceException(e.getMessage());
 		}
 
@@ -151,8 +130,8 @@ public class GuestServiceImpl implements GuestService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String tariffs(HttpServletRequest request, HttpSession session) {
-		Page<Tariff, TariffService> pageTariffArchive = null;
-		List<Tariff> tariffArchiveList = null;
+		Page<Tariff, TariffService> pageTariffArchive;
+		List<Tariff> tariffArchiveList;
 		String cmd = request.getParameter("cmd");
 		if (cmd != null) {
 			switch (cmd) {
@@ -172,7 +151,7 @@ public class GuestServiceImpl implements GuestService {
 				String sort = request.getParameter("sorting");
 				int filter = Integer.parseInt(request.getParameter("logConf"));
 				// comparator creation
-				Comparator<Tariff> c = null;
+				Comparator<Tariff> c;
 				switch (sort) {
 				case "incr":
 					c = Comparator.comparing((Tariff t) -> t.getCreationTimestamp());
@@ -184,7 +163,7 @@ public class GuestServiceImpl implements GuestService {
 					c = Comparator.comparing((Tariff t) -> t.getCreationTimestamp());
 					break;
 				}
-				// Predicste creation
+				// Predicate creation
 				Predicate<Tariff> p = (Tariff t) -> t.getLogisticConfig().getId() == filter;
 				pageTariffArchive = pageableFactory.getPageableForTariffArchive(6, c, p);
 				session.setAttribute("pageTariffArchive", pageTariffArchive);
@@ -205,27 +184,9 @@ public class GuestServiceImpl implements GuestService {
 	}
 
 	@Override
-	@Transactional
-	public String createUser(@ModelAttribute("personDto") @Valid PersonDto personDto, BindingResult bindingResult) {
-		if (bindingResult.hasErrors())
-			return "/new";
-		if (personService.findByLogin(personDto.getLogin()) != null) {
-			bindingResult.addError(new FieldError("personDto", "login", "Please, choose other login."));
-			return "/new";
-		}
-		personDto.setRoleId(2l);
-		String passEncoded = passwordEncoder.encode(personDto.getPassword());
-		personDto.setPassword(passEncoded);
-		Person person = mapper.toPerson(personDto);
-		person.setBalance(BigDecimal.ZERO);
-		personRepository.save(person);
-		return "redirect:/";
-	}
-
-	@Override
 	public String enterCabinet(Model model, Principal principal, HttpSession session) {
 		Person person = personService.findByLogin((principal.getName()));// todo here we get Optional
-		String page = null;// todo don't left gray code
+		String page;// todo don't left gray code
 		if (person != null) {// todo use Optional
 			switch (person.getRole().getName()) {
 			case "ROLE_USER":
@@ -240,11 +201,11 @@ public class GuestServiceImpl implements GuestService {
 				page = "redirect:/manager/cabinet";
 				break;
 			default:
-				page = "/index";
+				page = "/";
 				break;
 			}
 		} else {
-			page = "/index";
+			page = "/";
 		}
 		return page;
 	}

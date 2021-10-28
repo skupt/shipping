@@ -6,8 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,15 +20,14 @@ import lombok.RequiredArgsConstructor;
 import rozaryonov.shipping.dto.PersonDto;
 import rozaryonov.shipping.exception.RoleNotFoundException;
 import rozaryonov.shipping.service.GuestService;
-
+@Slf4j
 @Controller //todo diff with @RestController
 @RequiredArgsConstructor
 public class GuestController {
-	private static Logger logger = LogManager.getLogger();//todo @slf4j
-	
+
 	private final GuestService guestService;
 	
-	@GetMapping({"/", "/index", "/users"})//todo extract to config
+	@GetMapping("/")
 	public String indexPage () {
 		return "index";
 	}
@@ -44,17 +42,12 @@ public class GuestController {
 		return "/new";
 	}//todo why we need parameter? what?????
 	
-	@PostMapping({"/"})
-	public String createUser(@ModelAttribute ("personDto") @Valid PersonDto personDto, BindingResult bindingResult) {
-		return guestService.createUser(personDto, bindingResult);
-	}
-	
 	@GetMapping("/login")
 	public String loginPage(Model model) {
 		return "loginPage";
 	}
 
-	@GetMapping("/dispatch")//todo what meaning of it??? rename
+	@GetMapping("/authorized_zone_redirection")
 	public String enterCabinet(Model model, Principal principal, HttpSession session) {
 		return guestService.enterCabinet(model, principal, session);
 	}
