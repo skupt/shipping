@@ -6,5 +6,8 @@ public class ConnectionGettingException extends RuntimeException {
 	public ConnectionGettingException (String message) {
 		super(message);
 	}
+	public ConnectionGettingException (String message, Exception couse) {
+		super(message);
+	}
 
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import rozaryonov.shipping.dto.OrderDataDto;
-import rozaryonov.shipping.service.LocalityService;
+import rozaryonov.shipping.service.impl.LocalityServiceImpl;
 import rozaryonov.shipping.service.impl.ShippingServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ public class ShippingController {
     @Autowired
     private ShippingServiceImpl shippingService;
     @Autowired
-    private LocalityService localityService;
+    private LocalityServiceImpl localityService;
 
     @GetMapping("/calculation_start_form")
     public String getShippingCalculationStartForm(Model model) {

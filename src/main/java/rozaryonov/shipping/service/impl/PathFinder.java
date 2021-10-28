@@ -17,17 +17,16 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import rozaryonov.shipping.model.LogisticNetElement;
-import rozaryonov.shipping.service.LogisticNetElementService;
 
 public class PathFinder {
 	
 	private Set<Town> townSet;
 	
-	public PathFinder(LogisticNetElementService logisticNetElementService, long netConfigId) {
+	public PathFinder(LogisticNetElementServiceImpl logisticNetElementService, long netConfigId) {
 		townSet=loadTowns(logisticNetElementService, netConfigId);
 	}
 	
-	private static Set<Town> loadTowns(LogisticNetElementService  logisticNetElementService , long netConfigId) {
+	private static Set<Town> loadTowns(LogisticNetElementServiceImpl  logisticNetElementService , long netConfigId) {
 		Iterable<LogisticNetElement> eList = logisticNetElementService.findByNetConfig(netConfigId);
 		Map<String, Town> townMap = new TreeMap<>();
 		Town town1 = null;

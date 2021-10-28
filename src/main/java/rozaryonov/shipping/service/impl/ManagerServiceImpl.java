@@ -1,5 +1,30 @@
 package rozaryonov.shipping.service.impl;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import rozaryonov.shipping.dto.SettlementsDto;
+import rozaryonov.shipping.dto.ShippingToFinishDto;
+import rozaryonov.shipping.exception.*;
+import rozaryonov.shipping.model.*;
+import rozaryonov.shipping.repository.*;
+import rozaryonov.shipping.repository.page.DayReportRepo;
+import rozaryonov.shipping.repository.page.DirectionReportRepo;
+import rozaryonov.shipping.repository.page.Page;
+import rozaryonov.shipping.repository.page.PageableFactory;
+import rozaryonov.shipping.repository.reportable.DayReport;
+import rozaryonov.shipping.repository.reportable.DirectionReport;
+import rozaryonov.shipping.service.SettlementsService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -12,53 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-
-import lombok.RequiredArgsConstructor;
-import rozaryonov.shipping.dto.SettlementsDto;
-import rozaryonov.shipping.dto.ShippingToFinishDto;
-import rozaryonov.shipping.exception.ShippingNotFoundException;
-import rozaryonov.shipping.exception.ShippingStatusNotFoundException;
-import rozaryonov.shipping.exception.InvoiceStatusNotFound;
-import rozaryonov.shipping.exception.ManagerSerivceException;
-import rozaryonov.shipping.exception.PersonNotFoundException;
-import rozaryonov.shipping.exception.SettlementsTypeNotFoundException;
-import rozaryonov.shipping.model.Invoice;
-import rozaryonov.shipping.model.Person;
-import rozaryonov.shipping.model.Role;
-import rozaryonov.shipping.model.SettlementType;
-import rozaryonov.shipping.model.Settlements;
-import rozaryonov.shipping.model.Shipping;
-import rozaryonov.shipping.model.ShippingStatus;
-import rozaryonov.shipping.repository.InvoiceRepository;
-import rozaryonov.shipping.repository.InvoiceStatusRepository;
-import rozaryonov.shipping.repository.PersonRepository;
-import rozaryonov.shipping.repository.SettlementsRepository;
-import rozaryonov.shipping.repository.SettlementsTypeRepository;
-import rozaryonov.shipping.repository.ShippingRepository;
-import rozaryonov.shipping.repository.ShippingStatusRepository;
-import rozaryonov.shipping.repository.page.DayReportRepo;
-import rozaryonov.shipping.repository.page.DirectionReportRepo;
-import rozaryonov.shipping.repository.page.Page;
-import rozaryonov.shipping.repository.page.PageableFactory;
-import rozaryonov.shipping.repository.reportable.DayReport;
-import rozaryonov.shipping.repository.reportable.DirectionReport;
-import rozaryonov.shipping.service.ManagerService;
-import rozaryonov.shipping.service.SettlementsService;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 //todo @Slf4j
@@ -68,8 +47,7 @@ import rozaryonov.shipping.service.SettlementsService;
 /* TODO Refactor this class to use only Springframwork's Page. */
 
 
-public class ManagerServiceImpl implements ManagerService {
-	private static Logger logger = LogManager.getLogger();// todo use lombok
+public class ManagerServiceImpl {
 
 	private final PersonRepository personRepository;
 	private final SettlementsTypeRepository settlementsTypeRepository;
@@ -81,7 +59,6 @@ public class ManagerServiceImpl implements ManagerService {
 	private final InvoiceRepository invoiceRepository;
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public String paymentsShow(@ModelAttribute("settlements") @Valid SettlementsDto settlements, HttpSession session,
 			HttpServletRequest request) {
 		rozaryonov.shipping.repository.page.Page<Settlements, SettlementsService> pageSettlementsAddPayment = null;
@@ -123,7 +100,6 @@ public class ManagerServiceImpl implements ManagerService {
 	}
 
 	@Transactional // todo learn how it works (learn about inside Proxy)
-	@Override
 	public String paymentsCreate(@ModelAttribute("settlements") SettlementsDto settlements, BindingResult bindingResult,
 			HttpServletRequest request, HttpSession session) throws NumberFormatException {
 
@@ -141,7 +117,7 @@ public class ManagerServiceImpl implements ManagerService {
 					.orElseThrow(() -> new PersonNotFoundException("No Person with id while PaymentInsert"));
 			amount = BigDecimal.valueOf(Double.parseDouble(request.getParameter("amount")));
 		} catch (IllegalArgumentException | DateTimeParseException e) {
-			logger.warn(e.getMessage());
+			log.warn(e.getMessage());
 			throw new ManagerSerivceException(e.getMessage());
 		}
 		boolean hasErrors = false;
@@ -171,7 +147,6 @@ public class ManagerServiceImpl implements ManagerService {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public String showCreateInvoicesForm(HttpSession session, HttpServletRequest request) {
 
 		ShippingStatus justCreated = new ShippingStatus();
@@ -212,7 +187,6 @@ public class ManagerServiceImpl implements ManagerService {
 	}
 
 	@Transactional
-	@Override
 	public String createInvoices(HttpServletRequest request) {
 
 		String[] shippingIds = request.getParameterValues("shippingId");
@@ -226,7 +200,7 @@ public class ManagerServiceImpl implements ManagerService {
 						.orElseThrow(() -> new ShippingNotFoundException(
 								"No Shipping found in managerServiceImpl.createInvoices()."));
 			} catch (ShippingNotFoundException e) {
-				logger.warn(e.getMessage());
+				log.warn(e.getMessage());
 				throw e;
 			}
 			setShippings.add(shippig);
@@ -304,7 +278,6 @@ public class ManagerServiceImpl implements ManagerService {
 	}
 
 	@Transactional
-	@Override
 	public String finishShippings(@ModelAttribute("shippingDto") @Valid ShippingToFinishDto shippingDto,
 			BindingResult bindingResult, HttpServletRequest request, HttpSession session) {
 
@@ -353,7 +326,6 @@ public class ManagerServiceImpl implements ManagerService {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public String reportDay(HttpSession session, HttpServletRequest request) {
 		rozaryonov.shipping.repository.page.Page<DayReport, DayReportRepo> pageDayReport = null;
 		List<DayReport> reportDayList = null;
@@ -386,7 +358,6 @@ public class ManagerServiceImpl implements ManagerService {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public String reportDirection(HttpSession session, HttpServletRequest request) {
 		rozaryonov.shipping.repository.page.Page<DirectionReport, DirectionReportRepo> pageDirectionReport = null;
 		List<DirectionReport> reportDirectionList = null;

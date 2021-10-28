@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import rozaryonov.shipping.model.LogisticNetElement;
 
 @Repository
-public interface LogisticNetElementRepository extends CrudRepository<LogisticNetElement, Long>{
+public interface LogisticNetElementRepository extends CrudRepository<LogisticNetElement, Long>,
+        CustomLogisticNetElementRepository {
 
 }

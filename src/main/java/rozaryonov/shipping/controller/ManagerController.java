@@ -1,9 +1,7 @@
 package rozaryonov.shipping.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -12,21 +10,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import lombok.RequiredArgsConstructor;
 import rozaryonov.shipping.dto.SettlementsDto;
 import rozaryonov.shipping.dto.ShippingToFinishDto;
-import rozaryonov.shipping.service.ManagerService;
+import rozaryonov.shipping.service.impl.ManagerServiceImpl;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/manager/")
 
 //todo in parallel learn Spring and its basics
 public class ManagerController {
-	private static Logger logger = LogManager.getLogger();
-	
-	private final ManagerService managerService;
+	private final ManagerServiceImpl managerService;
 
 	@GetMapping("/cabinet")
 	public String cabinet (HttpSession session) {

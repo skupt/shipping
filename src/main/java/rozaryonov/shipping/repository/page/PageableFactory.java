@@ -1,13 +1,8 @@
 package rozaryonov.shipping.repository.page;
 
-import java.util.Comparator;
-import java.util.function.Predicate;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.stereotype.Component;
-
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import rozaryonov.shipping.model.Invoice;
 import rozaryonov.shipping.model.Person;
 import rozaryonov.shipping.model.Settlements;
@@ -18,10 +13,12 @@ import rozaryonov.shipping.service.InvoiceService;
 import rozaryonov.shipping.service.SettlementsService;
 import rozaryonov.shipping.service.TariffService;
 
+import java.util.Comparator;
+import java.util.function.Predicate;
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class PageableFactory {
-	private static Logger logger = LogManager.getLogger(PageableFactory.class.getName());
 	private final TariffService tariffService;
 	private final InvoiceService invoiceService;
 	private final SettlementsService settlementsService;
@@ -41,7 +38,7 @@ public class PageableFactory {
 
 	public Page<Invoice, InvoiceService> getPageableForUserSpendingPage (int rowsOnPage, Person person) {
 		 Page<Invoice, InvoiceService> page = new Page<>(
-				 invoiceService, 
+				 invoiceService,
 				 Comparator.comparing((Invoice s) -> s.getCreationDateTime()).reversed());
 		 page.setPredicat((Invoice e)-> (e.getInvoiceStatus().getId()==1)&&(e.getPerson().getId()==person.getId()));
 		 page.setRowsOnPage(rowsOnPage);

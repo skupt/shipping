@@ -31,11 +31,6 @@ import java.util.function.Predicate;
 @Service
 @RequiredArgsConstructor
 public class GuestServiceImpl{
-
-	private final PropertyService propertyService;
-	private final LogisticNetElementService logisticNetElementService;
-	private final TariffService tariffService;
-	private final LocalityService localityService;
 	private final PageableFactory pageableFactory;
 	private final PersonServiceImpl personService;
 

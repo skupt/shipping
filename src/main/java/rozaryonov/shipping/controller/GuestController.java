@@ -6,8 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import rozaryonov.shipping.exception.RoleNotFoundException;
-import rozaryonov.shipping.service.LocalityService;
 import rozaryonov.shipping.service.impl.GuestServiceImpl;
+import rozaryonov.shipping.service.impl.LocalityServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -19,8 +19,7 @@ import java.security.Principal;
 public class GuestController {
 
 	private final GuestServiceImpl guestService;
-	private final LocalityService localityService;
-	
+
 	@GetMapping("/")
 	public String indexPage () {
 		return "index";
