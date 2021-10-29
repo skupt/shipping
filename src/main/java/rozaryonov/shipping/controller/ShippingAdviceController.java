@@ -16,7 +16,7 @@ import rozaryonov.shipping.exception.InvoiceStatusNotFound;
 import rozaryonov.shipping.exception.LocalityNotFoundException;
 import rozaryonov.shipping.exception.LogisticConfigNotFoundException;
 import rozaryonov.shipping.exception.LogisticNetNotFoundException;
-import rozaryonov.shipping.exception.ManagerSerivceException;
+import rozaryonov.shipping.exception.PaymentCreationException;
 import rozaryonov.shipping.exception.PageableListFindingException;
 import rozaryonov.shipping.exception.PersonBalanceCalculationException;
 import rozaryonov.shipping.exception.PersonNotFoundException;
@@ -36,7 +36,7 @@ public class ShippingAdviceController {
 		LocalityNotFoundException.class, 
 		LogisticConfigNotFoundException.class, 
 		LogisticNetNotFoundException.class, 
-		ManagerSerivceException.class, 
+		PaymentCreationException.class,
 		PageableListFindingException.class, 
 		PersonBalanceCalculationException.class, 
 		PersonNotFoundException.class, 

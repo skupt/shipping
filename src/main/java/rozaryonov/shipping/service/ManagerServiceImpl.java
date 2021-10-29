@@ -117,7 +117,7 @@ public class ManagerServiceImpl {
 			amount = BigDecimal.valueOf(Double.parseDouble(request.getParameter("amount")));
 		} catch (IllegalArgumentException | DateTimeParseException e) {
 			log.warn(e.getMessage());
-			throw new ManagerSerivceException(e.getMessage());
+			throw new PaymentCreationException(e.getMessage());
 		}
 		boolean hasErrors = false;
 		if (paymentDate == null) {

@@ -32,8 +32,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		// todo disclose what will happen when anable csrf 
-		http.csrf().disable(); 
+		// todo disclose what will happen when anable csrf. Answer Tlf append appends hidden field _csrf	"8e321c6a-31fa-412c-9519-5c65d97000e1"
+		// whithout Tlf, there necessary to add <input type="hidden" name = "${_csrf.parameterName}" value = "${_csrf.token}">
+		// http.csrf().disable();
 
 		http
 			.authorizeRequests()
