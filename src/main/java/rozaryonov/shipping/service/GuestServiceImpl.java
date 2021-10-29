@@ -84,7 +84,7 @@ public class GuestServiceImpl{
 		Person person = personService.findByLogin((principal.getName()));// todo here we get Optional
 		String page;// todo don't left gray code
 		if (person != null) {// todo use Optional
-			switch (person.getRole().getName()) {
+			switch (person.getRole().toString()) {
 			case "ROLE_USER":
 				model.addAttribute("balance", personService.calcAndReplaceBalance(person.getId()));
 				model.addAttribute("person", person);

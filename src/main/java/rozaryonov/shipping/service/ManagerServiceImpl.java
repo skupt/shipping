@@ -90,7 +90,7 @@ public class ManagerServiceImpl {
 			session.setAttribute("pageNum", pageSettlementsAddPayment.getCurPageNum());
 			session.setAttribute("pageTotal", pageSettlementsAddPayment.getTotalPages());
 			session.setAttribute("settlementsList", settlementsList);
-			Role user = Role.findById(2L);
+			Role user = Role.valueOf("ROLE_USER");
 			session.setAttribute("persons", personRepository.findByRole(user));
 
 		}
@@ -319,7 +319,7 @@ public class ManagerServiceImpl {
 
 	public boolean isManager(HttpSession session) {
 		Person person = (Person) session.getAttribute("person");
-		if (person != null && person.getRole().getName().equals("manager"))
+		if (person != null && person.getRole().toString().equals("ROLE_MANAGER"))
 			return true;
 		return false;
 	}

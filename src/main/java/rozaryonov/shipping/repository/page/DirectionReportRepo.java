@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -21,10 +22,10 @@ import rozaryonov.shipping.exception.ConnectionGettingException;
 import rozaryonov.shipping.exception.PageableListFindingException;
 import rozaryonov.shipping.repository.reportable.DirectionReport;
 
+@Slf4j
 @Component
 public class DirectionReportRepo implements Pageable<DirectionReport> {
-	private static Logger logger = LogManager.getLogger(DayReportRepo.class.getName());
-	private static final String FITER_BY_PERIOD  = 
+	private static final String FITER_BY_PERIOD  =
 			"select concat_ws(\" -> \", dep.name, arr.name) as Direction, sum(a.fare) as Turnover\n" + 
 			"from shipping a,\n" + 
 			"	locality dep,\n" + 
@@ -40,7 +41,7 @@ public class DirectionReportRepo implements Pageable<DirectionReport> {
 		try {
 			this.connection = dataSource.getConnection();
 		} catch (SQLException e) {
-			logger.error(e.getMessage());
+			log.error(e.getMessage());
 			throw new ConnectionGettingException(e.getMessage());
 		}
 	}
@@ -66,7 +67,7 @@ public class DirectionReportRepo implements Pageable<DirectionReport> {
 				reportRows.add(r);
 			}
 		} catch (SQLException e) {
-			logger.error("SQLException while Shipping findAllInPeriod. ", e.getMessage());
+			log.error("SQLException while Shipping findAllInPeriod. ", e.getMessage());
 			throw new PageableListFindingException(e.getMessage());
 		}
 		return reportRows;

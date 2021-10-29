@@ -20,7 +20,7 @@ public class PersonMapper {
 		person.setPatronomic(personDto.getPatronomic());
 		person.setSurname(personDto.getSurname());
 		person.setTitle(personDto.getTitle());
-		person.setRole(Role.findById(personDto.getRoleId()));
+		person.setRole(Role.valueOf(personDto.getRoleId()));
 		
 		return person;
 	}

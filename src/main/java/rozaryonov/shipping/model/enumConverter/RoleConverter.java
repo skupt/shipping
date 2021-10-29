@@ -6,19 +6,19 @@ import javax.persistence.Converter;
 import rozaryonov.shipping.model.Role;
 
 @Converter(autoApply = true)
-public class RoleConverter implements AttributeConverter<Role, Long> {
+public class RoleConverter implements AttributeConverter<Role, String> {
 
 	@Override
-	public Long convertToDatabaseColumn(Role role) {
+	public String convertToDatabaseColumn(Role role) {
 		if (role == null) return null;
-		return role.getId();
+		return role.toString();
 	}
 
 	@Override
-	public Role convertToEntityAttribute(Long id) {
+	public Role convertToEntityAttribute(String id) {
 		if (id == null) return null;
 		
-		return Role.findById(id);
+		return Role.valueOf(id);
 	}
 
 }

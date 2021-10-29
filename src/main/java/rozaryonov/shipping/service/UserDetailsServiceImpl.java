@@ -26,10 +26,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 		Person person = personService.findByLogin(username);
 		if (person != null) {
-			System.out.println("Found user: " + person);
 			Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-			grantedAuthorities.add(new SimpleGrantedAuthority(person.getRole().getName()));
-			System.out.println(person.getLogin() + " - " + person.getRole().getName());
+			grantedAuthorities.add(new SimpleGrantedAuthority(person.getRole().toString()));
 			return (UserDetails) new User(person.getLogin(), person.getPassword(), grantedAuthorities);
 		}
 		throw new UsernameNotFoundException("User with login=" + username + " hasn't been found");

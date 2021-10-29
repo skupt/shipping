@@ -9,57 +9,156 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import lombok.extern.slf4j.Slf4j;
-import rozaryonov.shipping.exception.ConnectionGettingException;
-import rozaryonov.shipping.exception.GuestSerivceException;
-import rozaryonov.shipping.exception.InvoiceNotFoundException;
-import rozaryonov.shipping.exception.InvoiceStatusNotFound;
-import rozaryonov.shipping.exception.LocalityNotFoundException;
-import rozaryonov.shipping.exception.LogisticConfigNotFoundException;
-import rozaryonov.shipping.exception.LogisticNetNotFoundException;
-import rozaryonov.shipping.exception.PaymentCreationException;
-import rozaryonov.shipping.exception.PageableListFindingException;
-import rozaryonov.shipping.exception.PersonBalanceCalculationException;
-import rozaryonov.shipping.exception.PersonNotFoundException;
-import rozaryonov.shipping.exception.RoleNotFoundException;
-import rozaryonov.shipping.exception.SettlementsTypeNotFoundException;
-import rozaryonov.shipping.exception.ShippingNotFoundException;
+import rozaryonov.shipping.exception.*;
 
 @Slf4j
 @ControllerAdvice
 public class ShippingAdviceController {
 	
-	@ExceptionHandler( {
-		ConnectionGettingException.class,
-		GuestSerivceException.class, 
-		InvoiceNotFoundException.class, 
-		InvoiceStatusNotFound.class, 
-		LocalityNotFoundException.class, 
-		LogisticConfigNotFoundException.class, 
-		LogisticNetNotFoundException.class, 
-		PaymentCreationException.class,
-		PageableListFindingException.class, 
-		PersonBalanceCalculationException.class, 
-		PersonNotFoundException.class, 
-		PropertyNotFoundException.class, 
-		RoleNotFoundException.class, 
-		SettlementsTypeNotFoundException.class, 
-		ShippingNotFoundException.class 
-		})
+	@ExceptionHandler(ConnectionGettingException.class)
+	public String handleShippingExceptions (ConnectionGettingException e, Model model, HttpServletResponse response) {
+		log.error(e.getMessage(), e); //+ stacktrace
+		model.addAttribute("erororDescription", e.getMessage());
+		response.setStatus(500);
+		return "/error/5xx";
+	}
+
+	@ExceptionHandler(GuestSerivceException.class)
+	public String handleShippingExceptions (GuestSerivceException e, Model model, HttpServletResponse response) {
+		log.error(e.getMessage(), e); //+ stacktrace
+		model.addAttribute("erororDescription", e.getMessage());
+		response.setStatus(500);
+		return "/error/5xx";
+	}
+
+	@ExceptionHandler(InvoiceNotFoundException.class)
+	public String handleShippingExceptions (InvoiceNotFoundException e, Model model, HttpServletResponse response) {
+		log.error(e.getMessage(), e); //+ stacktrace
+		model.addAttribute("erororDescription", e.getMessage());
+		response.setStatus(500);
+		return "/error/5xx";
+	}
+
+	@ExceptionHandler(InvoiceStatusNotFound.class)
+	public String handleShippingExceptions (InvoiceStatusNotFound e, Model model, HttpServletResponse response) {
+		log.error(e.getMessage(), e); //+ stacktrace
+		model.addAttribute("erororDescription", e.getMessage());
+		response.setStatus(500);
+		return "/error/5xx";
+	}
+
+	@ExceptionHandler(LocalityNotFoundException.class)
+	public String handleShippingExceptions (LocalityNotFoundException e, Model model, HttpServletResponse response) {
+		log.error(e.getMessage(), e); //+ stacktrace
+		model.addAttribute("erororDescription", e.getMessage());
+		response.setStatus(500);
+		return "/error/5xx";
+	}
+
+	@ExceptionHandler(LogisticConfigNotFoundException.class)
+	public String handleShippingExceptions (LogisticConfigNotFoundException e, Model model, HttpServletResponse response) {
+		log.error(e.getMessage(), e); //+ stacktrace
+		model.addAttribute("erororDescription", e.getMessage());
+		response.setStatus(500);
+		return "/error/5xx";
+	}
+
+	@ExceptionHandler(LogisticNetNotFoundException.class)
+	public String handleShippingExceptions (LogisticNetNotFoundException e, Model model, HttpServletResponse response) {
+		log.error(e.getMessage(), e); //+ stacktrace
+		model.addAttribute("erororDescription", e.getMessage());
+		response.setStatus(500);
+		return "/error/5xx";
+	}
+
+	@ExceptionHandler(PaymentCreationException.class)
+	public String handleShippingExceptions (PaymentCreationException e, Model model, HttpServletResponse response) {
+		log.error(e.getMessage(), e); //+ stacktrace
+		model.addAttribute("erororDescription", e.getMessage());
+		response.setStatus(500);
+		return "/error/5xx";
+	}
+
+	@ExceptionHandler(PageableListFindingException.class)
+	public String handleShippingExceptions (PageableListFindingException e, Model model, HttpServletResponse response) {
+		log.error(e.getMessage(), e); //+ stacktrace
+		model.addAttribute("erororDescription", e.getMessage());
+		response.setStatus(500);
+		return "/error/5xx";
+	}
+
+	@ExceptionHandler(PersonBalanceCalculationException.class)
+	public String handleShippingExceptions (PersonBalanceCalculationException e, Model model, HttpServletResponse response) {
+		log.error(e.getMessage(), e); //+ stacktrace
+		model.addAttribute("erororDescription", e.getMessage());
+		response.setStatus(500);
+		return "/error/5xx";
+	}
+
+	@ExceptionHandler(PersonNotFoundException.class)
+	public String handleShippingExceptions (PersonNotFoundException e, Model model, HttpServletResponse response) {
+		log.error(e.getMessage(), e); //+ stacktrace
+		model.addAttribute("erororDescription", e.getMessage());
+		response.setStatus(500);
+		return "/error/5xx";
+	}
+
+	@ExceptionHandler(PropertyNotFoundException.class)
+	public String handleShippingExceptions (PropertyNotFoundException e, Model model, HttpServletResponse response) {
+		log.error(e.getMessage(), e); //+ stacktrace
+		model.addAttribute("erororDescription", e.getMessage());
+		response.setStatus(500);
+		return "/error/5xx";
+	}
+
+	@ExceptionHandler(RoleNotFoundException.class)
+	public String handleShippingExceptions (RoleNotFoundException e, Model model, HttpServletResponse response) {
+		log.error(e.getMessage(), e); //+ stacktrace
+		model.addAttribute("erororDescription", e.getMessage());
+		response.setStatus(500);
+		return "/error/5xx";
+	}
+
+	@ExceptionHandler(SettlementsTypeNotFoundException.class)
+	public String handleShippingExceptions (SettlementsTypeNotFoundException e, Model model, HttpServletResponse response) {
+		log.error(e.getMessage(), e); //+ stacktrace
+		model.addAttribute("erororDescription", e.getMessage());
+		response.setStatus(500);
+		return "/error/5xx";
+	}
+
+	@ExceptionHandler(ShippingNotFoundException.class)
 	public String handleShippingExceptions (Exception e, Model model, HttpServletResponse response) {
 		log.error(e.getMessage(), e); //+ stacktrace
 		model.addAttribute("erororDescription", e.getMessage());
 		response.setStatus(500);
 		return "/error/5xx";
 	}
-	
-	
-	@ExceptionHandler( Exception.class )
+
+	@ExceptionHandler(ShippingStatusNotFoundException.class )
+	public String handleExceptions (ShippingStatusNotFoundException e, Model model, HttpServletResponse response) {
+		log.error(e.getMessage(), e); //+ stacktrace
+		model.addAttribute("erororDescription", e.getMessage());
+		response.setStatus(500);
+		return "/error/5xx";
+	}
+
+	@ExceptionHandler(TariffNotFoundException.class )
+	public String handleExceptions (TariffNotFoundException e, Model model, HttpServletResponse response) {
+		log.error(e.getMessage(), e); //+ stacktrace
+		model.addAttribute("erororDescription", e.getMessage());
+		response.setStatus(500);
+		return "/error/5xx";
+	}
+
+	@ExceptionHandler(Exception.class )
 	public String handleExceptions (Exception e, Model model, HttpServletResponse response) {
 		log.error(e.getMessage(), e); //+ stacktrace
 		model.addAttribute("erororDescription", e.getMessage());
 		response.setStatus(500);
 		return "/error/5xx";
 	}
+
 
 
 }

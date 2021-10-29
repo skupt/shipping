@@ -12,13 +12,12 @@ import rozaryonov.shipping.dto.PersonDto;
 import rozaryonov.shipping.dto.mapper.PersonMapper;
 import rozaryonov.shipping.exception.PersonNotFoundException;
 import rozaryonov.shipping.model.Person;
+import rozaryonov.shipping.model.Role;
 import rozaryonov.shipping.repository.PersonRepository;
 import rozaryonov.shipping.repository.SettlementsRepository;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
-
-import static rozaryonov.shipping.AppConst.ROLE_USER_ID;
 
 @Slf4j
 @Service
@@ -48,7 +47,7 @@ public class PersonServiceImpl {
 
     @Transactional
     public String createUser(@ModelAttribute("personDto") @Valid PersonDto personDto) {
-        personDto.setRoleId(ROLE_USER_ID);
+        personDto.setRoleId(Role.ROLE_USER.toString());
         String passEncoded = passwordEncoder.encode(personDto.getPassword());
         personDto.setPassword(passEncoded);
         Person person = mapper.toPerson(personDto);

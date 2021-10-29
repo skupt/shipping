@@ -31,7 +31,7 @@ public class PersonDto {
 	private String surname;
 	private String patronomic;
 	private String title;
-	private long roleId;
+	private String roleId;
 	
 	public PersonDto(String login, String password, String name) {
 		this.login = login;

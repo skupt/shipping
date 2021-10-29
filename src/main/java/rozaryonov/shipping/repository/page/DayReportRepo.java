@@ -13,14 +13,14 @@ import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import rozaryonov.shipping.exception.ConnectionGettingException;
 import rozaryonov.shipping.exception.PageableListFindingException;
 import rozaryonov.shipping.repository.reportable.DayReport;
 
+@Slf4j
 @Component
 public class DayReportRepo implements Pageable<DayReport> {
 	private Connection connection;
@@ -29,7 +29,7 @@ public class DayReportRepo implements Pageable<DayReport> {
 		try {
 			this.connection = dataSource.getConnection();
 		} catch (SQLException e) {
-			logger.error(e.getMessage());
+			log.error(e.getMessage());
 			throw new ConnectionGettingException(e.getMessage());
 		}
 
@@ -38,9 +38,6 @@ public class DayReportRepo implements Pageable<DayReport> {
 	private static final String FITER_BY_PERIOD  = "select DATE(download_datetime) AS Date, sum(fare) as Turnover" + 
 			" from shipping" + 
 			" group by Date;";
-
-	
-	private static Logger logger = LogManager.getLogger(DayReportRepo.class.getName());
 
 	
 	@Override
@@ -63,7 +60,7 @@ public class DayReportRepo implements Pageable<DayReport> {
 				reportRows.add(r);
 			}
 		} catch (SQLException e) {
-			logger.error("SQLException while Shipping findAllInPeriod. ", e.getMessage());
+			log.error("SQLException while Shipping findAllInPeriod. ", e.getMessage());
 			throw new PageableListFindingException(e.getMessage());
 		}
 		return reportRows;
