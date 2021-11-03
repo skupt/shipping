@@ -1,9 +1,10 @@
-package rozaryonov.shipping.controller;
+package rozaryonov.shipping.exception;
 
 
 import javax.el.PropertyNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,7 +28,7 @@ public class ShippingAdviceController {
 	public String handleShippingExceptions (GuestSerivceException e, Model model, HttpServletResponse response) {
 		log.error(e.getMessage(), e); //+ stacktrace
 		model.addAttribute("erororDescription", e.getMessage());
-		response.setStatus(500);
+		response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 		return "/error/5xx";
 	}
 

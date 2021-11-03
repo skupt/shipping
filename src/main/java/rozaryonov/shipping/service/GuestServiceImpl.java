@@ -91,7 +91,7 @@ public class GuestServiceImpl{
 				session.setAttribute("person", person);
 				page = "redirect:/auth_user/cabinet";
 				break;
-			case "ROLE_MANAGER":
+			case "ROLE_MANAGER": //todo use enum
 				model.addAttribute("person", person);
 				session.setAttribute("person", person);
 				page = "redirect:/manager/cabinet";

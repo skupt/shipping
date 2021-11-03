@@ -44,9 +44,4 @@ public class GuestController {
 		return guestService.logout(session);
 	}
 	
-	@GetMapping("/exception")
-	public String exception() {
-		throw new RoleNotFoundException("RoleNotFoundException in GuestController");
-	}
-
 }
