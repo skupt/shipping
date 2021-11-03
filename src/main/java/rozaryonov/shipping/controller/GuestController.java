@@ -2,15 +2,14 @@ package rozaryonov.shipping.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import rozaryonov.shipping.dto.OrderDataDto;
 import rozaryonov.shipping.dto.PersonDto;
+import rozaryonov.shipping.dto.ShippingResultComposedDto;
 import rozaryonov.shipping.repository.LocalityRepository;
 import rozaryonov.shipping.service.GuestService;
 import rozaryonov.shipping.service.PersonService;
@@ -81,7 +80,10 @@ public class GuestController {
 
 	@GetMapping("/shippings/calculation_result_form")
 	public String getShippingCalculationResultForm(HttpServletRequest request,  HttpSession session) {
-		shippingService.shippingCostCalculationResult(request, session);
+		ShippingResultComposedDto composedDto = shippingService.calculatePriceResultComposedDto(request, session);
+		shippingService.setNumericAttributes(session, composedDto.getShippingResultPriceAttributesDto());
+		shippingService.setFormattedAttributes(session, composedDto.getShippingResultPriceAttributesDto(),
+				composedDto.getShippingResultFormParametersDto());
 		return "/shippings/calculation_result_form";
 	}
 
