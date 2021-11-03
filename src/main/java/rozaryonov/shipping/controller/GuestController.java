@@ -2,29 +2,41 @@ package rozaryonov.shipping.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import rozaryonov.shipping.exception.RoleNotFoundException;
-import rozaryonov.shipping.service.GuestServiceImpl;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import rozaryonov.shipping.dto.OrderDataDto;
+import rozaryonov.shipping.dto.PersonDto;
+import rozaryonov.shipping.repository.LocalityRepository;
+import rozaryonov.shipping.service.GuestService;
+import rozaryonov.shipping.service.PersonService;
+import rozaryonov.shipping.service.ShippingService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.security.Principal;
 
 @Slf4j
-@Controller //todo diff with @RestController
+@Controller
 @RequiredArgsConstructor
 public class GuestController {
+	private final GuestService guestService;
+	private final PersonService personService;
+	private final ShippingService shippingService;
+	private final LocalityRepository localityRepository;
 
-	private final GuestServiceImpl guestService;
 
 	@GetMapping("/")
 	public String indexPage () {
 		return "index";
 	}
 	
-	@GetMapping("/tariffs")//todo correct naming
+	@GetMapping("/tariffs")
 	public String tariffs(HttpServletRequest request, HttpSession session) {
 		return guestService.tariffs(request, session);
 	}
@@ -43,5 +55,37 @@ public class GuestController {
 	public String logout(HttpSession session) {
 		return guestService.logout(session);
 	}
-	
+
+	@GetMapping("/persons/new_person_form")
+	public String getNewPersonForm(@ModelAttribute("personDto") PersonDto personDto) {
+		return "/new_person_form";
+	}
+
+	@PostMapping("/persons/")
+	public String createPerson(@ModelAttribute ("personDto") @Valid PersonDto personDto, BindingResult bindingResult) {
+		String page;
+		if (personService.checkUserCreationForm(personDto, bindingResult).hasErrors()) {
+			page = "/person/new_person_form";
+		} else {
+			personService.createUser(personDto);
+			page = "redirect:/";
+		}
+		return page;
+	}
+
+	@GetMapping("/shippings/calculation_start_form")
+	public String getShippingCalculationStartForm(Model model) {
+		model.addAttribute("localities", localityRepository.findAll());
+		return "/shippings/calculation_start_form";
+	}
+
+	@GetMapping("/shippings/calculation_result_form")
+	public String getShippingCalculationResultForm(HttpServletRequest request,  HttpSession session) {
+		shippingService.shippingCostCalculationResult(request, session);
+		return "/shippings/calculation_result_form";
+	}
+
+
+
+
 }

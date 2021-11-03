@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import rozaryonov.shipping.dto.SettlementsDto;
 import rozaryonov.shipping.dto.ShippingToFinishDto;
-import rozaryonov.shipping.service.ManagerServiceImpl;
+import rozaryonov.shipping.service.ManagerService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -20,9 +20,8 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/manager/")
 
-//todo in parallel learn Spring and its basics
 public class ManagerController {
-	private final ManagerServiceImpl managerService;
+	private final ManagerService managerService;
 
 	@GetMapping("/cabinet")
 	public String cabinet (HttpSession session) {

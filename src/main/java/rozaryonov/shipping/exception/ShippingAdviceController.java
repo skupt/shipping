@@ -1,16 +1,13 @@
 package rozaryonov.shipping.exception;
 
 
-import javax.el.PropertyNotFoundException;
-import javax.servlet.http.HttpServletResponse;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import lombok.extern.slf4j.Slf4j;
-import rozaryonov.shipping.exception.*;
+import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
 @ControllerAdvice

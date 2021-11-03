@@ -16,7 +16,7 @@
     <h3 class="panel-title">
     <span th:text="#{deliveryCosts.totalMoney} + ' : '"></span>
     <span th:text="${session.totalMoney}"></span>
-	<a class="btn btn-default btn-lg" role="button" th:href="@{/shippings/form}" th:text="#{deliveryCosts.makeOrder}"></a>
+	<a class="btn btn-default btn-lg" role="button" th:href="@{/auth_user/shippings/new_shipping_form}" th:text="#{deliveryCosts.makeOrder}"></a>
 	</h3>
   </div>
   <div class="panel-body">
@@ -36,16 +36,16 @@
   <div class="panel-body">
 <p><span th:text="#{deliveryCosts.route}"></span>: <span th:text="${session.route}"></span></p>
 <p><span th:text="#{deliveryCosts.distance}"></span>: <span th:text="${session.distanceD}"></span></p>
-<p><span th:text="#{deliveryCosts.expectedDuration}">: </span><span th:text="${session.duration}"></span></p>
+<p><span th:text="#{deliveryCosts.expectedDuration}"></span>: <span th:text="${session.duration}"></span></p>
 <p><span th:text="#{deliveryCosts.weight}"></span>: <span th:text="${session.weight}"></span></p>
-<p><span th:text="#{deliveryCosts.volumeWeight}">: </span><span th:text="${session.volumeWeight}"></span></p>
-<p><span th:text="#{deliveryCosts.usedWeight}">: </span><span th:text="${session.usedWeight}"></span></p>
+<p><span th:text="#{deliveryCosts.volumeWeight}"></span>: <span th:text="${session.volumeWeight}"></span></p>
+<p><span th:text="#{deliveryCosts.usedWeight}"></span>: <span th:text="${session.usedWeight}"></span></p>
 </div>
 </div>
 
 <p><a class="btn btn-primary btn-lg" role="button" th:href="@{/shippings/calculation_start_form}" th:text="#{deliveryCosts.oneMoreCalculation}"></a></p>
 
-<th:block th:include="@{_footer_guest}">
+<th:block th:include="@{_footer_guest}"/>
 
 </div>
 </body>

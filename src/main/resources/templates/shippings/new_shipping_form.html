@@ -16,7 +16,7 @@
 <div th:if="${session.loadLocality != null}">
 <p th:if="${session.errorDescription != null}" th:text="${errorDescription}"></p>
 
-<form th:name="resumeOrder" th:method="POST" th:object="${orderDataDto}" th:action="@{/shippings/}" onsubmit="return validateForm()">
+<form th:name="resumeOrder" th:method="POST" th:object="${orderDataDto}" th:action="@{/auth_user/shippings/}" onsubmit="return validateForm()">
 <h2 th:text="#{userCabinetResOrder.enterData}"></h2>
 	<p th:text="#{userCabinetResOrder.loadLocality}"></p><p><input type="text" name="load" disabled th:value="${session.loadLocality.name}"/></p>
 	<div class="panel panel-primary">

@@ -22,11 +22,11 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AuthUserServiceImpl {
+public class AuthUserService {
 
 	private final ShippingRepository shippingRepository;
 	private final ShippingStatusRepository shippingStatusRepository;
-	private final PersonServiceImpl personService;
+	private final PersonService personService;
 	private final PageableFactory pageableFactory;
 	private final InvoiceRepository invoiceRepository;
 	private final SettlementsTypeRepository settlementsTypeRepository;

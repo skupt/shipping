@@ -31,22 +31,16 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static rozaryonov.shipping.AppConst.SHIPPING_STATUS_DELIVERING;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
-//todo @Slf4j
-//todo refactor all calsses to clean code (url naming< var naming, method naming, code readibility)
-//todo refactor all calsses to Solid (essentially Single responsibility)
-//todo use ultimate idea and learn its hotkeys (do not use eclipse!)
-/* TODO Refactor this class to use only Springframwork's Page. */
 
-
-public class ManagerServiceImpl {
+public class ManagerService {
 
 	private final PersonRepository personRepository;
 	private final SettlementsTypeRepository settlementsTypeRepository;
@@ -60,14 +54,14 @@ public class ManagerServiceImpl {
 	@SuppressWarnings("unchecked")
 	public String paymentsShow(@ModelAttribute("settlements") @Valid SettlementsDto settlements, HttpSession session,
 			HttpServletRequest request) {
-		rozaryonov.shipping.repository.page.Page<Settlements, SettlementsRepository> pageSettlementsAddPayment = null;
+		rozaryonov.shipping.repository.page.Page<Settlements, SettlementsRepository> pageSettlementsAddPayment;
 		List<Settlements> settlementsList;
 		String cmd = request.getParameter("cmd");
-		if (cmd != null) {// todo use more gracious way like Optional;
+		if (!Optional.ofNullable(cmd).isPresent()) {
 			switch (cmd) {// todo make code readibility; extrac to small methods
 			case "prevPage":
-				pageSettlementsAddPayment = (Page<Settlements, SettlementsRepository>) session// todo
-						.getAttribute("pageSettlementsAddPayment");// todo correct all yellow Idea's code
+				pageSettlementsAddPayment = (Page<Settlements, SettlementsRepository>) session
+						.getAttribute("pageSettlementsAddPayment");
 				settlementsList = pageSettlementsAddPayment.prevPage();
 				session.setAttribute("pageNum", pageSettlementsAddPayment.getCurPageNum());
 				session.setAttribute("pageTotal", pageSettlementsAddPayment.getTotalPages());
@@ -98,16 +92,17 @@ public class ManagerServiceImpl {
 		return "/manager/settlements";
 	}
 
-	@Transactional // todo learn how it works (learn about inside Proxy)
+	@Transactional
 	public String paymentsCreate(@ModelAttribute("settlements") SettlementsDto settlements, BindingResult bindingResult,
 			HttpServletRequest request, HttpSession session) throws NumberFormatException {
 
 		if (bindingResult.hasErrors())
 			return "/manager/payments";
 
-		LocalDateTime paymentDate = null;
-		Person person = null;
-		BigDecimal amount = null;
+		LocalDateTime paymentDate=null;
+		Person person=null;
+		BigDecimal amount=null;
+		boolean hasErrors = false;
 		try {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy K:mm a");
 			paymentDate = LocalDateTime.parse(request.getParameter("creationDatetime"), formatter);
@@ -117,12 +112,9 @@ public class ManagerServiceImpl {
 			amount = BigDecimal.valueOf(Double.parseDouble(request.getParameter("amount")));
 		} catch (IllegalArgumentException | DateTimeParseException e) {
 			log.warn(e.getMessage());
-			throw new PaymentCreationException(e.getMessage());
-		}
-		boolean hasErrors = false;
-		if (paymentDate == null) {
 			bindingResult.addError(new FieldError("settlements", "creationDatetime", "Wrong date."));
 			hasErrors = true;
+			//throw new PaymentCreationException(e.getMessage());
 		}
 		if (person == null) {
 			bindingResult.addError(new FieldError("settlements", "person", "Wrong person."));
@@ -151,9 +143,9 @@ public class ManagerServiceImpl {
 		ShippingStatus justCreated = new ShippingStatus();
 		justCreated.setId(1L);
 
-		org.springframework.data.domain.Page<Shipping> pageShipping = null;
+		org.springframework.data.domain.Page<Shipping> pageShipping;
 
-		String cmd = request.getParameter("cmd");// todo reanme
+		String cmd = request.getParameter("cmd");
 		if (cmd != null) {
 			switch (cmd) {
 			case "prevPage":
@@ -190,12 +182,10 @@ public class ManagerServiceImpl {
 
 		String[] shippingIds = request.getParameterValues("shippingId");
 		Set<Shipping> shippingSet = new HashSet<>();
-		for (String shippingId : shippingIds) {// todo naming; learn diff of for loop and foreach; LEARN
-												// EMERGENT!!!!!!!!!! //todo renaming hotkey shift+f6
+		for (String shippingId : shippingIds) {
 			Shipping shipping;
 			try {
-				shipping = shippingRepository.findById(Long.parseLong(shippingId))// todo hotkeyuy ctrl+q for see method
-																					// info
+				shipping = shippingRepository.findById(Long.parseLong(shippingId))
 						.orElseThrow(() -> new ShippingNotFoundException(
 								"No Shipping found in managerServiceImpl.createInvoices()."));
 			} catch (ShippingNotFoundException e) {
@@ -205,13 +195,13 @@ public class ManagerServiceImpl {
 			shippingSet.add(shipping);
 		}
 		Map<Person, List<Shipping>> personShippingsMap = shippingSet.stream()
-				.collect(Collectors.groupingBy(se -> se.getPerson()));
+				.collect(Collectors.groupingBy(Shipping::getPerson));
 		for (Map.Entry<Person, List<Shipping>> shippingsOfPerson : personShippingsMap.entrySet()) {
 			Invoice inv = new Invoice();
 			inv.setPerson(shippingsOfPerson.getKey());
 			inv.setCreationDateTime(Timestamp.valueOf(LocalDateTime.now()));
-			List<Shipping> shippingList = shippingsOfPerson.getValue().stream().collect(Collectors.toList());
-			BigDecimal sum = shippingList.stream().map(x -> x.getFare()).reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
+			List<Shipping> shippingList = new ArrayList<>(shippingsOfPerson.getValue());
+			BigDecimal sum = shippingList.stream().map(Shipping::getFare).reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 			inv.setSum(sum);
 			inv.setInvoiceStatus(invoiceStatusRepository.findById(1L).orElseThrow(() -> new InvoiceStatusNotFound(
 					"No InvoiceStatus found while createInvoices cmd in ManagerService")));
@@ -220,7 +210,7 @@ public class ManagerServiceImpl {
 						() -> new ShippingStatusNotFoundException("No ShippingStatus while CreateInvoices cmd")));
 			}
 			inv.setShippings(shippingList);
-			for (Shipping shp : shippingList) {// todo learn diff of @Transactional and .commit() and . rollback()
+			for (Shipping shp : shippingList) {
 				shippingRepository.save(shp);
 			}
 			invoiceRepository.save(inv);
@@ -229,7 +219,7 @@ public class ManagerServiceImpl {
 		session.setAttribute("goTo", "/manager/create_invoices");
 		session.setAttribute("message", "prg.invoiceOk");
 
-		return "redirect:/manager/prg";// todo extract preffix and suffix in app.properties
+		return "redirect:/manager/prg";//
 	}
 
 	// @Override
@@ -238,9 +228,9 @@ public class ManagerServiceImpl {
 			HttpSession session, HttpServletRequest request) {
 
 		ShippingStatus deliveringStatus = new ShippingStatus();
-		deliveringStatus.setId(4L);// todo don't use unanderstandable variabels; make constansp; hotkey ctrl+alt+C
+		deliveringStatus.setId(SHIPPING_STATUS_DELIVERING);
 
-		org.springframework.data.domain.Page<Shipping> pageShippingFinish = null;
+		org.springframework.data.domain.Page<Shipping> pageShippingFinish;
 
 		String cmd = request.getParameter("cmd");
 		if (cmd != null) {
@@ -265,6 +255,8 @@ public class ManagerServiceImpl {
 				session.setAttribute("pageShippingFinish", pageShippingFinish);
 				session.setAttribute("shippingListFinish", pageShippingFinish.getContent());
 				break;
+				default:
+					throw new IllegalStateException("Unexpected value: " + cmd);
 			}
 		} else {
 			pageShippingFinish = shippingRepository.findAllByShippingStatusOrderByCreationTimestamp(deliveringStatus,
@@ -302,13 +294,11 @@ public class ManagerServiceImpl {
 
 		for (int i = 0; i < shipIdsStr.length; i++) {
 			Long shId = Long.parseLong(shipIdsStr[i]);
-			if (shId != null) {
 				Shipping shipping = shippingRepository.findById(shId).orElseThrow(
 						() -> new ShippingNotFoundException("No Shipping found in ManagerService.finishShippings()"));
 				shipping.setUnloadingDatetime(Timestamp.valueOf(unloadDate));
 				shipping.setShippingStatus(statusDelivered);
 				shippingRepository.save(shipping);
-			}
 		}
 
 		session.setAttribute("goTo", "/manager/finish_shippings");
@@ -317,34 +307,29 @@ public class ManagerServiceImpl {
 		return "redirect:/manager/prg";
 	}
 
-	public boolean isManager(HttpSession session) {
-		Person person = (Person) session.getAttribute("person");
-		if (person != null && person.getRole().toString().equals("ROLE_MANAGER"))
-			return true;
-		return false;
-	}
-
 	@SuppressWarnings("unchecked")
 	public String reportDay(HttpSession session, HttpServletRequest request) {
-		rozaryonov.shipping.repository.page.Page<DayReport, DayReportRepo> pageDayReport = null;
-		List<DayReport> reportDayList = null;
+		rozaryonov.shipping.repository.page.Page<DayReport, DayReportRepo> pageDayReport;
+		List<DayReport> reportDayList;
 		String cmd = request.getParameter("cmd");
 		if (cmd != null) {
 			switch (cmd) {
 			case "prevPage":
-				pageDayReport = (rozaryonov.shipping.repository.page.Page<DayReport, DayReportRepo>) session
+				pageDayReport = (Page<DayReport, DayReportRepo>) session
 						.getAttribute("pageDayReport");
 				reportDayList = pageDayReport.prevPage();
 				session.setAttribute("pageDayReport", pageDayReport);
 				session.setAttribute("reportDayList", reportDayList);
 				break;
 			case "nextPage":
-				pageDayReport = (rozaryonov.shipping.repository.page.Page<DayReport, DayReportRepo>) session
+				pageDayReport = (Page<DayReport, DayReportRepo>) session
 						.getAttribute("pageDayReport");
 				reportDayList = pageDayReport.nextPage();
 				session.setAttribute("pageDayReport", pageDayReport);
 				session.setAttribute("reportDayList", reportDayList);
 				break;
+				default:
+					throw new IllegalStateException("Unexpected value: " + cmd);
 			}
 		} else {
 			pageDayReport = pageableFactory.getPageableForManagerDayReport(3);
@@ -359,24 +344,26 @@ public class ManagerServiceImpl {
 	@SuppressWarnings("unchecked")
 	public String reportDirection(HttpSession session, HttpServletRequest request) {
 		rozaryonov.shipping.repository.page.Page<DirectionReport, DirectionReportRepo> pageDirectionReport = null;
-		List<DirectionReport> reportDirectionList = null;
+		List<DirectionReport> reportDirectionList;
 		String cmd = request.getParameter("cmd");
 		if (cmd != null) {
 			switch (cmd) {
 			case "prevPage":
-				pageDirectionReport = (rozaryonov.shipping.repository.page.Page<DirectionReport, DirectionReportRepo>) session
+				pageDirectionReport = (Page<DirectionReport, DirectionReportRepo>) session
 						.getAttribute("pageDirectionReport");
 				reportDirectionList = pageDirectionReport.prevPage();
 				session.setAttribute("pageDirectionReport", pageDirectionReport);
 				session.setAttribute("reportDirectionList", reportDirectionList);
 				break;
 			case "nextPage":
-				pageDirectionReport = (rozaryonov.shipping.repository.page.Page<DirectionReport, DirectionReportRepo>) session
+				pageDirectionReport = (Page<DirectionReport, DirectionReportRepo>) session
 						.getAttribute("pageDirectionReport");
 				reportDirectionList = pageDirectionReport.nextPage();
 				session.setAttribute("pageDirectionReport", pageDirectionReport);
 				session.setAttribute("reportDirectionList", reportDirectionList);
 				break;
+				default:
+					throw new IllegalStateException("Unexpected value: " + cmd);
 			}
 		} else {
 			pageDirectionReport = pageableFactory.getPageableForManagerDirectionReport(3);

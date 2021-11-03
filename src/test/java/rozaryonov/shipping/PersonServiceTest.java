@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import rozaryonov.shipping.model.Person;
 import rozaryonov.shipping.repository.PersonRepository;
-import rozaryonov.shipping.service.PersonServiceImpl;
+import rozaryonov.shipping.service.PersonService;
 
 import java.math.BigDecimal;
 
@@ -14,13 +14,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 class PersonServiceTest {
 	@Autowired
-	private PersonServiceImpl personService;
+	private PersonService personService;
 	@Autowired
 	private PersonRepository personRepository;
 	
 	@Test
 	void findByLoginTest() {
-		Person admin = personService.findByLogin("admin");
+		Person admin = personRepository.findByLogin("admin").orElse(null);
 		assertEquals("admin", admin.getLogin());
 	}
 	

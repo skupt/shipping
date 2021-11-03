@@ -10,4 +10,4 @@ import java.util.function.Predicate;
 
 public interface CustomInvoiceRepository extends Pageable<Invoice> {
 	List<Invoice> findFilterSort(Timestamp after, Timestamp before, Predicate<Invoice> p, Comparator<Invoice> c);
-}
+ }

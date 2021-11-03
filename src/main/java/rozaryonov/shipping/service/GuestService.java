@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import rozaryonov.shipping.exception.PersonNotFoundException;
 import rozaryonov.shipping.model.Person;
+import rozaryonov.shipping.model.Role;
 import rozaryonov.shipping.model.Tariff;
+import rozaryonov.shipping.repository.PersonRepository;
 import rozaryonov.shipping.repository.TariffRepository;
 import rozaryonov.shipping.repository.page.Page;
 import rozaryonov.shipping.repository.page.PageableFactory;
@@ -17,12 +20,17 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static rozaryonov.shipping.model.Role.*;
+
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class GuestServiceImpl{
+public class GuestService {
 	private final PageableFactory pageableFactory;
-	private final PersonServiceImpl personService;
+	private final PersonService personService;
+	private final PersonRepository personRepository;
+
 
 
 	@SuppressWarnings("unchecked")
@@ -81,17 +89,16 @@ public class GuestServiceImpl{
 	}
 
 	public String enterCabinet(Model model, Principal principal, HttpSession session) {
-		Person person = personService.findByLogin((principal.getName()));// todo here we get Optional
-		String page;// todo don't left gray code
-		if (person != null) {// todo use Optional
-			switch (person.getRole().toString()) {
-			case "ROLE_USER":
+		Person person = personRepository.findByLogin((principal.getName())).orElseThrow(()-> new PersonNotFoundException(principal.getName()));
+		String page;
+		switch (person.getRole()) {
+			case ROLE_USER :
 				model.addAttribute("balance", personService.calcAndReplaceBalance(person.getId()));
 				model.addAttribute("person", person);
 				session.setAttribute("person", person);
 				page = "redirect:/auth_user/cabinet";
 				break;
-			case "ROLE_MANAGER": //todo use enum
+			case ROLE_MANAGER :
 				model.addAttribute("person", person);
 				session.setAttribute("person", person);
 				page = "redirect:/manager/cabinet";
@@ -100,9 +107,6 @@ public class GuestServiceImpl{
 				page = "/";
 				break;
 			}
-		} else {
-			page = "/";
-		}
 		return page;
 	}
 

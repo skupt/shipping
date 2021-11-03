@@ -22,18 +22,12 @@ import java.math.BigDecimal;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PersonServiceImpl {
+public class PersonService {
 
     private final SettlementsRepository settlementsRepository;
     private final PersonRepository personRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final PersonMapper mapper;
-
-    public Person findByLogin(String login) {
-        return personRepository.findByLogin(login).orElseThrow(() ->
-                new PersonNotFoundException("Person not found for login=" + login)); //todo here we get Optional
-    }
-
 
     @Transactional
     public BigDecimal calcAndReplaceBalance(long personId) {
@@ -58,7 +52,7 @@ public class PersonServiceImpl {
 
     public BindingResult checkUserCreationForm (@ModelAttribute("personDto") @Valid PersonDto personDto, BindingResult bindingResult) {
         try {
-            if (findByLogin(personDto.getLogin()) != null) {
+            if (personRepository.findByLogin(personDto.getLogin()).orElseThrow(()-> new PersonNotFoundException()) != null) {
                 bindingResult.addError(new FieldError("personDto", "login", "Please, choose other login."));
             }
         } catch(PersonNotFoundException e) {

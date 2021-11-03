@@ -11,15 +11,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
-import rozaryonov.shipping.service.UserDetailsServiceImpl;
+import rozaryonov.shipping.service.UserDetailsService;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-	@Autowired//todo learn autowiring differences
-	private UserDetailsServiceImpl userDetailsService;
+	@Autowired
+	private UserDetailsService userDetailsService;
 	
-	@Bean //todo learn bean scopes
+	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		return bCryptPasswordEncoder;
@@ -32,9 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		// todo disclose what will happen when anable csrf. Answer Tlf append appends hidden field _csrf	"8e321c6a-31fa-412c-9519-5c65d97000e1"
-		// whithout Tlf, there necessary to add <input type="hidden" name = "${_csrf.parameterName}" value = "${_csrf.token}">
-		// http.csrf().disable();
+		// whithout Thymeleaf, there necessary to add <input type="hidden" name = "${_csrf.parameterName}" value = "${_csrf.token}">
 
 		http
 			.authorizeRequests()
@@ -50,7 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/error/*",
                 "/shippings/*").permitAll()
 			.antMatchers("/manager/*").hasRole("MANAGER")
-			.antMatchers("/auth_user/*", "/shippings/form").hasRole("USER")
+			.antMatchers("/auth_user/**").hasRole("USER")
 			.and()
 		.exceptionHandling()
 			.accessDeniedPage("/error/403")

@@ -2,10 +2,11 @@ package rozaryonov.shipping.repository.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import rozaryonov.shipping.exception.ConnectionGettingException;
+import rozaryonov.shipping.exception.LocalityNotFoundException;
 import rozaryonov.shipping.exception.LogisticNetNotFoundException;
 import rozaryonov.shipping.model.LogisticNetElement;
 import rozaryonov.shipping.repository.CustomLogisticNetElementRepository;
-import rozaryonov.shipping.service.LocalityServiceImpl;
+import rozaryonov.shipping.repository.LocalityRepository;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -13,19 +14,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 @Slf4j
-public class CustomLogisticNetElementRepositoryImpl implements CustomLogisticNetElementRepository {// todo why not extand AbstractDao
+public class CustomLogisticNetElementRepositoryImpl implements CustomLogisticNetElementRepository {
 	private static final String FIND_ALL = "select city_id, neighbor_id, distance, logistic_config_id from logistic_net where logistic_config_id=? order by city_id, neighbor_id;";
-	private final LocalityServiceImpl localityService;
+	private final LocalityRepository localityRepository;
 	private Connection connection;
 
-	public CustomLogisticNetElementRepositoryImpl(DataSource dataSource, LocalityServiceImpl localityService) {
+	public CustomLogisticNetElementRepositoryImpl(DataSource dataSource, LocalityRepository localityRepository) {
 		try {
 			this.connection = dataSource.getConnection();
 		} catch (SQLException e) {
 			throw new ConnectionGettingException("SQL Exception while constructor CustomLogisticNetElementRepositoryImpl. " + e.getMessage());
 		}
-		this.localityService = localityService;
+		this.localityRepository = localityRepository;
 	}
 
 	public Iterable<LogisticNetElement> findByNetConfig(long netConfigId) {
@@ -36,8 +38,8 @@ public class CustomLogisticNetElementRepositoryImpl implements CustomLogisticNet
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				LogisticNetElement netElement = new LogisticNetElement();
-				netElement.setCity(localityService.findById(rs.getLong(1)));
-				netElement.setNeighbor(localityService.findById(rs.getLong(2)));
+				netElement.setCity(localityRepository.findById(rs.getLong(1)).orElseThrow(()-> new LocalityNotFoundException()));
+				netElement.setNeighbor(localityRepository.findById(rs.getLong(2)).orElseThrow(()-> new LocalityNotFoundException()));
 				netElement.setDistance(rs.getDouble(3));
 				localities.add(netElement);
 			}
