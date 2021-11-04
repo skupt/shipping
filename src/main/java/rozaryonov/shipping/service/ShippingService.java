@@ -18,14 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.NumberFormat;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Locale;
-
-import rozaryonov.shipping.AppConst;
 
 @Slf4j
 @Service
@@ -55,7 +50,7 @@ public class ShippingService {
             distance = pathfinder.calcMinDistance(shippingResultFormParametersDto.getDepartureId(), shippingResultFormParametersDto.getArrivalId());
         } catch (ClassNotFoundException | IOException e) {
             log.warn(e.getMessage());
-            throw new GuestSerivceException(e.getMessage());
+            throw new PathCalculationException(e.getMessage());
         }
         long tariffId = Long.parseLong(propertyRepository.findById("currentTariffId").orElseThrow(() -> new PropertyNotFoundException("currentTariffId")).getValue());
         Tariff tariff = tariffRepository.findById(tariffId).orElseThrow(() ->
