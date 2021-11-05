@@ -63,7 +63,8 @@ public class GuestController {
 	@PostMapping("/persons/")
 	public String createPerson(@ModelAttribute ("personDto") @Valid PersonDto personDto, BindingResult bindingResult) {
 		String page;
-		if (personService.checkUserCreationForm(personDto, bindingResult).hasErrors()) {
+		if (personService.checkUserCreationForm(personDto, bindingResult)
+				.hasErrors()) {
 			page = "/person/new_person_form";
 		} else {
 			personService.createUser(personDto);
@@ -80,7 +81,7 @@ public class GuestController {
 
 	@GetMapping("/shippings/calculation_result_form")
 	public String getShippingCalculationResultForm(HttpServletRequest request,  HttpSession session) {
-		ShippingResultComposedDto composedDto = shippingService.calculatePriceResultComposedDto(request, session);
+		ShippingResultComposedDto composedDto = shippingService.calculatePriceResultComposedDto(request);
 		shippingService.setNumericAttributes(session, composedDto.getShippingResultPriceAttributesDto());
 		shippingService.setFormattedAttributes(session, composedDto.getShippingResultPriceAttributesDto(),
 				composedDto.getShippingResultFormParametersDto());

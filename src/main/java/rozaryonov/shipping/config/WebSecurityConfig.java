@@ -29,24 +29,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
 	}
-	
+
+	String[] pathsPermittedToAll = {
+			"/",
+			"/persons/*",
+			"/cabinet",
+			"/costs",
+			"/delivery_cost",
+			"/login",
+			"/logout",
+			"/new",
+			"/error/*",
+			"/shippings/*"
+	};
+
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// whithout Thymeleaf, there necessary to add <input type="hidden" name = "${_csrf.parameterName}" value = "${_csrf.token}">
-
+		http.csrf().disable();
 		http
 			.authorizeRequests()
-			.antMatchers( //todo extract
-				"/", 
-				"/persons/*",
-				"/cabinet", 
-				"/costs", 
-				"/delivery_cost", 
-				"/login", 
-				"/logout", 
-				"/new",
-				"/error/*",
-                "/shippings/*").permitAll()
+			.antMatchers( pathsPermittedToAll ).permitAll()
 			.antMatchers("/manager/*").hasRole("MANAGER")
 			.antMatchers("/auth_user/**").hasRole("USER")
 			.and()
@@ -69,7 +73,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.rememberMe()
 			.tokenRepository(this.persistentTokenRepository())
 			.tokenValiditySeconds(1 * 24 * 60 * 60);
-
 
 	}
 

@@ -28,10 +28,9 @@ class ShippingRepositoryTest {
 	
 	@Test
 	void testFindByShippingStatus() {
-		ShippingStatus justCreated = shippingStatusRepository.findById(1L).orElse(null);
+		ShippingStatus justCreated = shippingStatusRepository.findById(AppConst.SHIPPING_STATUS_JUST_CREATED).orElse(null);
 		Page<Shipping> ps = shippingRepository.findAllByShippingStatusOrderByCreationTimestamp(justCreated, PageRequest.of(0, 2));
 
-		int zeroNumber = ps.getNumber();
 		int pageTotal = ps.getTotalPages();
 		boolean hasNext = ps.hasNext();
 
@@ -41,28 +40,26 @@ class ShippingRepositoryTest {
 			sb.append(s.getId()).append("; ").append(s.getFare()).append(s.getShippingStatus().getId()).append("\n");
 		}
 		
-		String exp1 = 	"1; 1345.961\n" + 
-				"3; 150.201\n";
+		String exp1 = 	"9; 424.801\n" +
+				"10; 1078.701\n";
 		assertEquals(exp1, sb.toString());
 		
-		assertEquals("1", "" + pageTotal);
+		assertEquals("3", "" + pageTotal);
 		
-		assertFalse(hasNext);
+		assertTrue(hasNext);
 		
 	}
 
 	@Test
 	void testFindByShippingStatus2ndPage() {
-//		ShippingStatus justCreated = shippingStatusRepository.findById(1L).orElse(null);
 		ShippingStatus justCreated = new ShippingStatus();
-		justCreated.setId(1L);
+		justCreated.setId(AppConst.SHIPPING_STATUS_JUST_CREATED);
 		
 		Page<Shipping> ps = shippingRepository.findAllByShippingStatusOrderByCreationTimestamp(justCreated, PageRequest.of(0, 2));
 
 		int curNumber = ps.getNumber();
-		int pageTotal = ps.getTotalPages();
 		boolean hasNext = ps.hasNext();
-		
+
 		Pageable pageable = null;
 		if (ps.hasNext()) pageable = ps.nextPageable();
 		
@@ -77,13 +74,13 @@ class ShippingRepositoryTest {
 		curNumber = ps.getNumber();
 		hasNext = ps.hasNext();
 		
-		String exp1 = 	"1; 1345.961\n" + 
-				"3; 150.201\n";
+		String exp1 = 	"11; 2131.201\n" +
+				"12; 3796.801\n";
 		assertEquals(exp1, sb.toString());
 		
-		assertEquals("0", "" + curNumber);
+		assertEquals("1", "" + curNumber);
 		
-		assertFalse(hasNext);
+		assertTrue(hasNext);
 		
 	}
 

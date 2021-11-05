@@ -36,7 +36,7 @@ public class AuthUserController {
 	@PostMapping("/settlements")
 	public String payInvoice(HttpServletRequest request, HttpSession session) {
 		authUserService.payInvoice(request, session);
-		return "redirect:/auth_user/spending_form";
+		return "redirect:/auth_user/settlements/spending_form";
 	}
 	@GetMapping("/shippings/new_shipping_form")
 	public String newShipping(HttpSession session, @ModelAttribute("orderDataDto") OrderDataDto orderDataDto) {

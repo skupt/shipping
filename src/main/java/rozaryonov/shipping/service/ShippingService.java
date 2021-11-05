@@ -38,7 +38,7 @@ public class ShippingService {
     @Autowired
     private ShippingStatusRepository shippingStatusRepository;
 
-    public ShippingResultComposedDto calculatePriceResultComposedDto(HttpServletRequest request, HttpSession session) {
+    public ShippingResultComposedDto calculatePriceResultComposedDto(HttpServletRequest request) {
         ShippingResultFormParametersDto shippingResultFormParametersDto = new ShippingResultFormParametersDto(request);
         long logisticConfigId = Long.parseLong(propertyRepository.findById("currentLogisticConfigId").orElseThrow(() -> new PropertyNotFoundException("currentLogisticConfigId")).getValue());
         Iterable<LogisticNetElement> logisticNetElements = logisticNetElementRepository.findByNetConfig(logisticConfigId);
@@ -71,7 +71,8 @@ public class ShippingService {
     public void setFormattedAttributes (HttpSession session, ShippingResultPriceAttributesDto priceDto,
                                         ShippingResultFormParametersDto formDto) {
         String[] locPart = formDto.getLocStrStr().split("_");
-        Locale locale = new Locale(locPart[0], locPart[1]);
+        Locale locale;
+        if(locPart.length == 2) locale = new Locale(locPart[0], locPart[1]); else locale = new Locale(locPart[0]);
         NumberFormat doubleFormat = NumberFormat.getInstance(locale);
         doubleFormat.setMaximumFractionDigits(2);
         NumberFormat intFormat = NumberFormat.getInstance();

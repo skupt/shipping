@@ -57,7 +57,7 @@ public class ManagerService {
 		rozaryonov.shipping.repository.page.Page<Settlements, SettlementsRepository> pageSettlementsAddPayment;
 		List<Settlements> settlementsList;
 		String cmd = request.getParameter("cmd");
-		if (!Optional.ofNullable(cmd).isPresent()) {
+		if (Optional.ofNullable(cmd).isPresent()) {
 			switch (cmd) {// todo make code readibility; extrac to small methods
 			case "prevPage":
 				pageSettlementsAddPayment = (Page<Settlements, SettlementsRepository>) session

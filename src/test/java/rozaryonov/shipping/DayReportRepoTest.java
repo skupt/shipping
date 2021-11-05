@@ -66,7 +66,7 @@ class DayReportRepoTest {
 			sb.append(r.toString()).append("\n");
 		}
 		
-		String expected = "2021-08-23	1345.96\n" + 
+		String expected = "2021-08-23	1345.96\n" +
 				"2021-09-11	378.0\n";
 		
 		assertEquals(expected, sb.toString());
@@ -81,7 +81,7 @@ class DayReportRepoTest {
 		int pageTotal = page.getTotalPages();
 		
 		assertEquals(1, curPage);
-		assertEquals(2, pageTotal);
+		assertEquals(4, pageTotal);
 		
 		
 	}

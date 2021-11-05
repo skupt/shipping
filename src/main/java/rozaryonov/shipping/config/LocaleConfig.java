@@ -34,7 +34,7 @@ public class LocaleConfig implements WebMvcConfigurer {
        SessionLocaleResolver slr = new SessionLocaleResolver();
        //Назначает локаль по умончанию, которая используется когда к сесии не прикреплена никакая локаль.
        //Если не назначать локаль по умолчанию, то локаль будет назначена согласно Accept-Language хэдера запроса
-       slr.setDefaultLocale(Locale.forLanguageTag("ru_RU"));
+       slr.setDefaultLocale(Locale.US);
        return slr;
     }
     
