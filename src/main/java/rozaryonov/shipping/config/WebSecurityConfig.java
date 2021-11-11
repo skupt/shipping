@@ -30,7 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
 	}
 
-	String[] pathsPermittedToAll = {
+	private String[] pathsPermittedToAll = {
 			"/",
 			"/persons/*",
 			"/cabinet",
@@ -47,7 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// whithout Thymeleaf, there necessary to add <input type="hidden" name = "${_csrf.parameterName}" value = "${_csrf.token}">
-		http.csrf().disable();
+		//http.csrf().disable();
 		http
 			.authorizeRequests()
 			.antMatchers( pathsPermittedToAll ).permitAll()

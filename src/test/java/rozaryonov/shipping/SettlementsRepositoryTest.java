@@ -35,8 +35,13 @@ class SettlementsRepositoryTest {
 			.append(" ").append(s.getAmount().toString())
 			.append("\n");
 		}
-		String expected = "1 vasya payment 20000.00\n" + 
-				"2 petya payment 20000.00\n";
+		String expected = "1 vasya payment 20000.00\n" +
+				"2 petya payment 20000.00\n" +
+				"3 user payment 5000.00\n" +
+				"4 6543 payment 6000.00\n" +
+				"5 vasya payment 2500.00\n" +
+				"6 petya payment 3400.00\n" +
+				"7 user payment 1300.00\n";
 		
 		
 		assertEquals(expected, sb.toString());
@@ -45,10 +50,10 @@ class SettlementsRepositoryTest {
 	@Test
 	void calcPersonBalanceTest() {
 		BigDecimal b1 = settlementRepository.calcPersonBalance(1L);
-		assertEquals("20000.00", b1.toString());
+		assertEquals("22500.00", b1.toString());
 
 		BigDecimal b2 = settlementRepository.calcPersonBalance(2L);
-		assertEquals("20000.00", b2.toString());
+		assertEquals("23249.80", b2.toString());
 
 		
 	}

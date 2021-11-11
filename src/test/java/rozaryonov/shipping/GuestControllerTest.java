@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -20,13 +20,22 @@ public class GuestControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    public void shouldLOginAndReturnRedirection() throws Exception {
-        this.mockMvc.perform(post("/j_spring_security_check")
-                        .param("username","admin")
-                        .param("password", "123456"))
+    @WithUserDetails("admin")
+    public void enterCabinetShouldReturnManagerCabinetPage() throws Exception {
+        this.mockMvc.perform(get("/authorized_zone_redirection"))
                 .andDo(print()).andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/authorized_zone_redirection"));
+                .andExpect(redirectedUrl("/manager/cabinet"));
     }
+
+    @Test
+    @WithUserDetails("user")
+    public void enterCabinetShouldReturnAuthUserCabinetPage() throws Exception {
+        this.mockMvc.perform(get("/authorized_zone_redirection"))
+                .andDo(print()).andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/auth_user/cabinet"));
+    }
+
+
 
     @Test
     public void shouldReturnIndexPage() throws Exception {
@@ -34,6 +43,7 @@ public class GuestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("MDS: Modern Delivery Service")));
     }
+
     @Test
     public void shouldReturnTariffPage() throws Exception {
         String expected = "\t<tr >\n" +
@@ -111,21 +121,19 @@ public class GuestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("calculation_start_form")));
     }
+
     @Test
     public void shouldReturnCalculationResultPage() throws Exception {
         this.mockMvc.perform(get("/shippings/calculation_result_form")
                         .header("Accept-Language", "en_US")
-                        .param("departure","5")
-                        .param("arrival","7")
-                        .param("length","20")
-                        .param("width","20")
-                        .param("height","20")
-                        .param("weight","20"))
+                        .param("departure", "5")
+                        .param("arrival", "7")
+                        .param("length", "20")
+                        .param("width", "20")
+                        .param("height", "20")
+                        .param("weight", "20"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("calculation_result_form")));
     }
-
-
-
 }
